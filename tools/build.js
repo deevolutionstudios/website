@@ -613,25 +613,23 @@ we use it and complain to a data protection authority.</p>
 }));
 
 write('/impressum/', layout({
-  url: '/impressum/', title: 'Impressum', noindex: true,
+  url: '/impressum/', title: 'Impressum',
   description: 'Legal notice (Impressum) for De-Evolution Studios.',
-  body: `<div class="draft-banner">Draft · fill in the highlighted parts (or have them checked) before this page goes live</div>
-${pageHeader('Legal notice', 'Impressum', null, { small: true })}
+  body: `${pageHeader('Legal notice', 'Impressum', null, { small: true })}
 <article class="doc"><div class="prose">
 <p>Angaben gemäß § 5 DDG · Information according to § 5 of the German Digital Services Act</p>
 <h2>Provider</h2>
 <p>DE-EVOLUTION STUDIOS LLC<br>
-<span class="fill">[Street and number]</span><br>
-<span class="fill">[Postcode] München</span><br>
+Donnersbergerstraße 38<br>
+80634 München<br>
 Germany</p>
-<p>Represented by: <span class="fill">[Richard Laufenburger, Managing Member]</span><br>
-Registered in: <span class="fill">[State of registration, e.g. New York, USA; registration number]</span><br>
-VAT ID (USt-IdNr.): <span class="fill">[if you have one]</span></p>
+<p>Represented by: Richard Laufenburger, Managing Member<br>
+Limited liability company registered in New York, USA</p>
 <h2>Contact</h2>
 <p>Email: <a href="mailto:${CONTACT}">${CONTACT}</a><br>
-Phone: <span class="fill">[a phone number, or a second fast way to reach you]</span></p>
+Phone: <a href="tel:+491728161503">+49 172 8161503</a></p>
 <h2>Responsible for content</h2>
-<p><span class="fill">[Name and address]</span> (§ 18 Abs. 2 MStV)</p>
+<p>Richard Laufenburger, Donnersbergerstraße 38, 80634 München (§ 18 Abs. 2 MStV)</p>
 <h2>Consumer dispute resolution</h2>
 <p>We are not willing or obliged to take part in dispute resolution proceedings before a consumer arbitration board.</p>
 </div></article>`,
@@ -645,7 +643,7 @@ write('/404.html', layout({
 <section class="section-wrap"><div class="section-inner"><div class="acts"><a class="btn-solid" href="/">Home</a><a class="btn-outline" href="/#games">Our games</a><a class="btn-outline" href="/support/">Support</a></div></div></section>`,
 }), { sitemap: false });
 
-const noSitemap = ['/impressum/'];
+const noSitemap = [];
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages.filter(p => !noSitemap.includes(p)).map(p => `  <url><loc>${SITE}${p}</loc></url>`).join('\n')}
