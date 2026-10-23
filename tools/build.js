@@ -74,7 +74,7 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <nav class="top" aria-label="Main">
-  <a href="/" class="nav-logo"><img src="/assets/img/studio/logo-long.png" alt="De-Evolution Studios" width="342" height="19"></a>
+  <a href="/" class="nav-logo"><img src="/assets/img/studio/logo-black.webp" alt="De-Evolution Studios" width="354" height="26"></a>
   <ul class="nav-links">${links}<li><a href="/contact/" class="nav-cta">Let's Talk</a></li></ul>
   <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </nav>
