@@ -7,7 +7,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const PORT = Number(process.argv[2]) || 8080;
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.txt': 'text/plain; charset=utf-8',
-  '.xml': 'application/xml', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
+  '.xml': 'application/xml', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
 
 const rules = fs.readFileSync(path.join(ROOT, '.htaccess'), 'utf8').split('\n');
 const redirects = rules.map(l => l.match(/^Redirect 301 (\S+) (\S+)/)).filter(Boolean).map(m => [m[1], m[2]]);

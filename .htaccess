@@ -30,7 +30,7 @@ RedirectMatch 404 ^/(README\.md|package\.json|\.gitignore)$
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  <FilesMatch "\.(css|js|woff2|webp|png|svg)$">
+  <FilesMatch "\.(css|js|woff2|webp|png|svg|ico|webmanifest)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   <FilesMatch "^(app-ads|robots)\.txt$">
@@ -41,3 +41,4 @@ RedirectMatch 404 ^/(README\.md|package\.json|\.gitignore)$
 AddType text/plain .txt
 AddType image/webp .webp
 AddType font/woff2 .woff2
+AddType application/manifest+json .webmanifest
