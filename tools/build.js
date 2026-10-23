@@ -21,8 +21,20 @@ const v = f => '/' + f + '?v=' + Math.floor(fs.statSync(path.join(ROOT, f)).mtim
 function write(url, html, { sitemap = true } = {}) {
   const file = url.endsWith('.html') ? path.join(ROOT, url) : path.join(ROOT, url, 'index.html');
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, html);
+  fs.writeFileSync(file, stampImages(html));
   if (sitemap) pages.push(url);
+}
+
+// Images are cached for a week (and by Hostinger's CDN), so each image URL carries a fingerprint of the file:
+// replacing an image with a new one under the same name shows up at once.
+const stamps = {};
+function stampImages(html) {
+  return html.replace(/((?:src|href|content)="(?:https:\/\/deevolutionstudios\.com)?)(\/assets\/img\/[^"?#]+)"/g, (all, pre, p) => {
+    const f = path.join(ROOT, p);
+    if (!fs.existsSync(f)) return all;
+    stamps[p] = stamps[p] || require('crypto').createHash('md5').update(fs.readFileSync(f)).digest('hex').slice(0, 8);
+    return `${pre}${p}?v=${stamps[p]}"`;
+  });
 }
 
 // ── LAYOUT ─────────────────────────────────────────────────────────────────────────────────────────────────────
