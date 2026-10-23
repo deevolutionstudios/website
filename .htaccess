@@ -1,0 +1,43 @@
+# deevolutionstudios.com on Hostinger (LiteSpeed reads this file like Apache).
+# No HTTPS or www rules here: Hostinger's CDN sits in front and already handles them; adding them can loop.
+
+ErrorDocument 404 /404.html
+DirectoryIndex index.html
+Options -Indexes
+
+# The March 2026 pages moved; keep old links (and search results) working.
+Redirect 301 /ourwork.html /work/
+Redirect 301 /about.html /about/
+Redirect 301 /services.html /services/
+Redirect 301 /contact.html /contact/
+Redirect 301 /game-candi.html /candi/
+Redirect 301 /game-d2048.html /d2048/
+Redirect 301 /game-elementra.html /elementra/
+Redirect 301 /game-cthulhu.html /cthulhu/
+Redirect 301 /game-gravefall.html /gravefall/
+Redirect 301 /game-wraps.html /wraps/
+Redirect 301 /game-hopz.html /hopz/
+
+# The page sources and build tools live in the repo but aren't part of the site.
+RedirectMatch 404 ^/(_src|tools|\.git)(/|$)
+RedirectMatch 404 ^/(README\.md|package\.json|\.gitignore)$
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Pages must update as soon as a new version is deployed; CSS/JS URLs carry a version, so they can be cached.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|woff2|webp|png|svg)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "^(app-ads|robots)\.txt$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
+
+AddType text/plain .txt
+AddType image/webp .webp
+AddType font/woff2 .woff2

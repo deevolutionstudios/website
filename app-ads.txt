@@ -1,0 +1,3 @@
+# De-Evolution Studios: authorized sellers of ad space in our apps (IAB app-ads.txt).
+# Candi's Swamp Hop and D2048 show Google AdMob ads; Elementra and Colorwise have none.
+google.com, pub-9406879677352795, DIRECT, f08c47fec0942fa0

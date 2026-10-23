@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_src/
+Disallow: /tools/
+
+Sitemap: https://deevolutionstudios.com/sitemap.xml
