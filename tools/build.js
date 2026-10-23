@@ -376,7 +376,8 @@ ${d.inApp ? `<h2>Delete it in the game</h2><p>${d.inApp}</p><h2>Or ask us by ema
 // ── OLDER PROJECT PAGES ────────────────────────────────────────────────────────────────────────────────────────
 
 Object.entries(OLD).forEach(([slug, p]) => {
-  const shots = Array.from({ length: p.shots || 3 }, (_, i) => i + 1).map(n =>`<img src="/assets/img/${slug}/shot${n}.webp" alt="" loading="lazy">`).join('');
+  const shots = (p.gallery || ['shot1', 'shot2', 'shot3']).map(s => `<img src="/assets/img/${slug}/${s}.webp" alt="" loading="lazy">`).join('');
+  const hero = p.hero || 'cover', wide = !!p.hero;
   write(`/${slug}/`, layout({
     url: `/${slug}/`, title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
     body: `
@@ -387,7 +388,7 @@ Object.entries(OLD).forEach(([slug, p]) => {
       <span class="page-eyebrow">✦ ${p.eyebrow}</span><h1 class="page-title">${esc(p.name)}</h1>
       <p class="game-tagline">${p.tagline}</p>
     </div>
-    <div style="max-width:340px;justify-self:center"><img src="/assets/img/${slug}/cover.webp" alt="${esc(p.name)}" style="border:2.5px solid var(--ink);border-radius:18px;box-shadow:7px 7px 0 var(--ink);display:block"></div>
+    <div style="max-width:${wide ? 560 : 340}px;justify-self:center"><img src="/assets/img/${slug}/${hero}.webp" alt="${esc(p.name)}" style="border:2.5px solid var(--ink);border-radius:18px;box-shadow:7px 7px 0 var(--ink);display:block${wide ? ';background:#fff' : ''}"></div>
   </div>
 </header>
 <section class="section-wrap">

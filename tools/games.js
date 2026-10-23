@@ -203,7 +203,8 @@ const PROJECTS = [
 // Detail pages for the older projects (text from the March 2026 site).
 const OLD = {
   'elementra-card-game': {
-    name: 'Elementra', eyebrow: 'Card Game · Dragon Academy', tagline: '2 cards are all you need to win it all!', shots: 4,
+    name: 'Elementra', eyebrow: 'Card Game · Dragon Academy', tagline: '2 cards are all you need to win it all!',
+    hero: 'box', gallery: ['rules-of-play', 'card-aurora-gayle', 'card-blaze', 'card-radiance', 'card-jade-everbloom', 'card-tannis-mortos'],
     info: [['Type', 'Card Game'], ['Players', '2–8'], ['Age', '10+'], ['Platform', 'Tabletop'], ['Theme', 'Fantasy / Anime'], ['Digital edition', '<a href="/elementra/">Elementra: Dragon Academy app</a>']],
     about: `<p>Elementra: Dragon Academy is a dynamic card game that combines strategy, quick thinking, and a touch of anime flair. Designed for 2 to 8 players, this game offers engaging hand management mechanics that keep each session lively and unpredictable.</p>
 <p>Players take on the roles of dragon riders competing in a high-stakes academy tournament. Each turn, you draw a card and decide which to keep and which to discard, triggering unique effects that can aid your strategy or hinder your opponents. The objective is to pair a rider with a dragon, optimizing their combined combat strength to outlast rivals.</p>
