@@ -221,7 +221,7 @@ write('/', layout({
       <div><span class="s-eyebrow">✦ Our Work</span><h2 class="s-title">Games We've<br>Built.</h2></div>
       <a href="/work/" class="btn-outline">View All Projects</a>
     </div>
-    <div class="port-grid four">${PROJECTS.filter(p => ['elementra', 'cthulhu', 'gravefall', 'wraps'].includes(p.slug)).map(p => projectCard(p)).join('')}</div>
+    <div class="port-grid four">${PROJECTS.filter(p => ['elementra-card-game', 'cthulhu', 'gravefall', 'wraps'].includes(p.slug)).map(p => projectCard(p)).join('')}</div>
   </div>
 </section>
 
@@ -283,7 +283,6 @@ function helpCard(g) {
 
 MOBILE.forEach((g, i) => {
   const shots = (g.shots || []).map(s => `<img src="/assets/img/${g.slug}/${s}.webp" alt="" width="540" height="960" loading="lazy">`).join('');
-  const extra = (g.extraShots || []).map(s => `<img src="/assets/img/${g.slug}/${s}.webp" alt="" loading="lazy">`).join('');
   const prev = MOBILE[(i + MOBILE.length - 1) % MOBILE.length], next = MOBILE[(i + 1) % MOBILE.length];
   write(`/${g.slug}/`, layout({
     url: `/${g.slug}/`, title: g.name, image: g.slug === 'colorwise' ? '/assets/img/colorwise/logo.webp' : `/assets/img/${g.slug}/feature.webp`,
@@ -305,7 +304,6 @@ ${shots ? `<section class="section-wrap" style="padding-bottom:40px"><div class=
 <section class="section-wrap"${shots ? ' style="padding-top:40px"' : ''}>
   <div class="section-inner game-main">
     <div class="prose fu"><h2>About the Game</h2>${g.about}
-      ${extra ? `<h3>From the tabletop edition</h3><div class="shots wide">${extra}</div>` : ''}
     </div>
     <aside>
       <div class="info-card fu"><h2>Game info</h2><table class="info-table"><tbody>${g.info.map(([k, val]) => `<tr><th scope="row">${k}</th><td>${val}</td></tr>`).join('')}<tr><th scope="row">Studio</th><td>De-Evolution Studios</td></tr></tbody></table></div>
@@ -366,7 +364,7 @@ ${d.inApp ? `<h2>Delete it in the game</h2><p>${d.inApp}</p><h2>Or ask us by ema
 // ── OLDER PROJECT PAGES ────────────────────────────────────────────────────────────────────────────────────────
 
 Object.entries(OLD).forEach(([slug, p]) => {
-  const shots = [1, 2, 3].map(n => `<img src="/assets/img/${slug}/shot${n}.webp" alt="" loading="lazy">`).join('');
+  const shots = Array.from({ length: p.shots || 3 }, (_, i) => i + 1).map(n =>`<img src="/assets/img/${slug}/shot${n}.webp" alt="" loading="lazy">`).join('');
   write(`/${slug}/`, layout({
     url: `/${slug}/`, title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
     body: `

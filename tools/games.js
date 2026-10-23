@@ -121,7 +121,7 @@ on is a boss fight: a skeleton, the Orc War Chief, the Lich, the Wizard and fina
     play: { id: 'com.deevolutionstudios.elementra', live: false },
     web: 'https://play.deevolutionstudios.com',
     shots: ['01-home', '02-game', '04-collection', '05-shop'],
-    info: [['Platforms', 'iPhone, iPad, Android, web'], ['Genre', 'Card / Strategy'], ['Age', '9+ (accounts 13+)'], ['Price', 'Free, with optional purchases. No ads'], ['Players', '2–4 online, or vs the computer'], ['Tabletop', '2–8 players']],
+    info: [['Platforms', 'iPhone, iPad, Android, web'], ['Genre', 'Card / Strategy'], ['Age', '9+ (accounts 13+)'], ['Price', 'Free, with optional purchases. No ads'], ['Players', '2–4 online, or vs the computer']],
     about: `
 <p>Welcome, new recruit. Your training begins at the Elementra: Dragon Academy, where Riders and Dragons learn to
 fight as one.</p>
@@ -136,10 +136,9 @@ at a rival's hand, swap cards, knock a classmate out of the Round, or protect yo
   <li>Collect and upgrade your cards through five finishes, with foil and holographic shine</li>
   <li>Daily and weekly quests, seasonal events and a friends list</li>
 </ul>
-<h3>The tabletop game</h3>
-<p>The app is based on our card game Elementra: Dragon Academy for 2 to 8 players: draw a card, discard one, and
-pair a Rider with a Dragon to outlast your rivals.</p>`,
-    extraShots: ['box', 'elementra2', 'elementra3', 'elementra4'],
+<h3>Prefer cards on the table?</h3>
+<p>The app is the digital edition of <a href="/elementra-card-game/">Elementra, our tabletop card game</a> for 2 to 8
+players.</p>`,
     privacy: 'elementra-privacy.html',
     terms: 'elementra-terms.html',
     deletion: {
@@ -191,7 +190,8 @@ the rule flips.</p>
 
 // Older and tabletop projects, as on the March 2026 site.
 const PROJECTS = [
-  { slug: 'elementra', name: 'Elementra', type: 'card', label: 'Card Game', kind: 'Card Game · Dragon Academy', img: 'elementra/box', tag: 'Dragon Academy. All you need is 2 cards to win — but getting there is everything.' },
+  { slug: 'elementra-card-game', name: 'Elementra', type: 'card', label: 'Card Game', kind: 'Card Game · Dragon Academy', img: 'elementra-card-game/cover', tag: 'Dragon Academy. All you need is 2 cards to win — but getting there is everything.' },
+  { slug: 'elementra', name: 'Elementra: Dragon Academy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Card duel', img: 'elementra/cover', tag: 'The card game goes digital. Bond a Rider and a Dragon and duel players around the world.' },
   { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
   { slug: 'd2048', name: 'D2048', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'd2048/cover', tag: '2048 meets RPG. Merge tiles, battle monsters, survive the waves.' },
   { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
@@ -202,6 +202,15 @@ const PROJECTS = [
 
 // Detail pages for the older projects (text from the March 2026 site).
 const OLD = {
+  'elementra-card-game': {
+    name: 'Elementra', eyebrow: 'Card Game · Dragon Academy', tagline: '2 cards are all you need to win it all!', shots: 4,
+    info: [['Type', 'Card Game'], ['Players', '2–8'], ['Age', '10+'], ['Platform', 'Tabletop'], ['Theme', 'Fantasy / Anime'], ['Digital edition', '<a href="/elementra/">Elementra: Dragon Academy app</a>']],
+    about: `<p>Elementra: Dragon Academy is a dynamic card game that combines strategy, quick thinking, and a touch of anime flair. Designed for 2 to 8 players, this game offers engaging hand management mechanics that keep each session lively and unpredictable.</p>
+<p>Players take on the roles of dragon riders competing in a high-stakes academy tournament. Each turn, you draw a card and decide which to keep and which to discard, triggering unique effects that can aid your strategy or hinder your opponents. The objective is to pair a rider with a dragon, optimizing their combined combat strength to outlast rivals.</p>
+<p>The game's vibrant artwork and fast-paced gameplay make it a hit for both casual gatherings and dedicated game nights. Its blend of tactical decision-making and interactive play ensures that no two games are alike, offering endless replayability.</p>
+<p>Whether you're a seasoned gamer or new to card games, Elementra: Dragon Academy provides an accessible yet challenging experience that will have you coming back for more.</p>
+<h3>Play it on your phone</h3>
+<p>Elementra is also an app: <a href="/elementra/">Elementra: Dragon Academy</a> for iPhone, iPad and Android, with online matches against players around the world.</p>` },
   cthulhu: {
     name: "Lil' Cthulhu", eyebrow: 'Card Game · Original IP', tagline: 'You cannot win, you can only survive!',
     info: [['Type', 'Card Game'], ['Players', '2–5'], ['Age', '14+'], ['Platform', 'Tabletop'], ['Funding', 'Kickstarter']],

@@ -12,7 +12,7 @@ Redirect 301 /services.html /services/
 Redirect 301 /contact.html /contact/
 Redirect 301 /game-candi.html /candi/
 Redirect 301 /game-d2048.html /d2048/
-Redirect 301 /game-elementra.html /elementra/
+Redirect 301 /game-elementra.html /elementra-card-game/
 Redirect 301 /game-cthulhu.html /cthulhu/
 Redirect 301 /game-gravefall.html /gravefall/
 Redirect 301 /game-wraps.html /wraps/
