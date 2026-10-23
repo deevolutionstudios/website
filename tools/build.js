@@ -293,40 +293,42 @@ function helpCard(g) {
   <li><a href="mailto:${CONTACT}?subject=${encodeURIComponent(g.shortName || g.name)}">Email us</a></li></ul></div>`;
 }
 
-MOBILE.forEach((g, i) => {
-  const shots = (g.shots || []).map(s => `<img src="/assets/img/${g.slug}/${s}.webp" alt="" width="540" height="960" loading="lazy">`).join('');
-  const prev = MOBILE[(i + MOBILE.length - 1) % MOBILE.length], next = MOBILE[(i + 1) % MOBILE.length];
-  write(`/${g.slug}/`, layout({
-    url: `/${g.slug}/`, active: '/work/', title: g.name, image: g.slug === 'colorwise' ? '/assets/img/colorwise/logo.webp' : `/assets/img/${g.slug}/feature.webp`,
-    description: `${g.name}: ${g.tagline}`,
-    body: `
+// One layout for every game on Our Work (the March 2026 project template): title on the left with the portrait
+// art on the right, then About the Game with its screenshots and art, and the game info beside it.
+function projectPage({ slug, name, crumbs, eyebrow, tagline, heroExtra = '', heroImg, heroWide, about, shots, aside }) {
+  const gallery = shots.length ? `<h3>Screenshots &amp; Art</h3><div class="shots wide">${shots.map(s => `<img src="/assets/img/${slug}/${s}.webp" alt="" loading="lazy">`).join('')}</div>` : '';
+  return `
 <header class="game-hero">
   <div class="game-hero-inner">
     <div>
       <p class="back-link"><a href="/work/">← Back to Our Work</a></p>
-      <p class="crumbs">${gameCrumbs(g)}</p>
-      <div class="game-id">${icon(g, 92)}<div><span class="page-eyebrow">✦ ${g.type}</span><h1 class="page-title small">${esc(g.name)}</h1></div></div>
-      <p class="game-tagline">${g.tagline}</p>
-      ${badges(g)}
-      ${g.storeNames ? `<p class="form-note" style="text-align:left">Listed as ${g.storeNames}.</p>` : ''}
+      <p class="crumbs">${crumbs}</p>
+      <span class="page-eyebrow">✦ ${eyebrow}</span><h1 class="page-title">${esc(name)}</h1>
+      <p class="game-tagline">${tagline}</p>
+      ${heroExtra}
     </div>
-    <div class="game-art${g.slug === 'colorwise' ? ' cw' : ''}">${art(g).replace(' loading="lazy"', '')}</div>
+    <div class="cover-art${heroWide ? ' wide' : ''}"><img src="/assets/img/${slug}/${heroImg}.webp" alt="${esc(name)}"></div>
   </div>
 </header>
-${shots ? `<section class="section-wrap" style="padding-bottom:40px"><div class="section-inner"><h2 class="s-eyebrow">✦ Screenshots</h2><div class="shots fu">${shots}</div></div></section>` : ''}
-<section class="section-wrap"${shots ? ' style="padding-top:40px"' : ''}>
+<section class="section-wrap">
   <div class="section-inner game-main">
-    <div class="prose fu"><h2>About the Game</h2>${g.about}
-    </div>
-    <aside>
-      <div class="info-card fu"><h2>Game info</h2><table class="info-table"><tbody>${g.info.map(([k, val]) => `<tr><th scope="row">${k}</th><td>${val}</td></tr>`).join('')}<tr><th scope="row">Studio</th><td>De-Evolution Studios</td></tr></tbody></table></div>
-      ${helpCard(g)}
-    </aside>
+    <div class="prose fu"><h2>About the Game</h2>${about}${gallery}</div>
+    <aside>${aside}</aside>
   </div>
 </section>
-<section class="band-bone"><div class="section-wrap" style="padding-top:36px;padding-bottom:36px"><div class="section-inner pager">
-  <a href="/${prev.slug}/">← ${esc(prev.shortName || prev.name)}</a><a href="/work/">All projects</a><a href="/${next.slug}/">${esc(next.shortName || next.name)} →</a>
-</div></div></section>`,
+${cta('Got a Game Idea?', "Let's build your next world together.")}`;
+}
+const infoCard = (rows, studio) => `<div class="info-card fu"><h2>Game info</h2><table class="info-table"><tbody>${rows.map(([k, val]) => `<tr><th scope="row">${k}</th><td>${val}</td></tr>`).join('')}${studio ? '<tr><th scope="row">Studio</th><td>De-Evolution Studios</td></tr>' : ''}</tbody></table></div>`;
+
+MOBILE.forEach(g => {
+  write(`/${g.slug}/`, layout({
+    url: `/${g.slug}/`, active: '/work/', title: g.name, image: `/assets/img/${g.slug}/cover.webp`,
+    description: `${g.name}: ${g.tagline}`,
+    body: projectPage({
+      slug: g.slug, name: g.name, crumbs: gameCrumbs(g), eyebrow: g.type, tagline: g.tagline, heroImg: 'cover',
+      heroExtra: `${badges(g)}${g.storeNames ? `<p class="form-note" style="text-align:left">Listed as ${g.storeNames}.</p>` : ''}`,
+      about: g.about, shots: g.shots || [], aside: infoCard(g.info, true) + helpCard(g),
+    }),
   }));
 
   if (g.privacy) {
@@ -377,29 +379,13 @@ ${d.inApp ? `<h2>Delete it in the game</h2><p>${d.inApp}</p><h2>Or ask us by ema
 // ── OLDER PROJECT PAGES ────────────────────────────────────────────────────────────────────────────────────────
 
 Object.entries(OLD).forEach(([slug, p]) => {
-  const shots = (p.gallery || ['shot1', 'shot2', 'shot3']).map(s => `<img src="/assets/img/${slug}/${s}.webp" alt="" loading="lazy">`).join('');
-  const hero = p.hero || 'cover', wide = !!p.hero;
   write(`/${slug}/`, layout({
     url: `/${slug}/`, active: '/work/', title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
-    body: `
-<header class="game-hero">
-  <div class="game-hero-inner">
-    <div>
-      <p class="back-link"><a href="/work/">← Back to Our Work</a></p>
-      <p class="crumbs"><a href="/">Home</a> / <a href="/work/">Our Work</a> / ${esc(p.name)}</p>
-      <span class="page-eyebrow">✦ ${p.eyebrow}</span><h1 class="page-title">${esc(p.name)}</h1>
-      <p class="game-tagline">${p.tagline}</p>
-    </div>
-    <div style="max-width:${wide ? 560 : 340}px;justify-self:center"><img src="/assets/img/${slug}/${hero}.webp" alt="${esc(p.name)}" style="border:2.5px solid var(--ink);border-radius:18px;box-shadow:7px 7px 0 var(--ink);display:block${wide ? ';background:#fff' : ''}"></div>
-  </div>
-</header>
-<section class="section-wrap">
-  <div class="section-inner game-main">
-    <div class="prose fu"><h2>About the Game</h2>${p.about}<h3>Screenshots &amp; Art</h3><div class="shots wide">${shots}</div></div>
-    <aside><div class="info-card fu"><h2>Game info</h2><table class="info-table"><tbody>${p.info.map(([k, val]) => `<tr><th scope="row">${k}</th><td>${val}</td></tr>`).join('')}</tbody></table></div></aside>
-  </div>
-</section>
-${cta('Got a Game Idea?', "Let's build your next world together.")}`,
+    body: projectPage({
+      slug, name: p.name, crumbs: `<a href="/">Home</a> / <a href="/work/">Our Work</a> / ${esc(p.name)}`, eyebrow: p.eyebrow,
+      tagline: p.tagline, heroImg: p.hero || 'cover', heroWide: !!p.hero, about: p.about,
+      shots: p.gallery || ['shot1', 'shot2', 'shot3'], aside: infoCard(p.info),
+    }),
   }));
 });
 

@@ -298,6 +298,10 @@ h1.hero-headline{font-family:var(--slab);font-size:clamp(58px,7.5vw,108px);line-
 .game-art img{width:100%;height:100%;object-fit:cover;display:block}
 .game-art.cw{background:radial-gradient(ellipse at 50% 60%,#2b1260 0%,#0b0420 70%);display:flex;align-items:center;justify-content:center}
 .game-art.cw img{width:72%;height:auto;object-fit:contain}
+.cover-art{max-width:340px;width:100%;justify-self:center}
+.cover-art.wide{max-width:560px}
+.cover-art img{display:block;width:100%;height:auto;border:2.5px solid var(--ink);border-radius:18px;box-shadow:7px 7px 0 var(--ink);background:#111}
+.cover-art.wide img{background:#fff}
 .shots{display:flex;gap:16px;overflow-x:auto;padding:4px 4px 18px;scroll-snap-type:x mandatory}
 .shots img{height:440px;width:auto;border:2.5px solid var(--ink);border-radius:16px;flex-shrink:0;scroll-snap-align:start;background:#111}
 .shots.wide img{height:300px}
@@ -456,6 +460,7 @@ footer.site{background:var(--ink);color:#fff;padding:64px 52px 44px}
   .form-row{grid-template-columns:1fr}
   .game-hero-inner{padding:36px 16px}
   .game-id .app-icon{width:72px;height:72px;border-radius:17px}
+  .cover-art{max-width:280px}
   .shots img{height:360px}
   .doc{padding:44px 16px 72px}
   .app-body{padding:18px}
