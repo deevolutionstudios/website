@@ -35,15 +35,12 @@ All under `https://deevolutionstudios.com`. Google Play's "Website" field and Ap
 
 ## Deploying (Hostinger Git)
 
-One-time setup in hPanel (owner):
-1. Back up the current site: Websites → deevolutionstudios.com → Files → File manager → select everything in
-   `public_html` → Download (or Backups → Files).
-2. Websites → deevolutionstudios.com → Advanced → **Git**. Repository `https://github.com/deevolutionstudios/website.git`,
-   branch `main`, install path empty (`public_html`). For a private repo, add the SSH deploy key hPanel shows to the
-   GitHub repo (Settings → Deploy keys) and use the SSH URL instead.
-   Hostinger asks for `public_html` to be empty before the first deploy, which is why step 1 matters.
-3. Turn on **Auto deployment** and add the webhook URL hPanel shows to the GitHub repo (Settings → Webhooks), so every
-   push to `main` goes live.
+Every push to `main` goes live by itself: hPanel → Websites → deevolutionstudios.com → Advanced → **GIT** is
+connected through Hostinger's GitHub app (repo `website`, branch `main`, folder `public_html`) with
+**Auto-deployment** on. That page also lists each deployment and has **Redeploy**.
+
+Set up on October 23, 2026, after a backup (hPanel → Files → Backups; Hostinger also backs up daily). The files of the
+March 2026 site may still sit in `public_html` next to the new ones; `.htaccess` redirects their old addresses.
 
 After a deploy, check: https://deevolutionstudios.com/app-ads.txt shows the AdMob line as plain text, an old address
 like /game-candi.html redirects to /candi/, and a made-up address shows the 404 page.
