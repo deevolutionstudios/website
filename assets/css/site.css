@@ -79,6 +79,9 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;display:flex
 .crumbs{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;color:var(--muted)}
 .crumbs a{color:var(--muted);text-decoration:none}
 .crumbs a:hover{color:var(--red)}
+.back-link{margin-bottom:14px}
+.back-link a{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);text-decoration:none}
+.back-link a:hover{color:var(--ink)}
 
 /* ── HOME HERO ── */
 .hero{min-height:100vh;padding-top:72px;display:flex;align-items:flex-start;position:relative;overflow:hidden;background:#fff url(../img/studio/hero.webp) center bottom/cover no-repeat;border-bottom:2.5px solid var(--ink)}

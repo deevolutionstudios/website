@@ -280,7 +280,7 @@ ${cta("Got a Game Idea?", "We'd love to build your next world. Let's talk.")}`,
 
 // ── MOBILE GAME PAGES ──────────────────────────────────────────────────────────────────────────────────────────
 
-const gameCrumbs = (g, here) => `<a href="/">Home</a> / ${here ? `<a href="/${g.slug}/">${esc(g.shortName || g.name)}</a> / ${here}` : esc(g.shortName || g.name)}`;
+const gameCrumbs = (g, here) => `<a href="/">Home</a> / <a href="/work/">Our Work</a> / ${here ? `<a href="/${g.slug}/">${esc(g.name)}</a> / ${here}` : esc(g.name)}`;
 
 function helpCard(g) {
   const rows = [
@@ -297,12 +297,13 @@ MOBILE.forEach((g, i) => {
   const shots = (g.shots || []).map(s => `<img src="/assets/img/${g.slug}/${s}.webp" alt="" width="540" height="960" loading="lazy">`).join('');
   const prev = MOBILE[(i + MOBILE.length - 1) % MOBILE.length], next = MOBILE[(i + 1) % MOBILE.length];
   write(`/${g.slug}/`, layout({
-    url: `/${g.slug}/`, title: g.name, image: g.slug === 'colorwise' ? '/assets/img/colorwise/logo.webp' : `/assets/img/${g.slug}/feature.webp`,
+    url: `/${g.slug}/`, active: '/work/', title: g.name, image: g.slug === 'colorwise' ? '/assets/img/colorwise/logo.webp' : `/assets/img/${g.slug}/feature.webp`,
     description: `${g.name}: ${g.tagline}`,
     body: `
 <header class="game-hero">
   <div class="game-hero-inner">
     <div>
+      <p class="back-link"><a href="/work/">← Back to Our Work</a></p>
       <p class="crumbs">${gameCrumbs(g)}</p>
       <div class="game-id">${icon(g, 92)}<div><span class="page-eyebrow">✦ ${g.type}</span><h1 class="page-title small">${esc(g.name)}</h1></div></div>
       <p class="game-tagline">${g.tagline}</p>
@@ -330,7 +331,7 @@ ${shots ? `<section class="section-wrap" style="padding-bottom:40px"><div class=
 
   if (g.privacy) {
     write(`/${g.slug}/privacy/`, layout({
-      url: `/${g.slug}/privacy/`, title: `${g.shortName || g.name} Privacy Policy`,
+      url: `/${g.slug}/privacy/`, active: '/work/', title: `${g.shortName || g.name} Privacy Policy`,
       description: `What information ${g.name} collects, why, and the choices you have.`,
       body: `${pageHeader('Privacy Policy', esc(g.name), null, { small: true, crumbs: gameCrumbs(g, 'Privacy') })}
 <article class="doc"><div class="prose">
@@ -342,7 +343,7 @@ ${policy(g.privacy)}
   }
   if (g.terms) {
     write(`/${g.slug}/terms/`, layout({
-      url: `/${g.slug}/terms/`, title: `${g.shortName || g.name} Terms of Use`,
+      url: `/${g.slug}/terms/`, active: '/work/', title: `${g.shortName || g.name} Terms of Use`,
       description: `The terms for playing ${g.name}.`,
       body: `${pageHeader('Terms of Use', esc(g.name), null, { small: true, crumbs: gameCrumbs(g, 'Terms') })}
 <article class="doc"><div class="prose">
@@ -357,7 +358,7 @@ function deletePage(g) {
   const d = g.deletion, n = esc(g.name);
   const list = a => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
   return layout({
-    url: `/${g.slug}/delete/`, title: `Delete your ${g.shortName || g.name} data`,
+    url: `/${g.slug}/delete/`, active: '/work/', title: `Delete your ${g.shortName || g.name} data`,
     description: `How to delete your ${g.name} account and data, made by De-Evolution Studios.`,
     body: `${pageHeader('Account &amp; data deletion', `Delete your ${esc(g.shortName || g.name)} data`, null, { small: true, crumbs: gameCrumbs(g, 'Delete your data') })}
 <article class="doc"><div class="prose">
@@ -379,11 +380,12 @@ Object.entries(OLD).forEach(([slug, p]) => {
   const shots = (p.gallery || ['shot1', 'shot2', 'shot3']).map(s => `<img src="/assets/img/${slug}/${s}.webp" alt="" loading="lazy">`).join('');
   const hero = p.hero || 'cover', wide = !!p.hero;
   write(`/${slug}/`, layout({
-    url: `/${slug}/`, title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
+    url: `/${slug}/`, active: '/work/', title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
     body: `
 <header class="game-hero">
   <div class="game-hero-inner">
     <div>
+      <p class="back-link"><a href="/work/">← Back to Our Work</a></p>
       <p class="crumbs"><a href="/">Home</a> / <a href="/work/">Our Work</a> / ${esc(p.name)}</p>
       <span class="page-eyebrow">✦ ${p.eyebrow}</span><h1 class="page-title">${esc(p.name)}</h1>
       <p class="game-tagline">${p.tagline}</p>
