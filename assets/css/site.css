@@ -177,7 +177,7 @@ h1.hero-headline{font-family:var(--slab);font-size:clamp(58px,7.5vw,108px);line-
 .band-green{background:var(--green)} .band-red{background:var(--red)}
 .band-inner{max-width:1260px;margin:0 auto}
 .band-split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.band-logo{width:200px;margin-bottom:32px;filter:brightness(0) invert(1);opacity:.9}
+.band-logo{width:200px;height:auto;margin-bottom:32px;filter:brightness(0) invert(1);opacity:.9}
 .band-title{font-family:var(--slab);font-size:clamp(44px,5vw,72px);line-height:.95;color:#fff;margin-bottom:24px}
 .band-title .hollow{-webkit-text-stroke:2.5px rgba(255,255,255,.7);color:transparent}
 .band-body{font-size:1rem;color:rgba(255,255,255,.85);line-height:1.75}
