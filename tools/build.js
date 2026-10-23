@@ -579,15 +579,14 @@ write('/contact/', layout({
 write('/privacy/', layout({
   url: '/privacy/', title: 'Privacy',
   description: 'Privacy for deevolutionstudios.com, and links to the privacy policy of each De-Evolution Studios game.',
-  body: `<div class="draft-banner">Draft for the owner's review · not yet published</div>
-${pageHeader('Privacy', 'Privacy at<br>De-Evolution.', null, { small: true })}
+  body: `${pageHeader('Privacy', 'Privacy at<br>De-Evolution.', null, { small: true })}
 <article class="doc"><div class="prose">
 <h2>Our games</h2>
 <p>Each game has its own privacy policy, because each one uses different services:</p>
 <ul>${MOBILE.map(g => g.privacy ? `<li><a href="/${g.slug}/privacy/">${esc(g.name)} privacy policy</a> · <a href="/${g.slug}/delete/">delete your data</a></li>` : `<li>${esc(g.name)}: its policy will be published here before the apps launch.</li>`).join('')}</ul>
 
 <h2>This website</h2>
-<p class="meta">deevolutionstudios.com · Effective <span class="fill">[date of publishing]</span></p>
+<p class="meta">deevolutionstudios.com · Effective October 23, 2026</p>
 <p>This notice covers the website deevolutionstudios.com, run by DE-EVOLUTION STUDIOS LLC ("we", "us"). The games
 (including their web versions at candi.deevolutionstudios.com and play.deevolutionstudios.com) are covered by their
 own policies above.</p>
