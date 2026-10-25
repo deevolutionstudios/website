@@ -13,7 +13,7 @@ const MOBILE = [
     tagline: 'Hold to float, let go to hop! Help Candi cross the spooky-cute swamp without getting her boots wet.',
     short: 'A one-touch hopping game with a spooky-cute twist. Remastered for 2026.',
     appStore: { id: '6825680669', live: false },
-    play: { id: 'com.deevolutionstudios.swamphop', live: false },
+    play: { id: 'com.deevolutionstudios.swamphop', live: true },
     web: 'https://candi.deevolutionstudios.com',
     shots: ['1-float', '2-bat', '3-new-best', '4-wardrobe'],
     info: [['Platforms', 'iPhone, Android, web'], ['Genre', 'Arcade'], ['Age', '13+'], ['Price', 'Free, with optional packs'], ['Account', 'Optional (leaderboard)']],
