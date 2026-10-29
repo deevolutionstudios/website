@@ -42,9 +42,10 @@
     });
   });
 
-  // Contact form (Formspree): send without leaving the page, keep the normal post as the no-JS fallback.
-  var form = document.getElementById('contactForm');
-  var done = document.getElementById('formSuccess');
+  // Contact and tester forms (Formspree): send without leaving the page, keep the normal post as the no-JS fallback.
+  [['contactForm', 'formSuccess'], ['testerForm', 'testerSuccess']].forEach(function (ids) {
+  var form = document.getElementById(ids[0]);
+  var done = document.getElementById(ids[1]);
   if (form && done) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -59,4 +60,5 @@
         .catch(function () { b.textContent = 'Something went wrong. Try again'; b.disabled = false; });
     });
   }
+  });
 })();

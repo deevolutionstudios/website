@@ -3,8 +3,17 @@
 // a one-line summary for the list, and the body as HTML. Optional: game (a game's slug, for its icon and a link),
 // image (a path under /assets/img/). Then run `node tools/build.js`.
 // draft: true keeps a post off the site (no page, not in the list) until you remove it.
+// testers: a game's slug (or true for any game) adds a "Want to test it?" box linking to the sign-up page.
 
-module.exports = [
+// Games people can sign up to test at /testers/ (the sign-up form's choices). Only list a game once it may be named
+// publicly. "Anything new" is always there.
+const testing = [
+  { slug: 'elementra', name: 'Elementra: Dragon Academy' },
+  { slug: 'd2048', name: 'D2048: Merge Dungeon' },
+  { slug: 'colorwise', name: 'Colorwise' },
+];
+
+const posts = [
   {
     slug: 'candi-on-google-play',
     date: '2026-10-25',
@@ -35,3 +44,5 @@ and a Dragon, play your cards for their discard effects, and mess with your frie
 and we'll let you know when they arrive.</p>`,
   },
 ];
+
+module.exports = { posts, testing };

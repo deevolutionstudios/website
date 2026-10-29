@@ -14,7 +14,6 @@ const MOBILE = [
     short: 'A one-touch hopping game with a spooky-cute twist. Remastered for 2026.',
     appStore: { id: '6825680669', live: false },
     play: { id: 'com.deevolutionstudios.swamphop', live: true },
-    web: 'https://candi.deevolutionstudios.com',
     shots: ['1-float', '2-bat', '3-new-best', '4-wardrobe'],
     info: [['Platforms', 'iPhone, Android, web'], ['Genre', 'Arcade'], ['Age', '13+'], ['Price', 'Free, with optional packs'], ['Account', 'Optional (leaderboard)']],
     about: `
@@ -119,7 +118,6 @@ on is a boss fight: a skeleton, the Orc War Chief, the Lich, the Wizard and fina
     short: 'A fast fantasy card duel for 2 to 4 players, online or against the computer.',
     appStore: { id: '6826172343', live: false },
     play: { id: 'com.deevolutionstudios.elementra', live: false },
-    web: 'https://play.deevolutionstudios.com',
     shots: ['01-home', '02-game', '04-collection', '05-shop'],
     info: [['Platforms', 'iPhone, iPad, Android, web'], ['Genre', 'Card / Strategy'], ['Age', '9+ (accounts 13+)'], ['Price', 'Free, with optional purchases. No ads'], ['Players', '2–4 online, or vs the computer']],
     about: `
@@ -143,7 +141,7 @@ players.</p>`,
     terms: 'elementra-terms.html',
     deletion: {
       account: 'You only have an Elementra account if you signed in (with your email, Google or Apple). Playing against the computer needs no account.',
-      inApp: 'In the app or at play.deevolutionstudios.com, sign in and go to <strong>Profile → Account → Delete account</strong>. It takes effect straight away.',
+      inApp: 'In the app, sign in and go to <strong>Profile → Account → Delete account</strong>. It takes effect straight away.',
       steps: [
         `Can't sign in any more? Email ${mail('Elementra: delete my account')} <strong>from the email address on the account</strong>, with the subject “Elementra: delete my account”, and your player name if you remember it.`,
         'We check that the request comes from the account’s address, then delete the account.',
@@ -151,7 +149,7 @@ players.</p>`,
       ],
       deleted: ['Your sign-in and email address', 'Your player profile: name, picture, frame and friend code', 'Your progress and collection: cards, upgrades, crystals, shards, quests, events and items', 'Your friends list, friend requests and table invites', 'The codes you have redeemed'],
       kept: ['App Store and Google Play keep their own record of purchases you made, under their own privacy policies.', 'Technical logs and error reports on our game server are kept only for a short time (error reports up to 30 days).', 'Anonymous game statistics and crash reports from the apps aren’t linked to your account and are deleted by Google after a limited time.'],
-      device: 'Settings saved in your browser or on your device (sound, card display, tutorial progress) are removed when you uninstall the app or clear the site’s data.',
+      device: 'Settings saved on your device (sound, card display, tutorial progress) are removed when you uninstall the app.',
     },
     faq: [
       ['I bought something. How do I get it back?', 'Sign in with the same account, open the <strong>Shop</strong> and tap <strong>Restore Purchases</strong> at the bottom, signed in to the same App Store or Google Play account you paid with.'],
@@ -169,9 +167,8 @@ players.</p>`,
     short: 'Swipe toward the color the word says, not the color it’s painted. Coming to phones.',
     appStore: { live: false },
     play: { live: false },
-    web: 'https://colorrun.onrender.com',
     comingSoon: true,
-    info: [['Platforms', 'Web now; iPhone and Android coming'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
+    info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
     about: `
 <p>Colorwise is a neon rhythm game of colors that lie. Gates fly at you on the beat: swipe toward the color the word
 <em>says</em> and ignore the color it's painted. If that color isn't on the ring, tap. And when a gold ring appears,
@@ -181,7 +178,7 @@ the rule flips.</p>
   <li>Earn Prisms as you play and spend them on skins for the gate wheel, the tunnel and the sky</li>
   <li>World leaderboards per track, weekly and all-time</li>
 </ul>
-<p>Colorwise is coming to iPhone and Android. Until then, play it in your browser.</p>`,
+<p>Colorwise is coming to iPhone and Android.</p>`,
     // DRAFT (Oct 29, 2026): written from the ColorRun code for the owner's review; see the note in the policy file.
     privacy: 'colorwise-privacy.html',
     deletion: {
@@ -193,10 +190,10 @@ the rule flips.</p>
       ],
       deleted: ['Your player name and your place on the leaderboards', 'Your best scores on every track', 'Your Prisms, skins and chosen look saved with your account', 'For a whole-account deletion: your sign-in (email address and the Google or Apple sign-in link)'],
       kept: ['Nothing else: Colorwise sends no game statistics, crash reports or ad data, so there is nothing more to delete.', 'Once the phone apps are out, App Store and Google Play will keep their own record of anything you buy.'],
-      device: 'Everything the game saves in your browser or on your phone (scores, settings, Prisms and skins) is deleted when you clear the site’s data or uninstall the app.',
+      device: 'Everything the game saves on your phone (scores, settings, Prisms and skins) is deleted when you uninstall the app.',
     },
     faq: [
-      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Play the web version in the meantime.'],
+      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Follow our news page to hear first, or sign up to test it.'],
       ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
     ],
   },

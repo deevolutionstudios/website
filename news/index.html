@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>News &amp; Devlog — De-Evolution Studios</title>
-<meta name="description" content="News, launches and behind-the-scenes notes from De-Evolution Studios.">
+<meta name="description" content="News, launches, tester calls and behind-the-scenes notes from De-Evolution Studios.">
 <link rel="canonical" href="https://deevolutionstudios.com/news/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="De-Evolution Studios">
 <meta property="og:title" content="News &amp; Devlog — De-Evolution Studios">
-<meta property="og:description" content="News, launches and behind-the-scenes notes from De-Evolution Studios.">
+<meta property="og:description" content="News, launches, tester calls and behind-the-scenes notes from De-Evolution Studios.">
 <meta property="og:image" content="https://deevolutionstudios.com/assets/img/studio/hero.webp?v=4ee9d46e">
 <meta property="og:url" content="https://deevolutionstudios.com/news/">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,9 +19,10 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="De-Evolution Studios news" href="/news/feed.xml">
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=tnnx39">
-<script defer src="/assets/js/site.js?v=tnnwys"></script>
+<link rel="stylesheet" href="/assets/css/site.css?v=tnny54">
+<script defer src="/assets/js/site.js?v=tnny54"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7266c15388174b1e8c991502c03aca7a"}'></script>
 </head>
 <body>
@@ -44,15 +45,20 @@
       <span class="page-eyebrow">✦ News &amp; Devlog</span>
       <h1 class="page-title">What We’re<br>Building.</h1>
     </div>
-    <p class="page-sub">Launches, updates and notes from the workshop.</p>
+    <p class="page-sub">Launches, updates, tester calls and notes from the workshop.</p>
   </div>
 </header>
-<section class="doc"><div class="post-list">
-<a class="post-card fu" href="/news/candi-on-google-play/">
-  <img src="/assets/img/candi/icon.webp?v=d3c51d5b" alt="" width="56" height="56" loading="lazy">
-  <div><p class="post-date">October 25, 2026</p><h2>Candi's Swamp Hop is out on Google Play</h2><p>Candi is hopping through the swamp on Android now. The iPhone version is with Apple for review.</p></div>
+<section class="news-wrap">
+<a class="post-lead fu" href="/news/candi-on-google-play/" data-game="candi">
+  <img src="/assets/img/candi/feature.webp?v=1b72bf4f" alt="" width="1024" height="500">
+  <div class="post-lead-body"><p class="post-date">Latest · October 25, 2026</p><h2>Candi's Swamp Hop is out on Google Play</h2><p>Candi is hopping through the swamp on Android now. The iPhone version is with Apple for review.</p><span class="post-more">Read more →</span></div>
 </a>
-</div></section>
+
+
+<div class="tester-box"><div><strong>Want to test our next game?</strong><p>Get early builds before anyone else and help us make them better.</p></div><a class="btn-solid btn-sm" href="/testers/">Become a tester</a></div>
+<p class="rss-line"><a href="/news/feed.xml">RSS feed</a></p>
+</section>
+<script>document.querySelectorAll('.news-filter button').forEach(function(b){b.addEventListener('click',function(){var f=b.dataset.f;document.querySelectorAll('.news-filter button').forEach(function(x){x.classList.toggle('on',x===b)});document.querySelectorAll('.post-lead,.post-card').forEach(function(c){c.hidden=!!f&&c.dataset.game!==f})})});</script>
 </main>
 <footer class="site">
   <div class="footer-inner">

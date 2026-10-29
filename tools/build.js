@@ -7,7 +7,8 @@
 const fs = require('fs');
 const path = require('path');
 const { CONTACT, mail, MOBILE, PROJECTS, OLD } = require('./games');
-const NEWS = require('./news').filter(p => !p.draft).sort((a, b) => b.date.localeCompare(a.date));
+const { posts: ALL_POSTS, testing: TESTING } = require('./news');
+const NEWS = ALL_POSTS.filter(p => !p.draft).sort((a, b) => b.date.localeCompare(a.date));
 
 const ROOT = path.join(__dirname, '..');
 const SITE = 'https://deevolutionstudios.com';
@@ -73,6 +74,7 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="De-Evolution Studios news" href="/news/feed.xml">
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${v('assets/css/site.css')}">
 <script defer src="${v('assets/js/site.js')}"></script>
@@ -144,7 +146,7 @@ const cta = (title = 'Got a Game Idea?', sub = "Let's get it out of your head an
 const appStoreUrl = g => `https://apps.apple.com/app/id${g.appStore.id}`;
 const playUrl = g => `https://play.google.com/store/apps/details?id=${g.play.id}`;
 
-function badges(g, { web = true } = {}) {
+function badges(g) {
   const apple = '<img class="apple" src="/assets/img/badges/app-store.svg" alt="Download on the App Store" width="132" height="44">';
   const google = '<img class="google" src="/assets/img/badges/google-play.png" alt="Get it on Google Play" width="168" height="65">';
   const one = (live, href, img, label) => live
@@ -153,7 +155,6 @@ function badges(g, { web = true } = {}) {
   return `<div class="stores">
     ${one(g.appStore.live, g.appStore.id && appStoreUrl(g), apple, 'App Store')}
     ${one(g.play.live, g.play.id && playUrl(g), google, 'Google Play')}
-    ${web && g.web ? `<a class="web-play" href="${g.web}" rel="noopener">▶ Play on the web</a>` : ''}
   </div>`;
 }
 
@@ -583,29 +584,75 @@ write('/contact/', layout({
 
 const newsDate = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 const newsGame = p => p.game && MOBILE.find(g => g.slug === p.game);
+const newsImg = p => p.image || (newsGame(p) && newsGame(p).slug !== 'colorwise' ? `/assets/img/${p.game}/feature.webp` : null);
+const testerBox = p => p.testers ? (() => { const g = typeof p.testers === 'string' && MOBILE.find(x => x.slug === p.testers);
+  return `<div class="tester-box"><div><strong>Want to play it before anyone else?</strong><p>We're looking for testers${g ? ` for ${esc(g.name)}` : ''}. Sign up and we'll get in touch when there's a build to try.</p></div><a class="btn-solid btn-sm" href="/testers/${g ? `?game=${g.slug}` : ''}">Become a tester</a></div>`; })() : '';
+const gamesInNews = [...new Set(NEWS.map(p => p.game).filter(Boolean))].map(s => MOBILE.find(g => g.slug === s)).filter(Boolean);
+const [lead, ...rest] = NEWS;
 write('/news/', layout({
   url: '/news/', active: '/news/', title: 'News & Devlog',
-  description: 'News, launches and behind-the-scenes notes from De-Evolution Studios.',
-  body: `${pageHeader('News &amp; Devlog', 'What We’re<br>Building.', 'Launches, updates and notes from the workshop.')}
-<section class="doc"><div class="post-list">
-${NEWS.length ? NEWS.map(p => { const g = newsGame(p); return `<a class="post-card fu" href="/news/${p.slug}/">
+  description: 'News, launches, tester calls and behind-the-scenes notes from De-Evolution Studios.',
+  body: `${pageHeader('News &amp; Devlog', 'What We’re<br>Building.', 'Launches, updates, tester calls and notes from the workshop.')}
+<section class="news-wrap">
+${lead ? `<a class="post-lead fu" href="/news/${lead.slug}/" data-game="${lead.game || ''}">
+  ${newsImg(lead) ? `<img src="${newsImg(lead)}" alt="" width="1024" height="500">` : ''}
+  <div class="post-lead-body"><p class="post-date">Latest · ${newsDate(lead.date)}</p><h2>${esc(lead.title)}</h2><p>${esc(lead.summary)}</p><span class="post-more">Read more →</span></div>
+</a>` : '<p>No news yet. Check back soon.</p>'}
+${gamesInNews.length > 1 ? `<div class="news-filter" role="group" aria-label="Filter by game"><button type="button" class="on" data-f="">All</button>${gamesInNews.map(g => `<button type="button" data-f="${g.slug}">${esc(g.shortName || g.name)}</button>`).join('')}</div>` : ''}
+${rest.length ? `<div class="post-grid">${rest.map(p => { const g = newsGame(p); return `<a class="post-card fu" href="/news/${p.slug}/" data-game="${p.game || ''}">
   ${g ? `<img src="/assets/img/${g.slug}/icon.webp" alt="" width="56" height="56" loading="lazy">` : ''}
   <div><p class="post-date">${newsDate(p.date)}</p><h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p></div>
-</a>`; }).join('\n') : '<p>No news yet. Check back soon.</p>'}
-</div></section>`,
+</a>`; }).join('\n')}</div>` : ''}
+<div class="tester-box"><div><strong>Want to test our next game?</strong><p>Get early builds before anyone else and help us make them better.</p></div><a class="btn-solid btn-sm" href="/testers/">Become a tester</a></div>
+<p class="rss-line"><a href="/news/feed.xml">RSS feed</a></p>
+</section>
+<script>document.querySelectorAll('.news-filter button').forEach(function(b){b.addEventListener('click',function(){var f=b.dataset.f;document.querySelectorAll('.news-filter button').forEach(function(x){x.classList.toggle('on',x===b)});document.querySelectorAll('.post-lead,.post-card').forEach(function(c){c.hidden=!!f&&c.dataset.game!==f})})});</script>`,
 }));
 NEWS.forEach(p => {
-  const g = newsGame(p);
+  const g = newsGame(p), img = newsImg(p);
   write(`/news/${p.slug}/`, layout({
-    url: `/news/${p.slug}/`, active: '/news/', title: p.title, description: p.summary, image: p.image,
+    url: `/news/${p.slug}/`, active: '/news/', title: p.title, description: p.summary, image: img || undefined,
     body: `${pageHeader(newsDate(p.date), esc(p.title), null, { small: true, crumbs: '<a href="/">Home</a> / <a href="/news/">News</a>' })}
 <article class="doc"><div class="prose">
-${p.image ? `<img src="${p.image}" alt="" style="width:100%;border-radius:16px;margin-bottom:24px">` : ''}${p.body.trim()}
+${img ? `<img class="post-hero" src="${img}" alt="" width="1024" height="500">` : ''}${p.body.trim()}
+${testerBox(p)}
 ${g ? `<p style="margin-top:28px"><a href="/${g.slug}/">More about ${esc(g.name)} →</a></p>` : ''}
 <p><a href="/news/">← All news</a></p>
 </div></article>`,
   }));
 });
+const xml = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+fs.writeFileSync(path.join(ROOT, 'news/feed.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>De-Evolution Studios news</title><link>${SITE}/news/</link><description>News, launches and tester calls from De-Evolution Studios.</description><language>en</language>
+${NEWS.map(p => `<item><title>${xml(p.title)}</title><link>${SITE}/news/${p.slug}/</link><guid>${SITE}/news/${p.slug}/</guid><pubDate>${new Date(p.date + 'T12:00:00Z').toUTCString()}</pubDate><description>${xml(p.summary)}</description></item>`).join('\n')}
+</channel></rss>
+`);
+
+// ── TESTER SIGN-UP (Formspree, like the contact form) ──────────────────────────────────────────────────────────
+
+write('/testers/', layout({
+  url: '/testers/', title: 'Become a tester',
+  description: 'Sign up to test De-Evolution Studios games before they are released.',
+  body: `${pageHeader('Testers wanted', 'Play It<br>First.', 'Get early builds of our games before anyone else, and help us make them better.')}
+<section class="doc"><div class="prose">
+<p>When a game is ready for testing, we'll email you an invite for TestFlight (iPhone) or Google Play testing (Android).
+Testing is free, and you can stop at any time.</p>
+<form class="contact-form tester-form" id="testerForm" action="https://formspree.io/f/meepjead" method="POST">
+  <input type="hidden" name="_subject" value="Tester sign-up">
+  <input type="hidden" name="form" value="tester sign-up">
+  <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="name" autocomplete="name" required></div>
+  <div class="form-group"><label for="temail">Email address</label><input type="email" id="temail" name="email" autocomplete="email" required></div>
+  <div class="form-group"><label for="tgame">Which game?</label><select id="tgame" name="game">${TESTING.map(t => `<option value="${t.slug}">${esc(t.name)}</option>`).join('')}<option value="any">Anything new you're working on</option></select></div>
+  <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="phone"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
+  <div class="form-group"><label for="tnote">Anything else? (optional)</label><textarea id="tnote" name="message" placeholder="What games do you like to play?"></textarea></div>
+  <button type="submit" class="form-submit">Sign me up →</button>
+  <p class="form-note">We'll only use your details to invite you to tests. Your sign-up is sent through Formspree; see our <a href="/privacy/#testers">privacy notice</a>.</p>
+</form>
+<div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>You're on the list!</h3><p>Thanks for signing up. We'll email you when there's something to test. In the meantime, see <a href="/news/">what we're building</a>.</p></div>
+</div></section>
+<script>(function(){var g=new URLSearchParams(location.search).get('game'),s=document.getElementById('tgame');if(g&&s&&s.querySelector('option[value="'+g+'"]'))s.value=g;})();</script>`,
+}));
 
 // ── PRIVACY (this website) AND IMPRESSUM ───────────────────────────────────────────────────────────────────────
 
@@ -620,9 +667,7 @@ write('/privacy/', layout({
 
 <h2>This website</h2>
 <p class="meta">deevolutionstudios.com · Effective ${CF_ANALYTICS_TOKEN && CF_ANALYTICS_SINCE ? CF_ANALYTICS_SINCE : 'October 23, 2026'}</p>
-<p>This notice covers the website deevolutionstudios.com, run by DE-EVOLUTION STUDIOS LLC ("we", "us"). The games
-(including their web versions at candi.deevolutionstudios.com and play.deevolutionstudios.com) are covered by their
-own policies above.</p>
+<p>This notice covers the website deevolutionstudios.com, run by DE-EVOLUTION STUDIOS LLC ("we", "us"). The games are covered by their own policies above.</p>
 <h3>Visiting the site</h3>
 ${CF_ANALYTICS_TOKEN ? `<p>The site has no accounts and no advertising, and it sets no cookies. To count visits we use Cloudflare Web
 Analytics: when a page loads, it records the page, where the visit came from (the referring site), your browser and
@@ -640,6 +685,11 @@ third party to show these pages. Store badges link to the App Store and Google P
 message you enter are sent to us through Formspree, which delivers them to our inbox. We use them only to answer you,
 and delete them when they are no longer needed for that. See <a href="https://formspree.io/legal/privacy-policy/">Formspree's
 privacy policy</a>. If you email us directly, your email is handled by our email provider, Hostinger.</p>
+<h3 id="testers">Signing up as a tester</h3>
+<p>If you sign up on the <a href="/testers/">tester page</a>, the name, email address, game, phone type and note you
+enter are sent to us through Formspree, the same way as the contact form. We use them only to invite you to test our
+games (by email, and by adding your email to Apple's TestFlight or Google Play's testing list for that game, whose own
+policies then apply). We delete them when you ask us to, or when we no longer run tests you signed up for.</p>
 <h3>Your rights</h3>
 <p>You can ask us for a copy of the information we hold about you, or ask us to correct or delete it, by emailing
 <a href="mailto:${CONTACT}">${CONTACT}</a>. If you live in the European Union or the UK, you can also object to how
