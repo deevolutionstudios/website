@@ -643,7 +643,7 @@ Testing is free, and you can stop at any time.</p>
   <input type="hidden" name="form" value="tester sign-up">
   <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="name" autocomplete="name" required></div>
   <div class="form-group"><label for="temail">Email address</label><input type="email" id="temail" name="email" autocomplete="email" required></div>
-  <div class="form-group"><label for="tgame">Which game?</label><select id="tgame" name="game">${TESTING.map(t => `<option value="${t.slug}">${esc(t.name)}</option>`).join('')}<option value="any">Anything new you're working on</option></select></div>
+  <div class="form-group"><label for="tgame">Which game?</label><select id="tgame" name="game">${TESTING.map(t => `<option value="${t.slug}">${esc(t.name)}</option>`).join('')}</select></div>
   <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="phone"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
   <div class="form-group"><label for="tnote">Anything else? (optional)</label><textarea id="tnote" name="message" placeholder="What games do you like to play?"></textarea></div>
   <button type="submit" class="form-submit">Sign me up →</button>

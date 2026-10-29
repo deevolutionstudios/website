@@ -5,15 +5,30 @@
 // draft: true keeps a post off the site (no page, not in the list) until you remove it.
 // testers: a game's slug (or true for any game) adds a "Want to test it?" box linking to the sign-up page.
 
-// Games people can sign up to test at /testers/ (the sign-up form's choices). Only list a game once it may be named
-// publicly. "Anything new" is always there.
+// Games people can sign up to test at /testers/ (the sign-up form's choices). Only these, the owner's call (Oct 29).
 const testing = [
-  { slug: 'elementra', name: 'Elementra: Dragon Academy' },
   { slug: 'd2048', name: 'D2048: Merge Dungeon' },
-  { slug: 'colorwise', name: 'Colorwise' },
+  { slug: 'elementra', name: 'Elementra: Dragon Academy' },
+  { slug: 'glimmlings', name: 'Glimmlings (our new merge game)' },
 ];
 
 const posts = [
+  {
+    slug: 'd2048-final-testing',
+    date: '2026-10-29',
+    title: 'D2048: Merge Dungeon is in its final round of testing',
+    summary: 'The new D2048 is nearly ready, and we\'re looking for players to try it before it comes out.',
+    game: 'd2048',
+    testers: 'd2048',
+    body: `
+<p>The new D2048: Merge Dungeon is almost here. We're in the final round of testing, and we'd love a few more players
+to try it before it comes out.</p>
+<p>It's the 2048 you know, gone dungeon crawling: merge coins into gems and treasure chests, spend your gold on swords,
+hammers and potions, and keep your best treasure away from the skeletons and orcs that try to run off with it. Travel
+60 levels across six lands, with boss fights against the Orc War Chief, the Lich, the Wizard and finally the Dragon.</p>
+<p>As a tester you'll get the game early on your iPhone or Android phone, play it like you normally would, and tell us
+what you think: what's fun, what's too hard, and anything that breaks.</p>`,
+  },
   {
     slug: 'candi-on-google-play',
     date: '2026-10-25',

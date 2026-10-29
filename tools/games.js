@@ -193,7 +193,7 @@ the rule flips.</p>
       device: 'Everything the game saves on your phone (scores, settings, Prisms and skins) is deleted when you uninstall the app.',
     },
     faq: [
-      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Follow our news page to hear first, or sign up to test it.'],
+      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Follow our news page to hear when it’s out.'],
       ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
     ],
   },
