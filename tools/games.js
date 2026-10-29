@@ -198,6 +198,34 @@ the rule flips.</p>
       ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
     ],
   },
+  {
+    // Coming soon (Oct 29, 2026). No privacy policy yet: write one from the creature-keepers code before the apps ship.
+    slug: 'glimmlings',
+    name: 'Glimmlings',
+    type: 'Mobile game · Merge',
+    tagline: 'Merge, guess and catch. A cozy creature-keeping adventure.',
+    short: 'Merge the things a little creature wants, work out what it likes and catch it. Coming to phones.',
+    appStore: { live: false },
+    play: { live: false },
+    comingSoon: true,
+    info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Merge / Creature collecting'], ['Price', 'Free'], ['Testing', '<a href="/testers/?game=glimmlings">Sign up to test it</a>']],
+    about: `
+<p>You've come to spend the summer at Grandma's, to train with Grandpa as a Keeper. But Grandpa has been called away,
+and the Glimmlings, the little creatures that live all around the cottage, have made a mess of his workshop.</p>
+<p>Every Glimmling wants something, and it won't tell you what. Merge thread into rope and berries into jam, offer it
+things and watch how it reacts: it backs away from the wrong kind, and its eyes light up when you're close. Guess right
+and catch it with a seed charm.</p>
+<ul>
+  <li>Discover creatures hiding in the bushes, each with its own likes</li>
+  <li>Raise them in their pens and evolve them with gems from the Glimmer well</li>
+  <li>Fill Grandpa's Keeper's journal and follow the story around Grandma's</li>
+</ul>
+<p>Glimmlings is coming to iPhone and Android. Want to play it early? <a href="/testers/?game=glimmlings">Sign up to test it</a>.</p>`,
+    faq: [
+      ['When is Glimmlings coming out?', 'We’re still building it. Follow our news page to hear when it’s out, or sign up to test it early.'],
+      ['Can I test it?', 'Yes. Sign up on our <a href="/testers/?game=glimmlings">testers page</a> and we’ll be in touch.'],
+    ],
+  },
 ];
 
 // Older and tabletop projects, as on the March 2026 site.

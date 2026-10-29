@@ -13,11 +13,13 @@ const SOURCES = [
   { out: 'd2048-privacy.html', from: 'D2048/D2048-release/privacy.html' },
   { out: 'elementra-privacy.html', from: 'Development/Elementra/public/privacy.html' },
   { out: 'elementra-terms.html', from: 'Development/Elementra/public/terms.html' },
+  { out: 'colorwise-privacy.html', from: 'Development/ColorRun/web/privacy.html' },
 ];
 // Links inside the policies that point at the game's own site, rewritten to the studio-site pages.
 const LINKS = [
   [/href="privacy\.html"/g, 'href="/elementra/privacy/"'],
   [/href="terms\.html"/g, 'href="/elementra/terms/"'],
+  [/href="https:\/\/deevolutionstudios\.com\//g, 'href="/'],
 ];
 
 for (const s of SOURCES) {
