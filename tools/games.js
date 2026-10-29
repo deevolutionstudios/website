@@ -168,6 +168,7 @@ players.</p>`,
     appStore: { live: false },
     play: { live: false },
     comingSoon: true,
+    shots: ['01-gates', '02-gold-ring', '03-results', '04-store'],
     info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
     about: `
 <p>Colorwise is a neon rhythm game of colors that lie. Gates fly at you on the beat: swipe toward the color the word
