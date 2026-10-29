@@ -182,8 +182,22 @@ the rule flips.</p>
   <li>World leaderboards per track, weekly and all-time</li>
 </ul>
 <p>Colorwise is coming to iPhone and Android. Until then, play it in your browser.</p>`,
+    // DRAFT (Oct 29, 2026): written from the ColorRun code for the owner's review; see the note in the policy file.
+    privacy: 'colorwise-privacy.html',
+    deletion: {
+      account: 'You only have an account if you signed in to the world leaderboards (with your email, Google or Apple). Playing without signing in needs no account. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
+      steps: [
+        `Email ${mail('Colorwise: delete my account')} <strong>from the email address you signed in with</strong> (for Sign in with Apple's “Hide My Email”, from the Apple ID that address forwards to), with the subject “Colorwise: delete my account”.`,
+        'Say whether you want the whole account deleted (for every game that uses it) or only your Colorwise information.',
+        'We check that the request comes from the account’s address, delete what you asked for and confirm by email within 30 days.',
+      ],
+      deleted: ['Your player name and your place on the leaderboards', 'Your best scores on every track', 'Your Prisms, skins and chosen look saved with your account', 'For a whole-account deletion: your sign-in (email address and the Google or Apple sign-in link)'],
+      kept: ['Nothing else: Colorwise sends no game statistics, crash reports or ad data, so there is nothing more to delete.', 'Once the phone apps are out, App Store and Google Play will keep their own record of anything you buy.'],
+      device: 'Everything the game saves in your browser or on your phone (scores, settings, Prisms and skins) is deleted when you clear the site’s data or uninstall the app.',
+    },
     faq: [
       ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Play the web version in the meantime.'],
+      ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
     ],
   },
 ];

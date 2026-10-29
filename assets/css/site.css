@@ -471,3 +471,13 @@ footer.site{background:var(--ink);color:#fff;padding:64px 52px 44px}
 @media (max-width:400px){
   .support-grid{grid-template-columns:1fr 1fr;gap:10px}
 }
+
+/* ── NEWS & DEVLOG ── */
+.post-list{display:flex;flex-direction:column;gap:18px}
+.post-card{display:flex;gap:20px;align-items:flex-start;padding:24px 26px;background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;text-decoration:none;color:var(--ink);transition:transform .18s,box-shadow .18s}
+.post-card:hover{transform:translateY(-3px);box-shadow:6px 6px 0 var(--ink)}
+.post-card img{flex-shrink:0;width:56px;height:56px;border-radius:14px}
+.post-card h2{font-family:var(--slab);font-weight:400;font-size:clamp(22px,2.4vw,28px);line-height:1.1;margin:4px 0 8px}
+.post-card p{color:#444;font-size:.98rem;margin:0}
+.post-date{font-family:var(--mono);font-size:.78rem!important;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)!important}
+@media (max-width:640px){.post-card{padding:18px;gap:14px}.post-card img{width:44px;height:44px}}

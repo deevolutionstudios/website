@@ -16,6 +16,8 @@ by `tools/build.js` and the generated files are committed.
 | Studio pages, layout, nav, footer | `tools/build.js` | `node tools/build.js` |
 | Look and feel | `assets/css/site.css` | `node tools/build.js` (refreshes the cache-busting version) |
 | Ad networks | `app-ads.txt` | nothing |
+| A news or devlog post | `tools/news.js` (newest first; `draft: true` hides one) | `node tools/build.js` |
+| Visitor counts on or off | `CF_ANALYTICS_TOKEN` and `CF_ANALYTICS_SINCE` at the top of `tools/build.js` (Cloudflare Web Analytics, no cookies) | `node tools/build.js` |
 | Redirects, 404, caching | `.htaccess` | nothing |
 
 Preview locally (same redirects and 404s as Hostinger): `node tools/serve.js`, then open http://localhost:8080.
@@ -26,8 +28,8 @@ Preview locally (same redirects and 404s as Hostinger): `node tools/serve.js`, t
 |---|---|---|---|---|
 | Marketing URL / Website | `/candi/` | `/d2048/` | `/elementra/` | `/colorwise/` |
 | Support URL | `/support/#candi` | `/support/#d2048` | `/support/#elementra` | `/support/#colorwise` |
-| Privacy policy URL | `/candi/privacy/` | `/d2048/privacy/` | `/elementra/privacy/` | (not written yet) |
-| Delete account URL (Play) | `/candi/delete/` | `/d2048/delete/` | `/elementra/delete/` | (not written yet) |
+| Privacy policy URL | `/candi/privacy/` | `/d2048/privacy/` | `/elementra/privacy/` | `/colorwise/privacy/` (draft) |
+| Delete account URL (Play) | `/candi/delete/` | `/d2048/delete/` | `/elementra/delete/` | `/colorwise/delete/` (draft) |
 | Terms of use | | | `/elementra/terms/` | |
 
 All under `https://deevolutionstudios.com`. Google Play's "Website" field and Apple's Marketing URL should be on

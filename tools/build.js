@@ -7,10 +7,16 @@
 const fs = require('fs');
 const path = require('path');
 const { CONTACT, mail, MOBILE, PROJECTS, OLD } = require('./games');
+const NEWS = require('./news').filter(p => !p.draft).sort((a, b) => b.date.localeCompare(a.date));
 
 const ROOT = path.join(__dirname, '..');
 const SITE = 'https://deevolutionstudios.com';
 const YEAR = new Date().getFullYear();
+// Visitor counts: Cloudflare Web Analytics, which sets no cookies and keeps no IP addresses, so no cookie banner is
+// needed. Paste the site's token from the Cloudflare dashboard (Analytics & Logs → Web Analytics → Add a site →
+// deevolutionstudios.com → the token in the JS snippet) and rebuild. Empty = no tracking and the privacy notice says so.
+const CF_ANALYTICS_TOKEN = '';
+const CF_ANALYTICS_SINCE = ''; // the date tracking goes on, e.g. 'November 3, 2026': it becomes the privacy notice's effective date
 const pages = []; // for the sitemap
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -39,7 +45,7 @@ function stampImages(html) {
 
 // ── LAYOUT ─────────────────────────────────────────────────────────────────────────────────────────────────────
 
-const NAV = [['/work/', 'Our Work'], ['/services/', 'Services'], ['/about/', 'About'], ['/support/', 'Support']];
+const NAV = [['/work/', 'Our Work'], ['/news/', 'News'], ['/services/', 'Services'], ['/about/', 'About'], ['/support/', 'Support']];
 
 function layout({ url, title, description, body, active, image, noindex }) {
   const full = title ? `${title} — De-Evolution Studios` : 'De-Evolution Studios — We Build Worlds Worth Playing';
@@ -70,7 +76,7 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${v('assets/css/site.css')}">
 <script defer src="${v('assets/js/site.js')}"></script>
-</head>
+${CF_ANALYTICS_TOKEN ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${CF_ANALYTICS_TOKEN}"}'></script>\n` : ''}</head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <nav class="top" aria-label="Main">
@@ -101,7 +107,7 @@ function footer() {
         <p class="footer-about">Games with quirky characters, creative mechanics and just the right amount of chaos. Questions about a game? <a href="mailto:${CONTACT}">${CONTACT}</a></p>
       </div>
       <div class="footer-col"><h2>Games</h2><ul>${games}<li><a href="/work/">All projects</a></li></ul></div>
-      <div class="footer-col"><h2>Studio</h2><ul><li><a href="/about/">About</a></li><li><a href="/services/">Services</a></li><li><a href="/contact/">Contact</a></li></ul></div>
+      <div class="footer-col"><h2>Studio</h2><ul><li><a href="/about/">About</a></li><li><a href="/news/">News</a></li><li><a href="/services/">Services</a></li><li><a href="/contact/">Contact</a></li></ul></div>
       <div class="footer-col"><h2>Help</h2><ul><li><a href="/support/">Support</a></li><li><a href="/support/#delete">Delete your data</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/impressum/">Impressum</a></li></ul></div>
     </div>
     <div class="footer-bottom">
@@ -573,6 +579,34 @@ write('/contact/', layout({
 </div></div></section>`,
 }));
 
+// ── NEWS & DEVLOG (posts in tools/news.js) ──────────────────────────────────────────────────────────────────────
+
+const newsDate = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const newsGame = p => p.game && MOBILE.find(g => g.slug === p.game);
+write('/news/', layout({
+  url: '/news/', active: '/news/', title: 'News & Devlog',
+  description: 'News, launches and behind-the-scenes notes from De-Evolution Studios.',
+  body: `${pageHeader('News &amp; Devlog', 'What We’re<br>Building.', 'Launches, updates and notes from the workshop.')}
+<section class="doc"><div class="post-list">
+${NEWS.length ? NEWS.map(p => { const g = newsGame(p); return `<a class="post-card fu" href="/news/${p.slug}/">
+  ${g ? `<img src="/assets/img/${g.slug}/icon.webp" alt="" width="56" height="56" loading="lazy">` : ''}
+  <div><p class="post-date">${newsDate(p.date)}</p><h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p></div>
+</a>`; }).join('\n') : '<p>No news yet. Check back soon.</p>'}
+</div></section>`,
+}));
+NEWS.forEach(p => {
+  const g = newsGame(p);
+  write(`/news/${p.slug}/`, layout({
+    url: `/news/${p.slug}/`, active: '/news/', title: p.title, description: p.summary, image: p.image,
+    body: `${pageHeader(newsDate(p.date), esc(p.title), null, { small: true, crumbs: '<a href="/">Home</a> / <a href="/news/">News</a>' })}
+<article class="doc"><div class="prose">
+${p.image ? `<img src="${p.image}" alt="" style="width:100%;border-radius:16px;margin-bottom:24px">` : ''}${p.body.trim()}
+${g ? `<p style="margin-top:28px"><a href="/${g.slug}/">More about ${esc(g.name)} →</a></p>` : ''}
+<p><a href="/news/">← All news</a></p>
+</div></article>`,
+  }));
+});
+
 // ── PRIVACY (this website) AND IMPRESSUM ───────────────────────────────────────────────────────────────────────
 
 write('/privacy/', layout({
@@ -585,12 +619,17 @@ write('/privacy/', layout({
 <ul>${MOBILE.map(g => g.privacy ? `<li><a href="/${g.slug}/privacy/">${esc(g.name)} privacy policy</a> · <a href="/${g.slug}/delete/">delete your data</a></li>` : `<li>${esc(g.name)}: its policy will be published here before the apps launch.</li>`).join('')}</ul>
 
 <h2>This website</h2>
-<p class="meta">deevolutionstudios.com · Effective October 23, 2026</p>
+<p class="meta">deevolutionstudios.com · Effective ${CF_ANALYTICS_TOKEN && CF_ANALYTICS_SINCE ? CF_ANALYTICS_SINCE : 'October 23, 2026'}</p>
 <p>This notice covers the website deevolutionstudios.com, run by DE-EVOLUTION STUDIOS LLC ("we", "us"). The games
 (including their web versions at candi.deevolutionstudios.com and play.deevolutionstudios.com) are covered by their
 own policies above.</p>
 <h3>Visiting the site</h3>
-<p>The site has no accounts, no advertising and no analytics or tracking, and it sets no cookies. Our host, Hostinger,
+${CF_ANALYTICS_TOKEN ? `<p>The site has no accounts and no advertising, and it sets no cookies. To count visits we use Cloudflare Web
+Analytics: when a page loads, it records the page, where the visit came from (the referring site), your browser and
+device type, your country and how fast the page loaded. It uses no cookies or other storage on your device, doesn't
+build a profile of you or follow you to other sites, and doesn't keep your IP address. We see only totals. See
+<a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>.</p>
+<p>Our host, Hostinger,` : `<p>The site has no accounts, no advertising and no analytics or tracking, and it sets no cookies. Our host, Hostinger,`}
 keeps standard server logs to deliver and secure the site: your IP address, the date and time, the page requested,
 and your browser's user agent. We use them only to run and protect the site. See
 <a href="https://www.hostinger.com/legal/privacy-policy">Hostinger's privacy policy</a>.</p>
