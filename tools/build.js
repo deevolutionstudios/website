@@ -15,8 +15,8 @@ const YEAR = new Date().getFullYear();
 // Visitor counts: Cloudflare Web Analytics, which sets no cookies and keeps no IP addresses, so no cookie banner is
 // needed. Paste the site's token from the Cloudflare dashboard (Analytics & Logs → Web Analytics → Add a site →
 // deevolutionstudios.com → the token in the JS snippet) and rebuild. Empty = no tracking and the privacy notice says so.
-const CF_ANALYTICS_TOKEN = '';
-const CF_ANALYTICS_SINCE = ''; // the date tracking goes on, e.g. 'November 3, 2026': it becomes the privacy notice's effective date
+const CF_ANALYTICS_TOKEN = '7266c15388174b1e8c991502c03aca7a';
+const CF_ANALYTICS_SINCE = 'October 29, 2026'; // the date tracking goes on, e.g. 'November 3, 2026': it becomes the privacy notice's effective date
 const pages = []; // for the sitemap
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
