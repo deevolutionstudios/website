@@ -209,7 +209,7 @@ the rule flips.</p>
     play: { id: 'com.deevolutionstudios.mergy', live: false },
     comingSoon: true,
     shots: ['01-garden', '02-stars', '03-halloween', '05-halloween-pack'],
-    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'None needed']],
+    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the world high scores']],
     about: `
 <p>Mergy is a tiny, cozy merge game you can play forever. Every round fills the board with copies of one thing: four
 strawberries, eight cupcakes, or now and then the whole board of sixteen. Drag one onto its twin and they merge into
@@ -219,20 +219,23 @@ something new. Keep merging until one is left, and the next round begins from it
   <li>No timers, no levels, no losing: just you and the board</li>
   <li>162 hand-painted items to discover, from fruit and flowers to treasure and the sky</li>
   <li>Optional board packs, like the Halloween Pack with 97 spooky items on a cracked-stone board</li>
+  <li>Sign in with Google (or Apple on iPhone) to put your name on the world high score board, this week and all time</li>
 </ul>
 <p>Mergy is coming to Android first, then iPhone.</p>`,
     privacy: 'mergy-privacy.html',
     deletion: {
-      account: 'Mergy has no accounts: there is nothing to sign in to, and we hold no data about you. Your merges and board are saved only on your own device.',
+      account: 'You only have an account if you signed in for the world high scores (with Google, or Apple on iPhone). Playing without signing in needs no account, and then we hold no data about you. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
       steps: [
-        `If you have a question about your data, email ${mail('Mergy privacy')} with the subject “Mergy privacy”.`,
-        'We answer within 30 days.',
+        'To take your name and scores off the board yourself: open <strong>Settings</strong> &gt; <strong>High scores</strong> in Mergy and tap <strong>Delete my high-score data</strong> (tap twice to confirm). It is gone straight away.',
+        `To delete your sign-in account too, email ${mail('Mergy: delete my account')} <strong>from the email address you signed in with</strong> (for Sign in with Apple’s “Hide My Email”, from the Apple ID that address forwards to), with the subject “Mergy: delete my account”. Say whether you want the whole account deleted (for every game that uses it) or only your Mergy information.`,
+        'We check that the request comes from the account’s address, delete what you asked for and confirm by email within 30 days.',
       ],
-      deleted: ['Nothing is kept by us: Mergy sends no game statistics, crash reports or personal details to us.'],
+      deleted: ['Your display name, profile picture and Supporter ring on the high score board', 'Your merge totals (all time and this week)', 'For a whole-account deletion: your sign-in (email address and the Google or Apple sign-in link)'],
       kept: ['Google Play (and later the App Store) keep their own record of anything you buy, under their own privacy policies.', 'Ad data held by Google can be reset or deleted in your device’s Google or Apple settings.'],
       device: 'Your merges, board and settings live only on your device: uninstalling Mergy deletes them.',
     },
     faq: [
+      ['How do I get on the high score board?', 'Open <strong>Settings</strong>, tap <strong>Sign in with Google</strong> (or Apple on iPhone) under High scores and choose a name. Your merges count from then on, for this week and all time, and the same name works on every phone you sign in on.'],
       ['I bought a pack or Remove ads. How do I get it on a new phone?', 'Open <strong>Settings</strong> and tap <strong>Restore purchases</strong>, signed in to the same Google Play account you bought it with.'],
       ['Can I lose?', 'No. Mergy has no timer and no game over. Every merge adds one to your total, and it keeps counting forever.'],
       ['How do I get rid of the ads?', 'Buy <strong>Remove ads</strong> in the Shop (it’s also included in the Supporter Pack). The banner goes away for good.'],
