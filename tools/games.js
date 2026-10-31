@@ -199,6 +199,46 @@ the rule flips.</p>
     ],
   },
   {
+    // In testing (Oct 31, 2026): Android first, through Google Play's internal testing. Policy: Mergy repo web/privacy.html.
+    slug: 'mergy',
+    name: 'Mergy',
+    type: 'Mobile game · Merge',
+    tagline: 'Drag. Merge. Relax. The coziest little merge game there is.',
+    short: 'Drag an item onto its twin and watch them merge. Endless, calm, and impossible to lose. Coming to phones.',
+    appStore: { live: false },
+    play: { id: 'com.deevolutionstudios.mergy', live: false },
+    comingSoon: true,
+    shots: ['01-garden', '02-stars', '03-halloween', '05-halloween-pack'],
+    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'None needed']],
+    about: `
+<p>Mergy is a tiny, cozy merge game you can play forever. Every round fills the board with copies of one thing: four
+strawberries, eight cupcakes, or now and then the whole board of sixteen. Drag one onto its twin and they merge into
+something new. Keep merging until one is left, and the next round begins from it.</p>
+<ul>
+  <li>Only twins merge, and every merge counts: watch your total climb</li>
+  <li>No timers, no levels, no losing: just you and the board</li>
+  <li>162 hand-painted items to discover, from fruit and flowers to treasure and the sky</li>
+  <li>Optional board packs, like the Halloween Pack with 97 spooky items on a cracked-stone board</li>
+</ul>
+<p>Mergy is coming to Android first, then iPhone.</p>`,
+    privacy: 'mergy-privacy.html',
+    deletion: {
+      account: 'Mergy has no accounts: there is nothing to sign in to, and we hold no data about you. Your merges and board are saved only on your own device.',
+      steps: [
+        `If you have a question about your data, email ${mail('Mergy privacy')} with the subject “Mergy privacy”.`,
+        'We answer within 30 days.',
+      ],
+      deleted: ['Nothing is kept by us: Mergy sends no game statistics, crash reports or personal details to us.'],
+      kept: ['Google Play (and later the App Store) keep their own record of anything you buy, under their own privacy policies.', 'Ad data held by Google can be reset or deleted in your device’s Google or Apple settings.'],
+      device: 'Your merges, board and settings live only on your device: uninstalling Mergy deletes them.',
+    },
+    faq: [
+      ['I bought a pack or Remove ads. How do I get it on a new phone?', 'Open <strong>Settings</strong> and tap <strong>Restore purchases</strong>, signed in to the same Google Play account you bought it with.'],
+      ['Can I lose?', 'No. Mergy has no timer and no game over. Every merge adds one to your total, and it keeps counting forever.'],
+      ['How do I get rid of the ads?', 'Buy <strong>Remove ads</strong> in the Shop (it’s also included in the Supporter Pack). The banner goes away for good.'],
+    ],
+  },
+  {
     // Coming soon (Oct 29, 2026). No privacy policy yet: write one from the creature-keepers code before the apps ship.
     slug: 'glimmlings',
     name: 'Glimmlings',
@@ -234,6 +274,7 @@ const PROJECTS = [
   { slug: 'elementra', name: 'Elementra: Dragon Academy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Card duel', img: 'elementra/cover', tag: 'The card game goes digital. Bond a Rider and a Dragon and duel players around the world.' },
   { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
   { slug: 'd2048', name: 'D2048', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'd2048/cover', tag: '2048 meets RPG. Merge tiles, battle monsters, survive the waves.' },
+  { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'Drag. Merge. Relax. The coziest little merge game there is.' },
   { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
   { slug: 'gravefall', name: 'Grave Fall', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'gravefall/cover', tag: "A Skully & Bony Rabbit Adventure. Cuteness is coming — and it's falling fast." },
   { slug: 'wraps', name: 'Wraps & Isis', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Character Design', img: 'wraps/cover', tag: 'Escape from Giza. A wild cast of mummies, pharaohs, and cats — and one golden box.' },

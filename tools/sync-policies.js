@@ -14,6 +14,7 @@ const SOURCES = [
   { out: 'elementra-privacy.html', from: 'Development/Elementra/public/privacy.html' },
   { out: 'elementra-terms.html', from: 'Development/Elementra/public/terms.html' },
   { out: 'colorwise-privacy.html', from: 'Development/ColorRun/web/privacy.html' },
+  { out: 'mergy-privacy.html', from: 'Development/Mergy/web/privacy.html' },
 ];
 // Links inside the policies that point at the game's own site, rewritten to the studio-site pages.
 const LINKS = [

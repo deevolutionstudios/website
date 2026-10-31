@@ -24,13 +24,13 @@ Preview locally (same redirects and 404s as Hostinger): `node tools/serve.js`, t
 
 ## URLs for the store listings
 
-| | Candi's Swamp Hop | D2048 | Elementra | Colorwise |
-|---|---|---|---|---|
-| Marketing URL / Website | `/candi/` | `/d2048/` | `/elementra/` | `/colorwise/` |
-| Support URL | `/support/#candi` | `/support/#d2048` | `/support/#elementra` | `/support/#colorwise` |
-| Privacy policy URL | `/candi/privacy/` | `/d2048/privacy/` | `/elementra/privacy/` | `/colorwise/privacy/` (draft) |
-| Delete account URL (Play) | `/candi/delete/` | `/d2048/delete/` | `/elementra/delete/` | `/colorwise/delete/` (draft) |
-| Terms of use | | | `/elementra/terms/` | |
+| | Candi's Swamp Hop | D2048 | Elementra | Colorwise | Mergy |
+|---|---|---|---|---|---|
+| Marketing URL / Website | `/candi/` | `/d2048/` | `/elementra/` | `/colorwise/` | `/mergy/` |
+| Support URL | `/support/#candi` | `/support/#d2048` | `/support/#elementra` | `/support/#colorwise` | `/support/#mergy` |
+| Privacy policy URL | `/candi/privacy/` | `/d2048/privacy/` | `/elementra/privacy/` | `/colorwise/privacy/` (draft) | `/mergy/privacy/` |
+| Delete account URL (Play) | `/candi/delete/` | `/d2048/delete/` | `/elementra/delete/` | `/colorwise/delete/` (draft) | `/mergy/delete/` |
+| Terms of use | | | `/elementra/terms/` | | |
 
 All under `https://deevolutionstudios.com`. Google Play's "Website" field and Apple's Marketing URL should be on
 `deevolutionstudios.com` so AdMob finds `https://deevolutionstudios.com/app-ads.txt`.
