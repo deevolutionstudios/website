@@ -305,6 +305,27 @@ h1.hero-headline{font-family:var(--slab);font-size:clamp(58px,7.5vw,108px);line-
 .shots{display:flex;gap:16px;overflow-x:auto;padding:4px 4px 18px;scroll-snap-type:x mandatory}
 .shots img{height:440px;width:auto;border:2.5px solid var(--ink);border-radius:16px;flex-shrink:0;scroll-snap-align:start;background:#111}
 .shots.wide img{height:300px}
+.shots img{cursor:zoom-in;transition:transform .15s}
+.shots img:hover{transform:translateY(-2px)}
+.shots img:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+/* Full-screen screenshot viewer (site.js) */
+.viewer{position:fixed;inset:0;z-index:1000;background:rgba(10,8,14,.94);display:none;align-items:center;justify-content:center;padding:56px 80px}
+.viewer.open{display:flex}
+.viewer-img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.5);user-select:none}
+.viewer button{position:absolute;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:50%;width:52px;height:52px;font-size:34px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 4px}
+.viewer button:hover{background:rgba(255,255,255,.26)}
+.viewer button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.viewer-close{top:14px;right:14px}
+.viewer-prev{left:16px;top:50%;margin-top:-26px}
+.viewer-next{right:16px;top:50%;margin-top:-26px}
+.viewer.single .viewer-prev,.viewer.single .viewer-next,.viewer.single .viewer-count{display:none}
+.viewer-count{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-size:14px;letter-spacing:.08em}
+html.viewer-on{overflow:hidden}
+@media (max-width:640px){
+  .viewer{padding:60px 10px 70px}
+  .viewer-prev,.viewer-next{top:auto;bottom:10px;margin-top:0;width:46px;height:46px}
+  .viewer-count{bottom:24px}
+}
 .game-main{display:grid;grid-template-columns:1.6fr 1fr;gap:64px;align-items:start}
 .prose{font-size:1rem;color:#444;line-height:1.8}
 .prose h2{font-family:var(--slab);font-weight:400;font-size:clamp(28px,3vw,40px);line-height:1;color:var(--ink);margin:48px 0 18px}
