@@ -20,7 +20,7 @@ Redirect 301 /game-hopz.html /hopz/
 
 # The page sources and build tools live in the repo but aren't part of the site.
 RedirectMatch 404 ^/(_src|tools|\.git)(/|$)
-RedirectMatch 404 ^/(README\.md|package\.json|\.gitignore)$
+RedirectMatch 404 ^/(README\.md|CLAUDE\.md|package\.json|\.gitignore)$
 
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
