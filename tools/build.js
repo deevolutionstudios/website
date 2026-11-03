@@ -329,7 +329,8 @@ const infoCard = (rows, studio) => `<div class="info-card fu"><h2>Game info</h2>
 
 MOBILE.forEach(g => {
   write(`/${g.slug}/`, layout({
-    url: `/${g.slug}/`, active: '/work/', title: g.name, image: `/assets/img/${g.slug}/cover.webp`,
+    url: `/${g.slug}/`, active: '/work/', title: g.name, // link previews use the wide art when the game has it
+    image: `/assets/img/${g.slug}/${fs.existsSync(path.join(ROOT, 'assets/img', g.slug, 'feature.webp')) ? 'feature' : 'cover'}.webp`,
     description: `${g.name}: ${g.tagline}`,
     body: projectPage({
       slug: g.slug, name: g.name, crumbs: gameCrumbs(g), eyebrow: g.type, tagline: g.tagline, heroImg: 'cover',
