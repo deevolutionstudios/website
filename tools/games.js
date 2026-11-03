@@ -67,7 +67,7 @@ swamp!</p>
     short: 'Merge treasure, slay monsters: the 2048 you love, now with swords and a dragon.',
     appStore: { id: '1354589124', live: true },
     play: { id: 'com.deevolutionstudios.d2048', live: false },
-    shots: ['01-title', '02-adventure', '03-boss', '04-endless'],
+    shots: ['01-title', '02-adventure', '03-boss', '04-map', '05-menu', '06-guide', '07-profile'],
     info: [['Platforms', 'iPhone, iPad, Android'], ['Genre', 'Puzzle / RPG'], ['Age', '9+'], ['Price', 'Free, with optional packs'], ['Account', 'None needed']],
     about: `
 <p>Swipe to slide the board and merge matching treasure: copper coins into silver, silver into gold, gold into gems and
@@ -210,7 +210,7 @@ the rule flips.</p>
     appStore: { live: false },
     play: { id: 'com.deevolutionstudios.mergy', live: false },
     comingSoon: true,
-    shots: ['01-cozy', '02-less-chill', '03-halloween', '04-christmas'],
+    shots: ['01-chill', '02-less-chill', '03-christmas', '04-halloween', '05-ranks'],
     info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
     about: `
 <p>Mergy is a tiny, cozy merge game you can play forever. Curl up in a lamp-lit room with snow falling past the
