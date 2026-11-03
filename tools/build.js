@@ -36,7 +36,9 @@ function write(url, html, { sitemap = true } = {}) {
 // replacing an image with a new one under the same name shows up at once.
 const stamps = {};
 function stampImages(html) {
-  return html.replace(/((?:src|href|content)="(?:https:\/\/deevolutionstudios\.com)?)(\/assets\/img\/[^"?#]+)"/g, (all, pre, p) => {
+  html = html.replace(/srcset="([^"]+)"/g, (all, list) => 'srcset="' + list.split(', ')
+    .map(e => e.replace(/^\/assets\/img\/[^ ?]+/, p => stampImages(`src="${p}"`).slice(5, -1))).join(', ') + '"');
+  return html.replace(/((?:src|href|content|data-full)="(?:https:\/\/deevolutionstudios\.com)?)(\/assets\/img\/[^"?#]+)"/g, (all, pre, p) => {
     const f = path.join(ROOT, p);
     if (!fs.existsSync(f)) return all;
     stamps[p] = stamps[p] || require('crypto').createHash('md5').update(fs.readFileSync(f)).digest('hex').slice(0, 8);
@@ -48,9 +50,22 @@ function stampImages(html) {
 
 const NAV = [['/work/', 'Our Work'], ['/news/', 'News'], ['/services/', 'Services'], ['/about/', 'About'], ['/support/', 'Support']];
 
-function layout({ url, title, description, body, active, image, noindex }) {
+// Link previews use a 1200x630 JPG copy of the page's art (assets/img/og/, made from the WebP): WebP previews don't
+// show everywhere (LinkedIn, some chat apps).
+function ogImage(image) {
+  const jpg = image.replace(/^\/assets\/img\/([^/]+)\/([^/.]+)\.webp$/, '/assets/img/og/$1-$2.jpg');
+  return jpg !== image && fs.existsSync(path.join(ROOT, jpg)) ? { src: jpg, w: 1200, h: 630 } : { src: image };
+}
+
+// Structured data (schema.org JSON-LD) so search engines know who the studio is and what each game is.
+const ORG = { '@type': 'Organization', '@id': SITE + '/#studio', name: 'De-Evolution Studios', legalName: 'DE-EVOLUTION STUDIOS LLC',
+  url: SITE + '/', logo: SITE + '/assets/img/studio/logo.webp', email: CONTACT };
+const ldScript = items => `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': items }).replace(/</g, '\\u003c')}</script>\n`;
+const crumbsLd = trail => ({ '@type': 'BreadcrumbList', itemListElement: trail.map(([name, u], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE + u })) });
+
+function layout({ url, title, description, body, active, image, noindex, ld }) {
   const full = title ? `${title} — De-Evolution Studios` : 'De-Evolution Studios — We Build Worlds Worth Playing';
-  const og = SITE + (image || '/assets/img/studio/hero.webp');
+  const ogi = ogImage(image || '/assets/img/studio/hero.webp'), og = SITE + ogi.src;
   const links = NAV.map(([href, label]) =>
     `<li><a href="${href}"${active === href ? ' class="active" aria-current="page"' : ''}>${label}</a></li>`).join('');
   return `<!DOCTYPE html>
@@ -66,6 +81,9 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:image" content="${og}">
+${ogi.w ? `<meta property="og:image:width" content="${ogi.w}">
+<meta property="og:image:height" content="${ogi.h}">
+` : ''}<meta property="og:image:alt" content="${esc(title || 'De-Evolution Studios')}">
 <meta property="og:url" content="${SITE}${url}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFF8EC">
@@ -78,7 +96,7 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${v('assets/css/site.css')}">
 <script defer src="${v('assets/js/site.js')}"></script>
-${CF_ANALYTICS_TOKEN ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${CF_ANALYTICS_TOKEN}"}'></script>\n` : ''}</head>
+${ld ? ldScript(ld) : ''}${CF_ANALYTICS_TOKEN ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${CF_ANALYTICS_TOKEN}"}'></script>\n` : ''}</head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <nav class="top" aria-label="Main">
@@ -161,7 +179,20 @@ function badges(g) {
 const icon = (g, size = 64) => `<img class="app-icon" src="/assets/img/${g.slug}/icon.webp" alt="" width="${size}" height="${size}" loading="lazy">`;
 const art = g => g.slug === 'colorwise'
   ? `<img src="/assets/img/colorwise/logo.webp" alt="${esc(g.name)}" width="900" height="300" loading="lazy">`
-  : `<img src="/assets/img/${g.slug}/feature.webp" alt="${esc(g.name)}" width="1024" height="500" loading="lazy">`;
+  : `<img src="/assets/img/${g.slug}/feature.webp"${srcset(g.slug, 'feature', [768, 1080])} sizes="(max-width:760px) 92vw, 600px" alt="${esc(g.name)}" width="1024" height="500" loading="lazy">`;
+// Smaller copies for phones where they've been made (feature-768/-1080.webp, cover-450/-600.webp), next to the full-size file.
+function srcset(dir, name, widths) {
+  const f = w => path.join(ROOT, 'assets/img', dir, w ? `${name}-${w}.webp` : `${name}.webp`);
+  const have = widths.filter(w => fs.existsSync(f(w)));
+  if (!have.length) return '';
+  return ` srcset="${[...have.map(w => `/assets/img/${dir}/${name}-${w}.webp ${w}w`), `/assets/img/${dir}/${name}.webp ${webpWidth(f())}w`].join(', ')}"`;
+}
+function webpWidth(f) { // the width from a WebP file's header (VP8X, VP8 or VP8L)
+  const b = fs.readFileSync(f), kind = b.toString('ascii', 12, 16);
+  if (kind === 'VP8X') return 1 + b.readUIntLE(24, 3);
+  if (kind === 'VP8 ') return b.readUInt16LE(26) & 0x3fff;
+  return 1 + (b.readUInt16LE(21) & 0x3fff);
+}
 
 function appCard(g) {
   return `<article class="app-card fu">
@@ -177,7 +208,7 @@ function appCard(g) {
 
 function projectCard(p, { linkOld = true } = {}) {
   return `<a href="/${p.slug}/" class="g-card fu" data-type="${p.type}">
-  <div class="g-visual"><img src="/assets/img/${p.img}.webp" alt="" loading="lazy">
+  <div class="g-visual"><img src="/assets/img/${p.img}.webp"${p.img.endsWith('/cover') ? srcset(p.img.split('/')[0], 'cover', [450, 600]) + ' sizes="(max-width:760px) 46vw, 300px"' : ''} alt="" loading="lazy">
     <span class="g-badge${p.type.startsWith('mobile') ? ' mobile' : ''}">${p.label}</span>${p.client ? '<span class="g-badge client">Client</span>' : ''}</div>
   <div class="g-body"><span class="g-type">${p.kind}</span><span class="g-title">${esc(p.name)}</span><span class="g-tag">${esc(p.tag)}</span><span class="g-cta">View Project</span></div>
 </a>`;
@@ -188,7 +219,8 @@ function projectCard(p, { linkOld = true } = {}) {
 const TICKER = ['Game Development', 'Character Design', 'Game Balancing', 'Creative Consultation', 'Story Creation', 'Card &amp; Board Games', 'Mobile Games'];
 
 write('/', layout({
-  url: '/', description: 'De-Evolution Studios makes mobile, card and board games: Candi’s Swamp Hop, D2048, Elementra and Colorwise. Download our games, get support and read our privacy policies.',
+  url: '/', description: `De-Evolution Studios makes mobile, card and board games: ${MOBILE.map(g => g.shortName || g.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}. Download our games and get support.`,
+  ld: [ORG, { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'De-Evolution Studios', publisher: { '@id': ORG['@id'] } }],
   body: `
 <section class="hero">
   <div class="hero-inner">
@@ -303,7 +335,9 @@ function helpCard(g) {
 // One layout for every game on Our Work (the March 2026 project template): title on the left with the portrait
 // art on the right, then About the Game with its screenshots and art, and the game info beside it.
 function projectPage({ slug, name, crumbs, eyebrow, tagline, heroExtra = '', heroImg, heroWide, about, shots, aside }) {
-  const gallery = shots.length ? `<h3>Screenshots &amp; Art</h3><div class="shots wide">${shots.map(s => `<img src="/assets/img/${slug}/${s}.webp" alt="" loading="lazy">`).join('')}</div>` : '';
+  const shotAlt = s => `${name}: ${s.replace(/^\d+-/, '').replace(/^shot(\d)$/, 'screenshot $1').replace(/-/g, ' ')}`;
+  const full = s => fs.existsSync(path.join(ROOT, 'assets/img', slug, s + '-full.webp')) ? ` data-full="/assets/img/${slug}/${s}-full.webp"` : '';
+  const gallery = shots.length ? `<h3>Screenshots &amp; Art</h3><div class="shots wide">${shots.map(s => `<img src="/assets/img/${slug}/${s}.webp"${full(s)} alt="${esc(shotAlt(s))}" loading="lazy">`).join('')}</div>` : '';
   return `
 <header class="game-hero">
   <div class="game-hero-inner">
@@ -327,11 +361,22 @@ ${cta('Got a Game Idea?', "Let's build your next world together.")}`;
 }
 const infoCard = (rows, studio) => `<div class="info-card fu"><h2>Game info</h2><table class="info-table"><tbody>${rows.map(([k, val]) => `<tr><th scope="row">${k}</th><td>${val}</td></tr>`).join('')}${studio ? '<tr><th scope="row">Studio</th><td>De-Evolution Studios</td></tr>' : ''}</tbody></table></div>`;
 
+// Each mobile game as a schema.org MobileApplication: what it is, who made it, where to get it.
+function appLd(g) {
+  const plat = (g.info.find(([k]) => k === 'Platforms') || [, ''])[1];
+  const os = [/iPhone|iPad|iOS/.test(plat) && 'iOS', /Android/.test(plat) && 'Android', /web/i.test(plat) && 'Web'].filter(Boolean).join(', ');
+  const art = fs.existsSync(path.join(ROOT, 'assets/img', g.slug, 'feature.webp')) ? 'feature' : 'cover';
+  const stores = [g.appStore.live && appStoreUrl(g), g.play.live && playUrl(g)].filter(Boolean);
+  return { '@type': 'MobileApplication', name: g.name, description: g.tagline, url: `${SITE}/${g.slug}/`, image: `${SITE}/assets/img/${g.slug}/${art}.webp`,
+    applicationCategory: 'GameApplication', ...(os && { operatingSystem: os }), author: { '@id': ORG['@id'] }, publisher: { '@id': ORG['@id'] },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, ...(stores.length && { sameAs: stores, installUrl: stores[0] }) };
+}
+
 MOBILE.forEach(g => {
   write(`/${g.slug}/`, layout({
     url: `/${g.slug}/`, active: '/work/', title: g.name, // link previews use the wide art when the game has it
     image: `/assets/img/${g.slug}/${fs.existsSync(path.join(ROOT, 'assets/img', g.slug, 'feature.webp')) ? 'feature' : 'cover'}.webp`,
-    description: `${g.name}: ${g.tagline}`,
+    description: `${g.name}: ${g.tagline}`, ld: [ORG, appLd(g), crumbsLd([['Home', '/'], ['Our Work', '/work/'], [g.name, `/${g.slug}/`]])],
     body: projectPage({
       slug: g.slug, name: g.name, crumbs: gameCrumbs(g), eyebrow: g.type, tagline: g.tagline, heroImg: 'cover',
       heroExtra: `${badges(g)}${g.storeNames ? `<p class="form-note" style="text-align:left">Listed as ${g.storeNames}.</p>` : ''}`,
@@ -354,7 +399,7 @@ ${policy(g.privacy)}
   if (g.terms) {
     write(`/${g.slug}/terms/`, layout({
       url: `/${g.slug}/terms/`, active: '/work/', title: `${g.shortName || g.name} Terms of Use`,
-      description: `The terms for playing ${g.name}.`,
+      description: `The terms of use for ${g.name} by De-Evolution Studios: accounts, purchases, fair play and what happens if something goes wrong.`,
       body: `${pageHeader('Terms of Use', esc(g.name), null, { small: true, crumbs: gameCrumbs(g, 'Terms') })}
 <article class="doc"><div class="prose">
 ${policy(g.terms)}
@@ -388,7 +433,9 @@ ${d.inApp ? `<h2>Delete it in the game</h2><p>${d.inApp}</p><h2>Or ask us by ema
 
 Object.entries(OLD).forEach(([slug, p]) => {
   write(`/${slug}/`, layout({
-    url: `/${slug}/`, active: '/work/', title: p.name, image: `/assets/img/${slug}/cover.webp`, description: `${p.name}: ${p.tagline}`,
+    url: `/${slug}/`, active: '/work/', title: p.name, image: `/assets/img/${slug}/cover.webp`, description: p.description || `${p.name}: ${p.tagline}`,
+    ld: [ORG, { '@type': 'Game', name: p.name, description: p.description || p.tagline, url: `${SITE}/${slug}/`, image: `${SITE}/assets/img/${slug}/cover.webp`, author: { '@id': ORG['@id'] } },
+      crumbsLd([['Home', '/'], ['Our Work', '/work/'], [p.name, `/${slug}/`]])],
     body: projectPage({
       slug, name: p.name, crumbs: `<a href="/">Home</a> / <a href="/work/">Our Work</a> / ${esc(p.name)}`, eyebrow: p.eyebrow,
       tagline: p.tagline, heroImg: p.hero || 'cover', heroWide: !!p.hero, about: p.about,
@@ -401,7 +448,7 @@ Object.entries(OLD).forEach(([slug, p]) => {
 
 write('/support/', layout({
   url: '/support/', active: '/support/', title: 'Support',
-  description: 'Help with Candi’s Swamp Hop, D2048, Elementra and Colorwise: purchases, accounts, deleting your data and how to contact us.',
+  description: `Help with ${MOBILE.map(g => g.shortName || g.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}: purchases, accounts, deleting your data and how to contact us.`,
   body: `${pageHeader('Player Support', 'How Can<br>We Help?', `Pick your game below, or email <a href="mailto:${CONTACT}">${CONTACT}</a>. You're talking to the people who build the games.`)}
 <article class="doc" style="max-width:1000px"><div class="prose">
 <div class="support-grid">${MOBILE.map(g => `<a class="support-card" href="#${g.slug}"><img src="/assets/img/${g.slug}/icon.webp" alt="" width="64" height="64"><span>${esc(g.shortName || g.name)}</span></a>`).join('')}</div>

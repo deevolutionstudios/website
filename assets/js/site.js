@@ -49,7 +49,7 @@
     var box, pic, count, at = 0, opener = null;
     var show = function (i) {
       at = (i + imgs.length) % imgs.length;
-      pic.src = imgs[at].currentSrc || imgs[at].src;
+      pic.src = imgs[at].dataset.full || imgs[at].currentSrc || imgs[at].src; // the sharper copy when there is one
       count.textContent = (at + 1) + ' / ' + imgs.length;
     };
     var close = function () {

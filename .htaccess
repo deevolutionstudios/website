@@ -1,5 +1,11 @@
 # deevolutionstudios.com on Hostinger (LiteSpeed reads this file like Apache).
-# No HTTPS or www rules here: Hostinger's CDN sits in front and already handles them; adding them can loop.
+# No HTTPS rule here: Hostinger's CDN sits in front and already handles it; adding one can loop.
+# www is not redirected by the CDN, so send it to the main address (matching the host only, so it can't loop).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.deevolutionstudios\.com$ [NC]
+  RewriteRule ^ https://deevolutionstudios.com%{REQUEST_URI} [R=301,L]
+</IfModule>
 
 ErrorDocument 404 /404.html
 DirectoryIndex index.html

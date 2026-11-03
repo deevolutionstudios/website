@@ -29,6 +29,7 @@ a{color:inherit}
 
 /* ── NAV ── */
 nav.top{position:fixed;top:0;left:0;right:0;z-index:200;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:2.5px solid var(--ink);gap:24px}
+.nav-logo{display:flex;align-items:center;min-height:44px}
 .nav-logo img{height:26px;width:auto;display:block}
 .nav-links{display:flex;gap:36px;list-style:none;align-items:center}
 .nav-links a{font-family:var(--cond);font-size:.88rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .18s}
@@ -123,7 +124,7 @@ h1.hero-headline{font-family:var(--slab);font-size:clamp(58px,7.5vw,108px);line-
 .app-name:hover{color:var(--red)}
 .app-tag{font-size:.9rem;color:#555;line-height:1.55}
 .app-links{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
-.app-links a{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);text-decoration:none}
+.app-links a{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);text-decoration:none;display:inline-flex;align-items:center;min-height:28px}
 .app-links a:hover{color:var(--ink)}
 
 /* Store badges: Apple's SVG is the real size; Google's PNG has clear space built in, so it's drawn larger and

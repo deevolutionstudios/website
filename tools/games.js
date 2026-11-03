@@ -301,7 +301,7 @@ const PROJECTS = [
 // Detail pages for the older projects (text from the March 2026 site).
 const OLD = {
   'elementra-card-game': {
-    name: 'Elementra', eyebrow: 'Card Game · Dragon Academy', tagline: '2 cards are all you need to win it all!',
+    name: 'Elementra', eyebrow: 'Card Game · Dragon Academy', tagline: '2 cards are all you need to win it all!', description: 'Elementra: Dragon Academy, the fantasy card game for 2–8 players: pair a rider with a dragon, outwit your rivals and win the academy tournament.',
     gallery: ['rules-of-play', 'box', 'card-aurora-gayle', 'card-blaze', 'card-radiance', 'card-jade-everbloom', 'card-tannis-mortos'],
     info: [['Type', 'Card Game'], ['Players', '2–8'], ['Age', '10+'], ['Platform', 'Tabletop'], ['Theme', 'Fantasy / Anime'], ['Digital edition', '<a href="/elementra/">Elementra: Dragon Academy app</a>']],
     about: `<p>Elementra: Dragon Academy is a dynamic card game that combines strategy, quick thinking, and a touch of anime flair. Designed for 2 to 8 players, this game offers engaging hand management mechanics that keep each session lively and unpredictable.</p>
@@ -311,27 +311,27 @@ const OLD = {
 <h3>Play it on your phone</h3>
 <p>Elementra is also an app: <a href="/elementra/">Elementra: Dragon Academy</a> for iPhone, iPad and Android, with online matches against players around the world.</p>` },
   cthulhu: {
-    name: "Lil' Cthulhu", eyebrow: 'Card Game · Original IP', tagline: 'You cannot win, you can only survive!',
+    name: "Lil' Cthulhu", eyebrow: 'Card Game · Original IP', tagline: 'You cannot win, you can only survive!', description: 'Lil’ Cthulhu, a Kickstarter-funded card game of madness, betrayal and survival for 2–5 players. Keep the tiny Great Old One happy, or be the next sacrifice.',
     info: [['Type', 'Card Game'], ['Players', '2–5'], ['Age', '14+'], ['Platform', 'Tabletop'], ['Funding', 'Kickstarter']],
     about: `<p>Lil' Cthulhu is a fast-paced card game of madness, betrayal, and survival for 2 to 5 players. In this darkly fun game, you play as cultists desperately trying to appease the adorable but terrifying Lil' Cthulhu — a pint-sized Great Old One with a very short temper.</p>
 <p>Each round, players scramble to offer gifts, complete rituals, and sabotage their fellow cultists. The goal? Keep Lil' Cthulhu entertained… and keep yourself sane. Fail, and you'll be the next sacrifice.</p>
 <p>The game blends strategy, take-that mechanics, and a dose of dark humor. Players must balance self-preservation with clever timing to throw others under the bus — because in the end, there are no winners, only survivors.</p>
 <p>Originally funded on Kickstarter, Lil' Cthulhu was created by De-Evolution Studios for anyone who loves card games with chaotic energy, a Lovecraftian twist, and backstabbing fun packed into every turn.</p>` },
   gravefall: {
-    name: 'Grave Fall', eyebrow: 'Mobile Game · A Skully & Bony Rabbit Adventure', tagline: 'Run! Cuteness is Coming!',
+    name: 'Grave Fall', eyebrow: 'Mobile Game · A Skully & Bony Rabbit Adventure', tagline: 'Run! Cuteness is Coming!', description: 'Grave Fall, De-Evolution Studios’ first game: an endless mobile runner where Skully the skeleton flees Candi and her candy-coated affection.',
     info: [['Type', 'Mobile Game'], ['Platform', 'iOS / Android'], ['Genre', 'Endless Runner'], ['Age', '7+'], ['Notable', "Studio's First Title"]],
     about: `<p>Grave Fall is the game that started it all for De-Evolution Studios. In this fast-paced mobile escape, you play as Skully — a skeleton on the run from the most dangerous thing in the graveyard: Candi. She's sweet, she's adorable, and she's absolutely terrifying.</p>
 <p>Your only goal? Dodge, dive, and fall as fast as you can to escape her relentless, candy-coated affection. The game's increasing difficulty and dynamic environment require quick thinking and precise movements, offering a challenging and engaging experience.</p>
 <p>As De-Evolution Studios' inaugural title, Grave Fall laid the foundation for the company's commitment to creating fun, quick-to-learn, and challenging games. Its success paved the way for subsequent titles like Candi's Swamp Hop and Lil' Cthulhu, further establishing the studio's reputation in the gaming community.</p>` },
   wraps: {
-    name: 'Wraps & Isis', eyebrow: 'Mobile Game · Escape from Giza', tagline: 'Escape from Giza — if you can!',
+    name: 'Wraps & Isis', eyebrow: 'Mobile Game · Escape from Giza', tagline: 'Escape from Giza — if you can!', description: 'Wraps & Isis: Escape from Giza, a mobile action puzzle game. De-Evolution Studios created the story, characters and designs for the mummy, his cat and Khufu’s ghost.',
     info: [['Type', 'Mobile Game'], ['Platform', 'iOS / Android'], ['Genre', 'Action / Puzzle'], ['Role', 'Story & Character Design'], ['Sequel', 'Wraps & Isis 2']],
     about: `<p>Wraps & Isis: Escape from Giza follows the adventure of Wraps, an awakened mummy trapped deep inside the Great Pyramid of Giza. Confused but determined, Wraps teams up with his loyal cat Isis and the mischievous ghost of Khufu — the pyramid's original occupant and now its restless spirit.</p>
 <p>De-Evolution Studios was tasked with creating the story, characters, and character designs for this project — building a world full of personality, humor, and heart. Every detail was crafted from early sketches to final designs to bring this unlikely trio to life.</p>
 <p>Together, Wraps, Isis, and Khufu solve puzzles, dodge ancient traps, and outsmart the pyramid's shifting walls as they fight their way to freedom. The game blends action, mythology, and charm — turning one mummy's escape into a fast-paced, character-driven adventure.</p>
 <p>The world expanded in Wraps & Isis 2: Riddle of the Sphinx, a candy-crush-style puzzle game where players dive back in. Once again, De-Evolution Studios created the characters, story, and designs — giving players another fun way to explore this lighthearted world full of humor, magic, and adventure.</p>` },
   hopz: {
-    name: 'Hopz', eyebrow: 'Mobile Game · Client Work', tagline: 'A competitive strategy game with a twist!',
+    name: 'Hopz', eyebrow: 'Mobile Game · Client Work', tagline: 'A competitive strategy game with a twist!', description: 'Hopz, Alien Hopz and Caribbean Hops: competitive mobile strategy games that turn Tic-Tac-Toe into hopping battles, designed by De-Evolution Studios for a client.',
     info: [['Type', 'Mobile Game'], ['Platform', 'iOS / Android'], ['Genre', 'Strategy'], ['Client', 'External'], ['Series', 'Hopz / Alien Hopz / Caribbean Hops']],
     about: `<p>We had the chance to reimagine a classic with Hopz, Alien Hopz, and Caribbean Hops — a series of competitive strategy games designed and produced for a client.</p>
 <p>These games take the simple concept of Tic-Tac-Toe and flip it on its head. Instead of just placing pieces, players hop over opponents to reach new spots, adding layers of movement, strategy, and surprising depth. Every match becomes a fast-paced battle of positioning, forcing players to think ahead and block their opponent while planning their next hop.</p>
