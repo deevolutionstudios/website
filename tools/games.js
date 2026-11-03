@@ -67,7 +67,7 @@ swamp!</p>
     short: 'Merge treasure, slay monsters: the 2048 you love, now with swords and a dragon.',
     appStore: { id: '1354589124', live: true },
     play: { id: 'com.deevolutionstudios.d2048', live: false },
-    shots: ['01-title', '02-adventure', '03-boss', '06-store'],
+    shots: ['01-title', '02-adventure', '03-boss', '04-endless'],
     info: [['Platforms', 'iPhone, iPad, Android'], ['Genre', 'Puzzle / RPG'], ['Age', '9+'], ['Price', 'Free, with optional packs'], ['Account', 'None needed']],
     about: `
 <p>Swipe to slide the board and merge matching treasure: copper coins into silver, silver into gold, gold into gems and
@@ -118,7 +118,7 @@ on is a boss fight: a skeleton, the Orc War Chief, the Lich, the Wizard and fina
     short: 'A fast fantasy card duel for 2 to 4 players, online or against the computer.',
     appStore: { id: '6826172343', live: false },
     play: { id: 'com.deevolutionstudios.elementra', live: false },
-    shots: ['01-home', '02-game', '04-collection', '05-shop'],
+    shots: ['01-home', '03-table', '02-game', '04-collection'],
     info: [['Platforms', 'iPhone, iPad, Android, web'], ['Genre', 'Card / Strategy'], ['Age', '9+ (accounts 13+)'], ['Price', 'Free, with optional purchases. No ads'], ['Players', '2–4 online, or vs the computer']],
     about: `
 <p>Welcome, new recruit. Your training begins at the Elementra: Dragon Academy, where Riders and Dragons learn to
@@ -168,7 +168,7 @@ players.</p>`,
     appStore: { live: false },
     play: { live: false },
     comingSoon: true,
-    shots: ['01-gates', '02-gold-ring', '03-results', '04-store'],
+    shots: ['01-gates', '02-gold-ring', '04-run', '03-results'],
     info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
     about: `
 <p>Colorwise is a neon rhythm game of colors that lie. Gates fly at you on the beat: swipe toward the color the word
