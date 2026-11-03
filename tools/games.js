@@ -200,33 +200,45 @@ the rule flips.</p>
   },
   {
     // In testing (Oct 31, 2026): Android first, through Google Play's internal testing. Policy: Mergy repo web/privacy.html.
+    // Text matches the game as of version 80 (Nov 2, 2026): the cozy redesign, Chill and Less Chill, Mergy the cat.
     slug: 'mergy',
     name: 'Mergy',
+    storeNames: '“Mergy” on Google Play, “Mergy: Cozy Merge” on the App Store',
     type: 'Mobile game · Merge',
-    tagline: 'Drag. Merge. Relax. The coziest little merge game there is.',
-    short: 'Drag an item onto its twin and watch them merge. Endless, calm, and impossible to lose. Coming to phones.',
+    tagline: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.',
+    short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. Coming to phones.',
     appStore: { live: false },
     play: { id: 'com.deevolutionstudios.mergy', live: false },
     comingSoon: true,
-    shots: ['01-garden', '02-stars', '03-halloween', '05-halloween-pack'],
-    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the world high scores']],
+    shots: ['01-cozy', '02-less-chill', '03-halloween', '04-christmas'],
+    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
     about: `
-<p>Mergy is a tiny, cozy merge game you can play forever. Every round fills the board with copies of one thing: four
-strawberries, eight cupcakes, or now and then the whole board of sixteen. Drag one onto its twin and they merge into
-something new. Keep merging until one is left, and the next round begins from it.</p>
+<p>Mergy is a tiny, cozy merge game you can play forever. Curl up in a lamp-lit room with snow falling past the
+window, while Mergy the cat dozes on top of the board.</p>
+<h3>Two moods</h3>
 <ul>
-  <li>Only twins merge, and every merge counts: watch your total climb</li>
-  <li>No timers, no levels, no losing: just you and the board</li>
-  <li>162 hand-painted items to discover, from fruit and flowers to treasure and the sky</li>
-  <li>Optional board packs, like the Halloween Pack with 97 spooky items on a cracked-stone board</li>
-  <li>Sign in with Google (or Apple on iPhone) to put your name on the world high score board, this week and all time</li>
+  <li><strong>Chill:</strong> every round fills the board with copies of one thing. Drag one onto its twin and they
+    merge into the next: a cotton puff into thread, thread into a ball of yarn, all the way to a patchwork quilt, then
+    on through tea and sleep. No timers, no levels, no losing: every merge adds one to your total.</li>
+  <li><strong>Less Chill:</strong> sleepy animals lie along the top of the board, dreaming of what they'd like. Tap the
+    rocking chair, the snoozing teapot and the napping goose for things, merge them up, and hand each customer what
+    they're dreaming of.</li>
+</ul>
+<h3>What's inside</h3>
+<ul>
+  <li>36 cozy hand-painted items in three lines, knitting, tea and sleep, every step made from the one before</li>
+  <li>Soft merge notes and calm music, each with its own volume</li>
+  <li>The Cozy Hall of Fame: sign in with Google (or Apple on iPhone) to put your name and merges on the world board,
+    this week and all time</li>
+  <li>Optional packs: the Halloween Pack and the Christmas Pack each bring 36 seasonal items and their own room</li>
+  <li>Remove ads: one small purchase and the ad is gone for good</li>
 </ul>
 <p>Mergy is coming to Android first, then iPhone.</p>`,
     privacy: 'mergy-privacy.html',
     deletion: {
       account: 'You only have an account if you signed in for the world high scores (with Google, or Apple on iPhone). Playing without signing in needs no account, and then we hold no data about you. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
       steps: [
-        'To take your name and scores off the board yourself: open <strong>Settings</strong> &gt; <strong>High scores</strong> in Mergy and tap <strong>Delete my high-score data</strong> (tap twice to confirm). It is gone straight away.',
+        'To take your name and scores off the board yourself: open <strong>Settings</strong> &gt; <strong>The Cozy Hall of Fame</strong> in Mergy and tap <strong>Delete my high-score data</strong> (tap twice to confirm). It is gone straight away.',
         `To delete your sign-in account too, email ${mail('Mergy: delete my account')} <strong>from the email address you signed in with</strong> (for Sign in with Apple’s “Hide My Email”, from the Apple ID that address forwards to), with the subject “Mergy: delete my account”. Say whether you want the whole account deleted (for every game that uses it) or only your Mergy information.`,
         'We check that the request comes from the account’s address, delete what you asked for and confirm by email within 30 days.',
       ],
@@ -235,10 +247,11 @@ something new. Keep merging until one is left, and the next round begins from it
       device: 'Your merges, board and settings live only on your device: uninstalling Mergy deletes them.',
     },
     faq: [
-      ['How do I get on the high score board?', 'Open <strong>Settings</strong>, tap <strong>Sign in with Google</strong> (or Apple on iPhone) under High scores and choose a name. Your merges count from then on, for this week and all time, and the same name works on every phone you sign in on.'],
+      ['How do I get on the Cozy Hall of Fame?', 'Open <strong>Settings</strong>, tap <strong>Sign in with Google</strong> (or Apple on iPhone) under The Cozy Hall of Fame and choose a name. Your merges count from then on, for this week and all time, and the same name works on every phone you sign in on.'],
+      ['How do I switch between Chill and Less Chill?', 'Open <strong>Settings</strong> and pick one under <strong>Game Mood</strong>. Each keeps its own board, so you can swap any time.'],
       ['I bought a pack or Remove ads. How do I get it on a new phone?', 'Open <strong>Settings</strong> and tap <strong>Restore purchases</strong>, signed in to the same Google Play account you bought it with.'],
       ['Can I lose?', 'No. Mergy has no timer and no game over. Every merge adds one to your total, and it keeps counting forever.'],
-      ['How do I get rid of the ads?', 'Buy <strong>Remove ads</strong> in the Shop (it’s also included in the Supporter Pack). The banner goes away for good.'],
+      ['How do I get rid of the ads?', 'Buy <strong>Remove ads</strong> in the Shop in Settings. The ad goes away for good.'],
     ],
   },
   {
@@ -277,7 +290,8 @@ const PROJECTS = [
   { slug: 'elementra', name: 'Elementra: Dragon Academy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Card duel', img: 'elementra/cover', tag: 'The card game goes digital. Bond a Rider and a Dragon and duel players around the world.' },
   { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
   { slug: 'd2048', name: 'D2048', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'd2048/cover', tag: '2048 meets RPG. Merge tiles, battle monsters, survive the waves.' },
-  { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'Drag. Merge. Relax. The coziest little merge game there is.' },
+  { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.' },
+  { slug: 'glimmlings', name: 'Glimmlings', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'glimmlings/cover', tag: 'Merge, guess and catch. A cozy creature-keeping adventure at Grandma’s.' },
   { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
   { slug: 'gravefall', name: 'Grave Fall', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'gravefall/cover', tag: "A Skully & Bony Rabbit Adventure. Cuteness is coming — and it's falling fast." },
   { slug: 'wraps', name: 'Wraps & Isis', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Character Design', img: 'wraps/cover', tag: 'Escape from Giza. A wild cast of mummies, pharaohs, and cats — and one golden box.' },
