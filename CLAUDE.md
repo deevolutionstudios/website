@@ -10,7 +10,8 @@ studio-wide yourself, tick it off in that doc too.
 Studio-wide (Nov 3, 2026):
 - **Studio Control Room** is live: a private Cloudflare Worker that checks every game hourly (GitHub builds, Render,
   App Store, Google Play, RevenueCat, AdMob) and writes its numbers to the Google Sheet "Control Room data". The 9:00
-  morning briefing reads that sheet. Its code lives on Richard's computer (studio-control-room), not in a GitHub repo.
+  morning briefing reads that sheet. Its code is in the private repo deevolutionstudios/control-room; every push to main
+  deploys it (GitHub Actions), so nobody runs wrangler by hand.
 - **Render is on the free Hobby plan** (moved from Pro, $25/month): at most 2 custom domains (both in use; a third
   costs $0.25/month), 25 services, 500 build minutes and 5 GB bandwidth a month. Every site is on a free instance.
 - **GitHub is on the Free plan**: 0.5 GB of Actions storage. Build files (artifacts) are kept 1 day in Candi, D2048,
