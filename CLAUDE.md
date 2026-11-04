@@ -27,4 +27,8 @@ Studio-wide (Nov 3, 2026):
   (Gmail filter, label "Cleaned up"). App Review results still arrive.
 
 This repo:
+- **"More from us" list** (Nov 4): `promo/games.json`, written by tools/build.js from tools/games.js (`PROMO` picks the
+  games and their order: Mergy, D2048, Candi; store links follow each game's `live` flags). Every game's "More from us"
+  card reads it (Mergy's Settings first), so keep its fields as they are (id, name, tagline, icon, page, ios, android).
+  .htaccess lets any app read /promo/ (CORS) and caches it an hour.
 - deevolutionstudios.com is verified in Google Search Console (DNS TXT record at Hostinger, Nov 3).
