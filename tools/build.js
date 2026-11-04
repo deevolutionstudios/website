@@ -778,6 +778,24 @@ write('/404.html', layout({
 <section class="section-wrap"><div class="section-inner"><div class="acts"><a class="btn-solid" href="/">Home</a><a class="btn-outline" href="/#games">Our games</a><a class="btn-outline" href="/support/">Support</a></div></div></section>`,
 }), { sitemap: false });
 
+// ── "MORE FROM US" LIST ────────────────────────────────────────────────────────────────────────────────────────
+// /promo/games.json: the list every game's "More from us" card reads when it opens (Mergy's Settings first, Nov 4).
+// Which games are in it, and their order: PROMO below. Store links come from each game's `live` flags in games.js, so
+// a game that goes live in a store shows its button in every game without an app update. Read from any app or site
+// (CORS open in .htaccess); the games keep their last copy for offline.
+const PROMO = ['mergy', 'd2048', 'candi'];
+const promoGames = PROMO.map(slug => MOBILE.find(g => g.slug === slug)).filter(Boolean).map(g => ({
+  id: g.slug,
+  name: g.shortName || g.name,
+  tagline: g.tagline,
+  icon: `${SITE}/assets/img/${g.slug}/icon.webp`,
+  page: `${SITE}/${g.slug}/`,
+  ios: g.appStore && g.appStore.live && g.appStore.id ? `https://apps.apple.com/app/id${g.appStore.id}` : null,
+  android: g.play && g.play.live && g.play.id ? `https://play.google.com/store/apps/details?id=${g.play.id}` : null,
+}));
+fs.mkdirSync(path.join(ROOT, 'promo'), { recursive: true });
+fs.writeFileSync(path.join(ROOT, 'promo/games.json'), JSON.stringify({ version: 1, updated: new Date().toISOString().slice(0, 10), games: promoGames }, null, 2) + '\n');
+
 const noSitemap = [];
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

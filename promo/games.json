@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "updated": "2026-11-04",
+  "games": [
+    {
+      "id": "mergy",
+      "name": "Mergy",
+      "tagline": "Drag. Merge. Relax. A cozy little merge game with Mergy the cat.",
+      "icon": "https://deevolutionstudios.com/assets/img/mergy/icon.webp",
+      "page": "https://deevolutionstudios.com/mergy/",
+      "ios": null,
+      "android": null
+    },
+    {
+      "id": "d2048",
+      "name": "D2048",
+      "tagline": "2048 goes dungeon crawling! Merge coins into gems and chests, outwit monsters and slay bosses in 60 levels.",
+      "icon": "https://deevolutionstudios.com/assets/img/d2048/icon.webp",
+      "page": "https://deevolutionstudios.com/d2048/",
+      "ios": "https://apps.apple.com/app/id1354589124",
+      "android": null
+    },
+    {
+      "id": "candi",
+      "name": "Candi's Swamp Hop",
+      "tagline": "Hold to float, let go to hop! Help Candi cross the spooky-cute swamp without getting her boots wet.",
+      "icon": "https://deevolutionstudios.com/assets/img/candi/icon.webp",
+      "page": "https://deevolutionstudios.com/candi/",
+      "ios": null,
+      "android": "https://play.google.com/store/apps/details?id=com.deevolutionstudios.swamphop"
+    }
+  ]
+}

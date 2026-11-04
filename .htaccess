@@ -39,12 +39,18 @@ RedirectMatch 404 ^/(README\.md|CLAUDE\.md|package\.json|\.gitignore)$
   <FilesMatch "\.(css|js|woff2|webp|png|svg|ico|webmanifest)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
+  # The "More from us" list: any of our apps may read it, and a change shows within the hour
+  <If "%{REQUEST_URI} =~ m#^/promo/#">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cache-Control "public, max-age=3600"
+  </If>
   <FilesMatch "^(app-ads|robots)\.txt$">
     Header set Cache-Control "public, max-age=3600"
   </FilesMatch>
 </IfModule>
 
 AddType text/plain .txt
+AddType application/json .json
 AddType image/webp .webp
 AddType font/woff2 .woff2
 AddType application/manifest+json .webmanifest
