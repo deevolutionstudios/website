@@ -10,9 +10,45 @@ const testing = [
   { slug: 'd2048', name: 'D2048: Merge Dungeon' },
   { slug: 'elementra', name: 'Elementra: Dragon Academy' },
   { slug: 'glimmlings', name: 'Glimmlings (our new merge game)' },
+  { slug: 'mergy', name: 'Mergy: Cozy Merge' },
 ];
 
 const posts = [
+  {
+    slug: 'd2048-is-live',
+    date: '2026-11-05',
+    title: 'D2048: Merge Dungeon is out now',
+    summary: 'The 2048 you know, gone dungeon crawling. Free now on iPhone and Android.',
+    game: 'd2048',
+    body: `
+<p>D2048: Merge Dungeon is out now, free on the App Store and Google Play.</p>
+<p>It's the 2048 you know and love, sent dungeon crawling. Merge coins into gems and chests to earn gold, outwit the
+skeletons and orcs that try to run off with your treasure, and take on bosses across 60 levels: the Orc War Chief, the
+Lich, the Wizard and, at the very end, the Dragon.</p>
+<p>A big thank you to everyone who tested it. Download it, play a few levels, and tell us what you think at
+<a href="mailto:contact@deevolutionstudios.com">contact@deevolutionstudios.com</a>. And if you enjoy it, a rating in
+the store helps a small studio like ours more than you'd think.</p>
+<p><a href="https://apps.apple.com/app/id1354589124">Get it on the App Store</a> ·
+<a href="https://play.google.com/store/apps/details?id=com.deevolutionstudios.d2048">Get it on Google Play</a></p>`,
+  },
+  {
+    slug: 'mergy-testers-wanted',
+    date: '2026-11-05',
+    title: 'Testers wanted: Mergy, our cozy merge game',
+    summary: 'Help us test Mergy, a cozy little merge game with Mergy the cat, before it comes out on iPhone and Android.',
+    game: 'mergy',
+    testers: 'mergy',
+    body: `
+<p>Meet Mergy, a cozy little merge game, and Mergy the cat, who would very much like you to get comfortable. Drag two
+of the same thing together and they merge into something new: a cotton puff becomes yarn, yarn becomes a knitted
+scarf, and on it goes all the way to a patchwork quilt.</p>
+<p>There are two ways to play. <strong>Chill</strong> is endless merging with nothing to lose, just you, the board and a
+warm blanket. <strong>Less Chill</strong> has sleepy animal customers dreaming of the things you make, so you merge to
+fill their orders. Your merges go on the world board, Legends of the Lounge, if you like a little friendly
+competition.</p>
+<p>We're looking for testers on iPhone and Android before it comes out. You'll get the game early, play it whenever
+you like, and tell us what you think: what feels good, what's confusing, and anything that breaks.</p>`,
+  },
   {
     slug: 'd2048-final-testing',
     date: '2026-10-29',
