@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="ad.orientation" content="portrait">
+<meta name="ad.size" content="width=320,height=480">
+<title>Candi's Swamp Hop</title>
+<!--NETWORK-->
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#1d3b3a;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  canvas{display:block;width:100%;height:100%}
+  #end{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;
+    background:radial-gradient(circle at 50% 40%,rgba(255,170,220,.35),rgba(20,40,40,.88) 70%);font-family:'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#fff;text-align:center}
+  #end.on{display:flex;animation:fade .35s ease-out}
+  #end img.logo{width:min(78vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))}
+  #end img.pose{height:min(30vh,220px);animation:bob 1.6s ease-in-out infinite}
+  #end .line{font-size:clamp(17px,5vw,22px);font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+  #end button{margin-top:4px;border:3px solid #fff;border-radius:999px;background:linear-gradient(#ff7fcb,#e23d9b);color:#fff;font:900 clamp(20px,6.2vw,26px)/1 'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;
+    padding:16px 40px;box-shadow:0 6px 0 #9c1d63,0 10px 20px rgba(0,0,0,.35);letter-spacing:.5px;animation:pulse 1.1s ease-in-out infinite;cursor:pointer}
+  #end .sub{font-size:13px;opacity:.85}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+  @keyframes pulse{50%{transform:scale(1.07)}}
+  @media (prefers-reduced-motion:reduce){#end img.pose,#end button{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="end">
+  <img class="logo" id="endlogo" alt="Candi's Swamp Hop">
+  <img class="pose" id="endpose" alt="">
+  <div class="line" id="endline">Nice hopping!</div>
+  <button id="cta" type="button">PLAY FREE</button>
+  <div class="sub">Free on iPhone and Android</div>
+</div>
+<script>
+// Candi's Swamp Hop playable ad (De-Evolution Studios). One file: the art is inlined by tools/build-playables.js.
+// Shown inside our own games (house ads) and usable on ad networks (MRAID / Google's ExitApi).
+// Host games talk to it with postMessage: it sends {dvsAd: 'ready'|'start'|'complete'|'cta', game} to its parent.
+const GAME = 'candi';
+const STORE = { ios: 'https://apps.apple.com/app/id6825680669', android: 'https://play.google.com/store/apps/details?id=com.deevolutionstudios.swamphop', web: 'https://deevolutionstudios.com/candi/' };
+const A = /*ASSETS*/{};
+const Q = new URLSearchParams(location.search);
+const hosted = window.parent !== window;
+const platform = Q.get('platform') || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
+let soundOn = Q.get('sound') !== '0';
+const send = (type, extra) => { try { if (hosted) parent.postMessage(Object.assign({ dvsAd: type, game: GAME }, extra || {}), '*'); } catch (e) {} };
+function cta() {
+  send('cta', { platform });
+  if (window.mraid && mraid.open) mraid.open(STORE[platform] || STORE.android);
+  else if (window.ExitApi && ExitApi.exit) ExitApi.exit();
+  else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
+}
+const src = k => A[k] || ('assets/' + k);
+const img = {}; let left = 0;
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0) start(); }; i.src = src(k + '.webp'); img[k] = i; }
+['sky', 'trees', 'reeds', 'stump1', 'stump3', 'stump5', 'moss', 'candi'].forEach(load);
+document.getElementById('endlogo').src = src('logo.webp');
+document.getElementById('endpose').src = src('pose.webp');
+
+// ---- sound (Web Audio; starts on the first touch)
+let ac = null; const buf = {};
+function unlock() {
+  if (ac || !soundOn) return;
+  try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  ['float', 'land', 'perfect', 'splash'].forEach(k => fetch(src(k + '.mp3')).then(r => r.arrayBuffer()).then(b => ac.decodeAudioData(b)).then(d => { buf[k] = d; }).catch(() => {}));
+}
+function play(k, vol) { if (!ac || !buf[k] || !soundOn) return; const s = ac.createBufferSource(), g = ac.createGain(); g.gain.value = vol || 0.6; s.buffer = buf[k]; s.connect(g).connect(ac.destination); s.start(); }
+window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd === 'sound') soundOn = !!d.on; });
+
+// ---- the world, in logical pixels 360 wide
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+let W = 360, H = 640, scale = 1, dpr = 1;
+function fit() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  scale = innerWidth / 300; W = 300; H = innerHeight / scale;
+  if (H < 480) { scale = innerHeight / 480; H = 480; W = innerWidth / scale; }
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+}
+addEventListener('resize', fit); fit();
+const WATER = () => H * 0.84;
+const HOME_X = 70;            // where the stump she stands on rests
+const CW = 104, CH = 103;       // Candi's drawn cell (bottom-centre on her feet)
+const STUMPS = ['stump1', 'stump3', 'stump5'];
+const FR = { stand: 0, fly: [1, 2, 3, 4], fall: [5, 6], run: [7, 8, 9, 10], splash: [11, 12, 13] };
+
+let stumps = [], candi, cam = 0, camTo = 0, hops = 0, score = 0, misses = 0, holding = false, state = 'load', t = 0,
+  hint = 'hold', fx = [], ended = false, started = false, idleT = 0, popups = [];
+function stumpAt(x, top, k, w) { return { x, top, img: STUMPS[k % 3], w: w || 64 }; }
+function nextStump(prev) {
+  const n = stumps.length;
+  const gap = [140, 150, 160, 168][Math.min(n - 1, 3)];
+  const top = Math.max(H * 0.42, Math.min(WATER() - 120, prev.top + [-40, -10, 30, -55, 20][n % 5]));
+  return stumpAt(prev.x + gap, top, n, [70, 64, 58, 54][Math.min(n - 1, 3)]);
+}
+function reset() {
+  stumps = [stumpAt(HOME_X, WATER() - 150, 0, 74)];
+  for (let i = 0; i < 4; i++) stumps.push(nextStump(stumps[stumps.length - 1]));
+  cam = camTo = 0;
+  candi = { x: HOME_X, y: stumps[0].top, vy: 0, mode: 'stand', on: 0, frame: 0, ft: 0 };
+}
+function start() { reset(); state = 'play'; send('ready'); requestAnimationFrame(loop); }
+
+// ---- input: hold anywhere to float up, let go to drift down onto the next stump
+function down(e) {
+  e.preventDefault(); unlock();
+  if (ended) return;
+  if (!started) { started = true; send('start'); }
+  idleT = 0;
+  if (candi.mode === 'stand' || candi.mode === 'run') { holding = true; candi.mode = 'fly'; candi.frame = 0; play('float', 0.5); if (hint === 'hold') hint = 'release'; }
+}
+function up(e) {
+  e.preventDefault();
+  if (!holding) return; holding = false;
+  if (candi.mode === 'fly') { candi.mode = 'drift'; if (hint === 'release') hint = null; }
+}
+cv.addEventListener('pointerdown', down); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+document.getElementById('cta').addEventListener('click', e => { e.stopPropagation(); cta(); });
+document.getElementById('end').addEventListener('click', cta);
+
+// ---- rules
+function step() {
+  t++; idleT++;
+  cam += (camTo - cam) * 0.12;
+  const next = stumps[candi.on + 1], here = stumps[candi.on];
+  if (candi.mode === 'fly') {
+    candi.y = Math.max(70, candi.y - 2.6);
+    if (t % 3 === 0) fx.push({ x: candi.x + (Math.random() - .5) * 18, y: candi.y - 80, vx: 0, vy: .5, life: 30, c: '#ffd1ee' });
+  } else if (candi.mode === 'drift') {
+    const px = candi.x, py = candi.y;
+    candi.x += 2.8; candi.y += 2.8;
+    // landing: her feet cross the next stump's top while over it
+    if (next && py <= next.top && candi.y >= next.top && Math.abs(candi.x - next.x) <= next.w / 2 + 14) {
+      candi.y = next.top; candi.on++; hops++;
+      const perfect = Math.abs(candi.x - next.x) < 12;
+      score += perfect ? 2 : 1;
+      popups.push({ x: candi.x, y: candi.y - 100, txt: perfect ? 'PERFECT +2' : '+1', c: perfect ? '#ff7fcb' : '#fff', life: 60 });
+      for (let i = 0; i < (perfect ? 22 : 10); i++) { const a = Math.random() * Math.PI * 2, s = 1 + Math.random() * 2.4; fx.push({ x: candi.x, y: candi.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 1, life: 34, c: perfect ? ['#ff7fcb', '#c8f57f', '#fff'][i % 3] : '#e9ffd0' }); }
+      play(perfect ? 'perfect' : 'land', 0.7);
+      candi.mode = 'run'; candi.frame = 0; candi.runTo = next.x; camTo = next.x - HOME_X;
+      if (stumps.length < candi.on + 4) stumps.push(nextStump(stumps[stumps.length - 1]));
+      if (hops >= 3) setTimeout(finish, 900);
+    } else if (next && candi.x > next.x - next.w / 2 - 4 && candi.x < next.x + next.w / 2 && candi.y > next.top + 10) {
+      candi.mode = 'slide'; candi.x = next.x - next.w / 2 - 4;   // hit its side: slide down it
+    } else if (candi.y > WATER()) splash();
+    else if (candi.x - cam > W + 30) splash();
+  } else if (candi.mode === 'slide') { candi.y += 4; if (candi.y > WATER()) splash(); }
+  else if (candi.mode === 'run') {
+    candi.x += (candi.runTo - candi.x) * 0.15;
+    if (Math.abs(candi.x - candi.runTo) < 1) { candi.x = candi.runTo; candi.mode = 'stand'; }
+  } else if (candi.mode === 'sink') {
+    candi.y += 1.6;
+    if (candi.y > WATER() + 60) {
+      misses++;
+      if (misses >= 3) return finish();
+      candi.x = here.x; candi.y = here.top; candi.mode = 'stand'; hint = 'hold';
+    }
+  }
+  candi.ft++;
+  if (candi.ft > 6) { candi.ft = 0; candi.frame++; }
+  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.06, --p.life > 0));
+  popups = popups.filter(p => (p.y -= 0.6, --p.life > 0));
+  if (!ended && started && idleT > 60 * 12) finish();   // they stopped playing: show the end card
+  if (!started && t > 60 * 15) finish();
+}
+function splash() {
+  candi.mode = 'sink'; candi.frame = 0; candi.x = Math.min(candi.x, cam + W - 30); candi.y = WATER();
+  play('splash', 0.6);
+  for (let i = 0; i < 24; i++) { const a = -Math.PI / 2 + (Math.random() - .5) * 2.2, s = 2 + Math.random() * 3; fx.push({ x: candi.x, y: WATER(), vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 40, c: i % 2 ? '#bff3e6' : '#fff' }); }
+  popups.push({ x: candi.x, y: WATER() - 60, txt: 'SPLASH!', c: '#bff3e6', life: 60 });
+}
+function finish() {
+  if (ended) return; ended = true; holding = false;
+  document.getElementById('endline').textContent = hops >= 3 ? `You scored ${score}! Can you go further?` : 'Help Candi cross the swamp!';
+  document.getElementById('end').classList.add('on');
+  send('complete', { score });
+}
+
+// ---- drawing
+function cover(im, y, h, par) {
+  if (!im.width) return;
+  const w = h * im.width / im.height, off = -((cam * par) % w);
+  for (let x = off - w; x < W + w; x += w) g.drawImage(im, x, y, w + 1, h);
+}
+function frameIndex() {
+  const m = candi.mode;
+  if (m === 'fly') return FR.fly[Math.min(candi.frame, 3)];
+  if (m === 'drift' || m === 'slide') return FR.fall[candi.frame % 2];
+  if (m === 'run') return FR.run[candi.frame % 4];
+  if (m === 'sink') return FR.splash[Math.min(candi.frame, 2)];
+  return FR.stand;
+}
+function drawCandi() {
+  const i = frameIndex(), x = candi.x - cam;
+  g.save();
+  if (candi.mode === 'sink') { g.beginPath(); g.rect(-50, -50, W + 100, WATER() + 52); g.clip(); }
+  g.drawImage(img.candi, i * 138, 0, 138, 136, x - CW / 2, candi.y - CH, CW, CH);
+  g.restore();
+}
+function drawStump(s) {
+  const im = img[s.img]; if (!im.width) return;
+  const w = s.w * 1.35, h = w * im.height / im.width, x = s.x - cam - w / 2;
+  g.drawImage(im, x, s.top - w * 0.06, w, h);
+  if (img.moss.width) g.drawImage(img.moss, s.x - cam - 13, s.top - 9, 26, 13);
+}
+function drawGuide() {
+  // where she'd land if she let go now: a dotted 45-degree line
+  if (candi.mode !== 'fly' && candi.mode !== 'drift') return;
+  if (hops >= 2) return;
+  g.save(); g.strokeStyle = 'rgba(255,255,255,.75)'; g.lineWidth = 3; g.setLineDash([2, 9]); g.lineCap = 'round';
+  g.beginPath(); g.moveTo(candi.x - cam, candi.y); g.lineTo(candi.x - cam + 400, candi.y + 400); g.stroke(); g.restore();
+}
+function drawHint() {
+  if (!hint || ended) return;
+  const pulse = 1 + Math.sin(t / 8) * 0.06, y = H * 0.22;
+  g.save(); g.translate(W / 2, y); g.scale(pulse, pulse);
+  g.font = '900 28px "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif'; g.textAlign = 'center'; g.lineJoin = 'round';
+  const txt = hint === 'hold' ? 'HOLD TO FLOAT' : 'LET GO TO HOP!';
+  g.lineWidth = 7; g.strokeStyle = '#8a1d5a'; g.strokeText(txt, 0, 0); g.fillStyle = '#fff'; g.fillText(txt, 0, 0);
+  g.restore();
+  if (hint === 'hold') { // a finger pressing
+    const fy = H * 0.34, fx0 = W / 2, k = (t % 50) / 50;
+    g.save(); g.strokeStyle = '#fff'; g.lineWidth = 4;
+    g.globalAlpha = .8 * (1 - k); g.beginPath(); g.arc(fx0, fy, 14 + k * 26, 0, Math.PI * 2); g.stroke();
+    g.globalAlpha = 1; g.font = '44px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', fx0 + 6, fy + 40 + Math.sin(t / 8) * 3); g.restore();
+  }
+}
+function draw() {
+  g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  const sky = img.sky;
+  if (sky.width) g.drawImage(sky, 0, 0, W, H); else { g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); }
+  cover(img.trees, H * 0.30, H * 0.56, 0.35);
+  for (const s of stumps) if (s.x - cam > -80 && s.x - cam < W + 80) drawStump(s);
+  const wg = g.createLinearGradient(0, WATER(), 0, H); wg.addColorStop(0, 'rgba(74,140,128,.92)'); wg.addColorStop(1, 'rgba(22,58,58,.98)');
+  drawGuide();
+  drawCandi();
+  g.fillStyle = wg; g.fillRect(0, WATER(), W, H - WATER());
+  g.fillStyle = 'rgba(255,255,255,.25)'; for (let x = -((cam * 1.1 + t * .4) % 40); x < W; x += 40) g.fillRect(x, WATER() + 3 + Math.sin((x + t) / 30) * 2, 18, 2);
+  cover(img.reeds, H - H * 0.13, H * 0.13, 1.2);
+  for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 20); g.fillStyle = p.c; g.beginPath(); g.arc(p.x - cam, p.y, 2.6, 0, Math.PI * 2); g.fill(); }
+  g.globalAlpha = 1;
+  g.textAlign = 'center'; g.lineJoin = 'round';
+  for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); g.font = '900 24px "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif'; g.lineWidth = 5; g.strokeStyle = 'rgba(60,10,40,.8)'; g.strokeText(p.txt, p.x - cam, p.y); g.fillStyle = p.c; g.fillText(p.txt, p.x - cam, p.y); }
+  g.globalAlpha = 1;
+  // score
+  g.font = '900 40px "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif'; g.lineWidth = 7; g.strokeStyle = '#8a1d5a';
+  g.strokeText(String(score), W / 2, 62); g.fillStyle = '#fff'; g.fillText(String(score), W / 2, 62);
+  drawHint();
+}
+function loop() { step(); draw(); requestAnimationFrame(loop); }
+</script>
+</body>
+</html>

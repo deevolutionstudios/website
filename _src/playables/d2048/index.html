@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="ad.orientation" content="portrait">
+<meta name="ad.size" content="width=320,height=480">
+<title>D2048: Merge Dungeon</title>
+<!--NETWORK-->
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#140c1c;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  canvas{display:block;width:100%;height:100%}
+  #end{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;
+    background:radial-gradient(circle at 50% 38%,rgba(170,70,255,.35),rgba(12,6,20,.9) 70%);font-family:'Trebuchet MS',Arial,sans-serif;color:#fff;text-align:center}
+  #end.on{display:flex;animation:fade .35s ease-out}
+  #end img.logo{width:min(88vw,380px);filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));animation:bob 2s ease-in-out infinite}
+  #end .line{font-size:clamp(17px,5vw,22px);font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+  #end .gold{font-size:clamp(15px,4.4vw,19px);color:#ffd45c;font-weight:800}
+  #end button{margin-top:6px;border:3px solid #ffe08a;border-radius:16px;background:linear-gradient(#ffcf3f,#e88a00);color:#3a1600;font:900 clamp(20px,6.2vw,26px)/1 'Trebuchet MS',Arial,sans-serif;
+    padding:16px 40px;box-shadow:0 6px 0 #8a4a00,0 10px 22px rgba(0,0,0,.45);animation:pulse 1.1s ease-in-out infinite;cursor:pointer}
+  #end .sub{font-size:13px;opacity:.8}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes bob{50%{transform:translateY(-6px)}}
+  @keyframes pulse{50%{transform:scale(1.07)}}
+  @media (prefers-reduced-motion:reduce){#end img.logo,#end button{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="end">
+  <img class="logo" id="endlogo" alt="D2048">
+  <div class="line">Merge treasure. Slay monsters.<br>60 levels and a dragon.</div>
+  <div class="gold" id="endgold"></div>
+  <button id="cta" type="button">PLAY FREE</button>
+  <div class="sub">Free on iPhone and Android</div>
+</div>
+<script>
+// D2048 playable ad (De-Evolution Studios). One file: the art is inlined by tools/build-playables.js.
+// Shown inside our own games (house ads) and usable on ad networks (MRAID / Google's ExitApi).
+// Host games talk to it with postMessage: it sends {dvsAd: 'ready'|'start'|'complete'|'cta', game} to its parent.
+const GAME = 'd2048';
+const STORE = { ios: 'https://apps.apple.com/app/id1354589124', android: 'https://play.google.com/store/apps/details?id=com.deevolutionstudios.d2048', web: 'https://deevolutionstudios.com/d2048/' };
+const A = /*ASSETS*/{};
+const Q = new URLSearchParams(location.search);
+const hosted = window.parent !== window;
+const platform = Q.get('platform') || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
+let soundOn = Q.get('sound') !== '0';
+const send = (type, extra) => { try { if (hosted) parent.postMessage(Object.assign({ dvsAd: type, game: GAME }, extra || {}), '*'); } catch (e) {} };
+function cta() {
+  send('cta', { platform });
+  if (window.mraid && mraid.open) mraid.open(STORE[platform] || STORE.android);
+  else if (window.ExitApi && ExitApi.exit) ExitApi.exit();
+  else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
+}
+const src = k => A[k] || ('assets/' + k);
+const img = {}; let left = 0;
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0) start(); }; i.src = src(k + '.webp'); img[k] = i; }
+['bg', 'frame', 'cell', 'skel', 'chest', 'sword', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'].forEach(load);
+document.getElementById('endlogo').src = src('logo.webp');
+
+let ac = null; const buf = {};
+function unlock() {
+  if (ac || !soundOn) return;
+  try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  ['coin', 'appear', 'slay', 'explode'].forEach(k => fetch(src(k + '.mp3')).then(r => r.arrayBuffer()).then(b => ac.decodeAudioData(b)).then(d => { buf[k] = d; }).catch(() => {}));
+}
+function play(k, vol) { if (!ac || !buf[k] || !soundOn) return; const s = ac.createBufferSource(), g = ac.createGain(); g.gain.value = vol || 0.6; s.buffer = buf[k]; s.connect(g).connect(ac.destination); s.start(); }
+window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd === 'sound') soundOn = !!d.on; });
+
+// ---- layout, in logical pixels 360 wide
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+let W = 360, H = 640, scale = 1, dpr = 1, BX, BY, BS, CS;
+function fit() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  scale = innerWidth / 360; W = 360; H = innerHeight / scale;
+  if (H < 560) { scale = innerHeight / 560; H = 560; W = innerWidth / scale; }
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  BS = Math.min(W - 24, 340); BX = (W - BS) / 2; BY = Math.max(130, H * 0.26); CS = (BS - 36) / 4;
+}
+addEventListener('resize', fit); fit();
+const cellX = c => BX + 18 + c * CS, cellY = r => BY + 18 + r * CS;
+
+// ---- the board: tiles {id, v (1-9 treasure, 's' skeleton, 'c' chest), r, c, x, y, pop}
+let tiles = [], nextId = 1, moves = 0, gold = 0, t = 0, state = 'load', hint = 'swipe', started = false, ended = false, idleT = 0,
+  fx = [], popups = [], swordGlow = false, slash = null, dir0 = 'left';
+const add = (v, r, c, pop) => { const o = { id: nextId++, v, r, c, x: cellX(c), y: cellY(r), pop: pop ? 0.2 : 1 }; tiles.push(o); return o; };
+const at = (r, c) => tiles.find(o => o.r === r && o.c === c && !o.gone);
+function start() {
+  // a board where the first swipe left merges three pairs at once
+  [[0, 0, 1], [0, 2, 1], [1, 1, 2], [1, 3, 2], [2, 0, 3], [2, 1, 3], [3, 2, 4], [0, 3, 5]].forEach(([r, c, v]) => add(v, r, c));
+  state = 'play'; send('ready'); requestAnimationFrame(loop);
+}
+const SPAWNS = [[3, 3], [2, 3], [1, 3], [3, 0], [0, 3], [2, 2], [3, 1], [1, 2]];
+function spawn(v) {
+  for (const [r, c] of SPAWNS) if (!at(r, c)) return add(v, r, c, true);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (!at(r, c)) return add(v, r, c, true);
+}
+function move(dir) {
+  if (ended || state !== 'play') return;
+  const dr = { up: -1, down: 1, left: 0, right: 0 }[dir], dc = { left: -1, right: 1, up: 0, down: 0 }[dir];
+  const order = [0, 1, 2, 3]; if (dr > 0 || dc > 0) order.reverse();
+  let moved = false, merged = 0;
+  const done = new Set();
+  for (const a of order) for (const b of order) {
+    const r = dr ? a : b, c = dc ? a : b, o = at(r, c); if (!o) continue;
+    let nr = r, nc = c;
+    while (true) {
+      const tr = nr + dr, tc = nc + dc; if (tr < 0 || tr > 3 || tc < 0 || tc > 3) break;
+      const there = at(tr, tc);
+      if (!there) { nr = tr; nc = tc; continue; }
+      if (typeof o.v === 'number' && there.v === o.v && o.v < 9 && !done.has(there.id)) {
+        o.gone = true; o.r = tr; o.c = tc; there.v++; there.pop = 1.35; done.add(there.id); merged++; moved = true;
+        const g2 = 5 * Math.pow(2, there.v); gold += g2;
+        popups.push({ x: cellX(tc) + CS / 2, y: cellY(tr), txt: '+' + g2, life: 50 });
+        for (let i = 0; i < 10; i++) { const an = Math.random() * 6.28, s = 1 + Math.random() * 2.5; fx.push({ x: cellX(tc) + CS / 2, y: cellY(tr) + CS / 2, vx: Math.cos(an) * s, vy: Math.sin(an) * s, life: 30, c: ['#ffd45c', '#fff2b0', '#c38cff'][i % 3] }); }
+        nr = null; break;
+      }
+      break;
+    }
+    if (nr !== null && (nr !== r || nc !== c)) { o.r = nr; o.c = nc; moved = true; }
+  }
+  if (!moved) return;
+  if (!started) { started = true; send('start'); }
+  idleT = 0; moves++; hint = null;
+  if (merged) play('coin', 0.6);
+  setTimeout(() => {
+    tiles = tiles.filter(o => !o.gone);
+    if (moves === 2 || (moves > 2 && !tiles.some(o => o.v === 's' || o.v === 'c') && !slash)) {
+      const s = spawn('s'); s.pop = 0.1; play('appear', 0.5); hint = 'sword'; swordGlow = true;
+      popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) - 6, txt: 'A SKELETON!', life: 80, red: true });
+    } else spawn(moves % 3 === 0 ? 2 : 1);
+  }, 130);
+}
+function useSword() {
+  const s = tiles.find(o => o.v === 's'); if (!s || slash) return;
+  swordGlow = false; hint = null; idleT = 0;
+  slash = { x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, life: 24 };
+  play('slay', 0.6);
+  setTimeout(() => {
+    s.v = 'c'; s.pop = 1.4; gold += 500; play('explode', 0.6);
+    popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r), txt: '+500 GOLD', life: 70 });
+    for (let i = 0; i < 30; i++) { const an = Math.random() * 6.28, sp = 1.5 + Math.random() * 3.5; fx.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 44, c: ['#ffd45c', '#fff', '#ff9a3c'][i % 3] }); }
+    setTimeout(finish, 1400);
+  }, 350);
+}
+function finish() {
+  if (ended) return; ended = true;
+  document.getElementById('endgold').textContent = gold ? `You looted ${gold.toLocaleString('en')} gold!` : '';
+  document.getElementById('end').classList.add('on');
+  send('complete', { score: gold });
+}
+
+// ---- input: swipe (or arrow keys); tap the sword
+let sx = 0, sy = 0, down = false;
+cv.addEventListener('pointerdown', e => {
+  e.preventDefault(); unlock(); if (ended) return;
+  const p = toLogical(e); sx = p.x; sy = p.y; down = true;
+  const sb = swordBox(); if (p.x > sb.x && p.x < sb.x + sb.s && p.y > sb.y && p.y < sb.y + sb.s) { down = false; useSword(); }
+  else { const s = tiles.find(o => o.v === 's'); if (s && p.x > cellX(s.c) && p.x < cellX(s.c) + CS && p.y > cellY(s.r) && p.y < cellY(s.r) + CS) { down = false; useSword(); } }
+});
+addEventListener('pointerup', e => {
+  if (!down) return; down = false;
+  const p = toLogical(e), dx = p.x - sx, dy = p.y - sy;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 22) return;
+  move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+});
+addEventListener('keydown', e => { const d = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' }[e.key]; if (d) { unlock(); move(d); } });
+function toLogical(e) { return { x: e.clientX / scale, y: e.clientY / scale }; }
+const swordBox = () => ({ x: W / 2 - 40, y: BY + BS + 26, s: 80 });
+document.getElementById('cta').addEventListener('click', e => { e.stopPropagation(); cta(); });
+document.getElementById('end').addEventListener('click', cta);
+
+// ---- drawing
+function step() {
+  t++; idleT++;
+  for (const o of tiles) { o.x += (cellX(o.c) - o.x) * 0.35; o.y += (cellY(o.r) - o.y) * 0.35; o.pop += (1 - o.pop) * 0.2; }
+  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.08, --p.life > 0));
+  popups = popups.filter(p => (p.y -= 0.5, --p.life > 0));
+  if (slash && --slash.life <= 0) slash = null;
+  if (!ended && started && idleT > 60 * 12) finish();
+  if (!started && t > 60 * 15) finish();
+}
+function text(s, x, y, size, fill, stroke) {
+  g.font = `900 ${size}px "Trebuchet MS",Arial,sans-serif`; g.textAlign = 'center'; g.lineJoin = 'round';
+  g.lineWidth = Math.max(4, size / 5); g.strokeStyle = stroke || '#2a0d3a'; g.strokeText(s, x, y); g.fillStyle = fill || '#fff'; g.fillText(s, x, y);
+}
+function draw() {
+  g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  const bg = img.bg;
+  if (bg.width) { const h = Math.max(H, W * bg.height / bg.width), w = h * bg.width / bg.height; g.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h); }
+  g.fillStyle = 'rgba(10,4,18,.35)'; g.fillRect(0, 0, W, H);
+  // gold counter
+  text(`\u{1FA99} ${gold.toLocaleString('en')}`, W / 2, Math.max(56, BY - 74), 30, '#ffd45c');
+  // board
+  if (img.frame.width) g.drawImage(img.frame, BX - 6, BY - 6, BS + 12, BS + 12);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (img.cell.width) g.drawImage(img.cell, cellX(c) + 2, cellY(r) + 2, CS - 4, CS - 4);
+  for (const o of tiles) {
+    const im = typeof o.v === 'number' ? img['t' + o.v] : o.v === 's' ? img.skel : img.chest;
+    if (!im || !im.width) continue;
+    const s = CS * 0.92 * o.pop, cx = o.x + CS / 2, cy = o.y + CS / 2 + (o.v === 's' ? Math.sin(t / 6) * 2 : 0);
+    g.globalAlpha = o.gone ? 0.6 : 1; g.drawImage(im, cx - s / 2, cy - s / 2, s, s); g.globalAlpha = 1;
+  }
+  // sword button
+  const sb = swordBox();
+  g.save(); g.translate(sb.x + sb.s / 2, sb.y + sb.s / 2);
+  if (swordGlow) { const k = 1 + Math.sin(t / 6) * 0.1; g.scale(k, k); g.shadowColor = '#ffcf3f'; g.shadowBlur = 24; }
+  if (img.sword.width) g.drawImage(img.sword, -sb.s / 2, -sb.s / 2, sb.s, sb.s);
+  g.restore();
+  // slash
+  if (slash) { g.save(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.shadowColor = '#c38cff'; g.shadowBlur = 16; g.globalAlpha = slash.life / 24;
+    const k = (24 - slash.life) / 24 * 60; g.beginPath(); g.moveTo(slash.x - 40, slash.y - 40); g.lineTo(slash.x - 40 + k * 1.4, slash.y - 40 + k * 1.4); g.stroke(); g.restore(); }
+  for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 16); g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, 2.8, 0, 6.29); g.fill(); }
+  g.globalAlpha = 1;
+  for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); text(p.txt, p.x, p.y, p.red ? 20 : 22, p.red ? '#ff6b6b' : '#ffd45c'); }
+  g.globalAlpha = 1;
+  // hints
+  const hy = BY - 26;
+  if (hint === 'swipe') {
+    text('SWIPE TO MERGE!', W / 2, hy, 26);
+    const k = (t % 60) / 60, hx = BX + BS * (0.72 - 0.45 * k), hy2 = BY + CS * 0.75;
+    g.globalAlpha = k < 0.85 ? 1 : (1 - k) / 0.15; g.font = '46px sans-serif'; g.fillText('\u{1F446}', hx, hy2 + 30); g.globalAlpha = 1;
+  } else if (hint === 'sword') {
+    text('TAP THE SWORD!', W / 2, hy, 26, '#fff', '#5a0b0b');
+    g.font = '40px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', sb.x + sb.s / 2 + 8, sb.y + sb.s + 34 + Math.sin(t / 7) * 4);
+  }
+}
+function loop() { step(); draw(); requestAnimationFrame(loop); }
+</script>
+</body>
+</html>

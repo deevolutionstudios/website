@@ -44,6 +44,13 @@ RedirectMatch 404 ^/(README\.md|CLAUDE\.md|package\.json|\.gitignore)$
     Header set Access-Control-Allow-Origin "*"
     Header set Cache-Control "public, max-age=3600"
   </If>
+  # Our playable ads (house ads): any of our apps may load them and show them in a frame
+  <If "%{REQUEST_URI} =~ m#^/playables/#">
+    Header set Access-Control-Allow-Origin "*"
+    Header unset X-Frame-Options
+    Header always unset X-Frame-Options
+    Header set Cache-Control "public, max-age=3600"
+  </If>
   <FilesMatch "^(app-ads|robots)\.txt$">
     Header set Cache-Control "public, max-age=3600"
   </FilesMatch>

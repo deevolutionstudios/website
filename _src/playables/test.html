@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>House ads test</title>
+<style>body{font:16px system-ui,sans-serif;margin:24px;background:#faf8f4;color:#1a1a1a}button{font:inherit;padding:10px 16px;margin:4px 4px 4px 0;border-radius:10px;border:2px solid #1a1a1a;background:#fff;cursor:pointer}pre{background:#fff;border:1px solid #ddd;padding:10px;white-space:pre-wrap;font-size:13px}</style></head>
+<body>
+<h1>House ads test</h1>
+<p>Plays the part of one of our games asking for an ad. Pretend to be:
+<select id="self"><option>mergy</option><option>d2048</option><option>candi</option></select></p>
+<p><button id="rew">Rewarded ad</button><button id="plain">Plain ad</button><button id="reset">Forget what was shown</button></p>
+<pre id="log"></pre>
+<script type="module">
+import * as House from './house-ads.js';
+const log = t => { document.getElementById('log').textContent = `${new Date().toLocaleTimeString()}  ${t}\n` + document.getElementById('log').textContent; };
+const list = location.hostname === 'localhost' ? '/promo/ads.json' : undefined;
+const start = () => House.init({ self: document.getElementById('self').value, list, onEvent: (e, d) => log(`${e} ${JSON.stringify(d)}`), open: u => log('open store: ' + u) })
+  .then(() => log('can show: ' + House.candidates().map(a => a.id).join(', ')));
+start(); document.getElementById('self').onchange = start;
+const go = r => House.show({ rewarded: r }).then(v => log('closed: reward ' + v), e => log('not shown / no reward: ' + e));
+document.getElementById('rew').onclick = () => go(true);
+document.getElementById('plain').onclick = () => go(false);
+document.getElementById('reset').onclick = () => { localStorage.removeItem('dvs.houseads'); location.reload(); };
+</script>
+</body></html>

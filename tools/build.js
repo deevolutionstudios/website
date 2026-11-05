@@ -811,6 +811,30 @@ const promoGames = PROMO.map(slug => MOBILE.find(g => g.slug === slug)).filter(B
 fs.mkdirSync(path.join(ROOT, 'promo'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'promo/games.json'), JSON.stringify({ version: 1, updated: new Date().toISOString().slice(0, 10), games: promoGames }, null, 2) + '\n');
 
+// /promo/ads.json: our own playable ads (house ads), read by house-ads.js in each game (Nov 5). One entry per game
+// that has a playable in /playables/<game>/ (built by tools/build-playables.js); store links as above, so a game is only
+// advertised in a store it's live in. The rules here tune the serving in every game without an app update.
+const houseAds = MOBILE.filter(g => fs.existsSync(path.join(ROOT, 'playables', g.slug, 'index.html'))).map(g => ({
+  id: g.slug,
+  name: g.shortName || g.name,
+  playable: `${SITE}/playables/${g.slug}/index.html`,
+  page: `${SITE}/${g.slug}/`,
+  ios: g.appStore && g.appStore.live && g.appStore.id ? `https://apps.apple.com/app/id${g.appStore.id}` : null,
+  android: g.play && g.play.live && g.play.id ? `https://play.google.com/store/apps/details?id=${g.play.id}` : null,
+}));
+fs.writeFileSync(path.join(ROOT, 'promo/ads.json'), JSON.stringify({
+  version: 1, updated: new Date().toISOString().slice(0, 10),
+  rules: {
+    share: 0.2,          // of ad requests, how many get one of ours instead (the rest go to AdMob)
+    fallback: true,      // show one of ours whenever AdMob has nothing
+    perGamePerDay: 2,    // the most times one game's ad is shown to a player in a day
+    afterTapDays: 14,    // after a player taps "Play free" for a game, leave that game out this long
+    rewardAfterSec: 25,  // a rewarded ad pays out when the playable ends, or after this long
+    closeAfterSec: 5,    // when the X appears
+  },
+  ads: houseAds,
+}, null, 2) + '\n');
+
 const noSitemap = [];
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
