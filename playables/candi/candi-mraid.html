@@ -129,11 +129,11 @@ function step() {
   cam += (camTo - cam) * 0.12;
   const next = stumps[candi.on + 1], here = stumps[candi.on];
   if (candi.mode === 'fly') {
-    candi.y = Math.max(70, candi.y - 2.0);
+    candi.y = Math.max(70, candi.y - 1.92);
     if (t % 3 === 0) fx.push({ x: candi.x + (Math.random() - .5) * 18, y: candi.y - 80, vx: 0, vy: .5, life: 30, c: '#ffd1ee' });
   } else if (candi.mode === 'drift') {
     const px = candi.x, py = candi.y;
-    candi.x += 2.05; candi.y += 2.05;
+    candi.x += 2.06; candi.y += 2.06;
     // landing: her feet cross the next stump's top while over it
     if (next && py <= next.top && candi.y >= next.top && Math.abs(candi.x - next.x) <= next.w / 2 + 14) {
       candi.y = next.top; candi.on++; hops++;
