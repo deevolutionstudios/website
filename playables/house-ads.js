@@ -43,7 +43,7 @@ function init(o) {
 }
 async function refresh() {
   try {
-    const r = await fetch(opts.list, { cache: 'no-cache' });
+    const r = await fetch(opts.list + (opts.list.includes('?') ? '&' : '?') + 't=' + Math.floor(Date.now() / 300000), { cache: 'no-cache' }); // a new address every 5 minutes, past any cache
     if (r.ok) { state.list = await r.json(); persist(); }
   } catch (e) { /* offline: keep the last list */ }
 }
