@@ -23,7 +23,8 @@
 const LIST = 'https://deevolutionstudios.com/promo/ads.json';
 const KEY = 'dvs.houseads';            // localStorage: { list, shown: {id: {day, n, at}}, tapped: {id: time} }
 const DEFAULT_RULES = { share: 0.2, fallback: true, perGamePerDay: 2, afterTapDays: 14, rewardAfterSec: 25, closeAfterSec: 5 };
-let opts = { self: '', list: LIST, sound: () => true, open: url => window.open(url, '_blank'), onShow: null, onEvent: null };
+// always: every ad is one of ours, with no daily or after-a-tap limits (the web builds on Render, for testing: Richard, Nov 5)
+let opts = { self: '', list: LIST, always: false, sound: () => true, open: url => window.open(url, '_blank'), onShow: null, onEvent: null };
 let state = load();
 const html = {};                       // playable pages fetched this session, by game id
 
@@ -53,15 +54,16 @@ function candidates() {
   const ads = ((state.list && state.list.ads) || []).filter(a => a && a.id !== opts.self && safe(a.playable) && storeOf(a));
   return ads.filter(a => {
     const s = (state.shown || {})[a.id], t = (state.tapped || {})[a.id];
+    if (opts.always) return true;
     if (s && s.day === d && s.n >= R.perGamePerDay) return false;
     if (t && now - t < R.afterTapDays * 86400000) return false;
     return true;
   }).sort((x, y) => (((state.shown || {})[x.id] || {}).at || 0) - (((state.shown || {})[y.id] || {}).at || 0));
 }
 // Should this ad request be one of ours? (a share of requests, when we have one to show)
-function wantsTurn() { return candidates().length > 0 && Math.random() < rules().share; }
+function wantsTurn() { return candidates().length > 0 && (opts.always || Math.random() < rules().share); }
 // When AdMob has nothing, can we fill in?
-function canFill() { return rules().fallback && candidates().length > 0; }
+function canFill() { return (opts.always || rules().fallback) && candidates().length > 0; }
 
 async function page(a) {
   if (html[a.id]) return html[a.id];
