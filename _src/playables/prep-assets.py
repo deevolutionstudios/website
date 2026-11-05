@@ -39,3 +39,16 @@ save(f'{D}/ui/swordIcon.webp', o+'sword.webp', w=120, q=80)
 save(f'{D}/ui/menuLogo.webp', o+'logo.webp', w=560, q=80)
 for a,b in (('Coin_Touch','coin'),('Monster_1_Appear','appear'),('Monster_1_Slay_Sound','slay'),('Coins_Explode','explode')): shutil.copy(f'{D}/sounds/{a}.mp3', o+b+'.mp3')
 save(f'{D}/ui/coinsIcon.webp', o+'coin.webp', w=96, q=85)
+# Mergy
+M='/home/claude/merge/web/img'; o='mergy/assets/'
+save(f'{M}/scene/room.webp', o+'bg.webp', w=600, q=62)
+save(f'{M}/board.webp', o+'board.webp', w=520, q=78)
+save(f'{M}/customers/cat.webp', o+'cat.webp', w=180, q=82)
+save(f'{M}/logo.webp', o+'logo.webp', w=520, q=82)
+for k in ('cotton-puff', 'thread', 'yarn-ball', 'knitting', 'sock'): save(f'{M}/items/{k}.webp', o+k+'.webp', w=150, q=82)
+# Elementra
+E='/home/claude/elementra'; o='elementra/assets/'
+save(f'{E}/public/table.webp', o+'bg.webp', w=600, q=62)
+save(f'{E}/art/logo.png', o+'logo.webp', w=520, q=82)
+save(f'{E}/public/cards/card-back.webp', o+'back.webp', w=240, q=78)
+for k in ('riders/kira-magnos', 'riders/fia-magmis', 'dragons/nova', 'dragons/blaze', 'riders/cole-evenguard', 'dragons/radiance'): save(f'{E}/public/cards/{k}.webp', o+k.split('/')[1]+'.webp', w=300, q=80)

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="ad.orientation" content="portrait">
+<meta name="ad.size" content="width=320,height=480">
+<title>Mergy: Cozy Merge</title>
+<!--NETWORK-->
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#3a1e14;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  canvas{display:block;width:100%;height:100%}
+  #end{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;
+    background:radial-gradient(circle at 50% 40%,rgba(255,190,120,.35),rgba(40,20,30,.9) 70%);font-family:'Trebuchet MS',Arial,sans-serif;color:#fff;text-align:center}
+  #end.on{display:flex;animation:fade .35s ease-out}
+  #end img.logo{width:min(80vw,340px);filter:drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+  #end img.cat{width:min(42vw,170px);animation:bob 2.2s ease-in-out infinite}
+  #end .line{font-size:clamp(18px,5.2vw,23px);font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+  #end .sub2{font-size:clamp(14px,4vw,17px);opacity:.9;max-width:320px}
+  #end button{margin-top:6px;border:3px solid #ffe7b0;border-radius:18px;background:linear-gradient(#b56cff,#7a3ad1);color:#fff;font:900 clamp(20px,6.2vw,26px)/1 'Trebuchet MS',Arial,sans-serif;
+    padding:16px 40px;box-shadow:0 6px 0 #4b1f87,0 10px 22px rgba(0,0,0,.45);animation:pulse 1.4s ease-in-out infinite;cursor:pointer}
+  #end .sub{font-size:13px;opacity:.8}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes bob{50%{transform:translateY(-6px)}}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  @media (prefers-reduced-motion:reduce){#end img.cat,#end button{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">/*BUILD*/</div>
+<div id="end">
+  <img class="logo" id="endlogo" alt="Mergy">
+  <img class="cat" id="endcat" alt="">
+  <div class="line">Drag. Merge. Relax.</div>
+  <div class="sub2">A cozy little merge game with Mergy the cat. Nothing to lose, all the time in the world.</div>
+  <button id="cta" type="button">PLAY FREE</button>
+  <div class="sub">Free on iPhone and Android</div>
+</div>
+<script>
+// Mergy playable ad (De-Evolution Studios). One file: the art is inlined by tools/build-playables.js.
+// Shown inside our other games (house ads; never inside Mergy itself) and usable on ad networks (MRAID / Google's ExitApi).
+// Host games talk to it with postMessage: it sends {dvsAd: 'ready'|'start'|'complete'|'cta', game} to its parent.
+const GAME = 'mergy';
+const STORE = { ios: 'https://deevolutionstudios.com/mergy/', android: 'https://deevolutionstudios.com/mergy/', web: 'https://deevolutionstudios.com/mergy/' };
+const A = /*ASSETS*/{};
+const Q = new URLSearchParams(location.search);
+const hosted = window.parent !== window;
+const platform = Q.get('platform') || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
+let soundOn = Q.get('sound') !== '0';
+const send = (type, extra) => { try { if (hosted) parent.postMessage(Object.assign({ dvsAd: type, game: GAME }, extra || {}), '*'); } catch (e) {} };
+function cta() {
+  send('cta', { platform });
+  if (window.mraid && mraid.open) mraid.open(STORE[platform] || STORE.web);
+  else if (window.ExitApi && ExitApi.exit) ExitApi.exit();
+  else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
+}
+const src = k => A[k] || ('assets/' + k);
+const LINE = ['cotton-puff', 'thread', 'yarn-ball', 'knitting', 'sock'];
+const NAMES = ['Cotton puff', 'Thread', 'Ball of yarn', 'Knitting', 'Sock'];
+const img = {}; let left = 0, begun = false;   // begun: start once, even if a picture comes back early
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0 && !begun) { begun = true; start(); } }; i.src = src(k + '.webp'); img[k] = i; }
+['bg', 'board', 'cat', ...LINE].forEach(load);
+document.getElementById('endlogo').src = src('logo.webp');
+document.getElementById('endcat').src = src('cat.webp');
+
+// ---- sound: Mergy's two soft rising notes, made here (no files)
+let ac = null;
+function unlock() { if (ac || !soundOn) return; try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+function chime(step) {
+  if (!ac || !soundOn) return;
+  const base = 523.25 * Math.pow(2, Math.min(step, 6) / 12);
+  [0, 0.09].forEach((d, i) => {
+    const o = ac.createOscillator(), g = ac.createGain(), t0 = ac.currentTime + d;
+    o.type = 'sine'; o.frequency.value = base * (i ? 1.5 : 1);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(0.16, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.5);
+    o.connect(g).connect(ac.destination); o.start(t0); o.stop(t0 + 0.55);
+  });
+}
+window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd === 'sound') soundOn = !!d.on; });
+
+// ---- layout, in logical pixels 360 wide; the stack is centred and clear of the host's Ad tag up top
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+let W = 360, H = 640, scale = 1, dpr = 1, BX = 12, BY = 220, BS = 336, CS = 80, GX = 0, GY = 0;
+function fit() {
+  if (!innerWidth || !innerHeight) return;   // a frame not laid out yet: wait for its resize
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  scale = innerWidth / 360; W = 360; H = innerHeight / scale;
+  if (H < 560) { scale = innerHeight / 560; H = 560; W = innerWidth / scale; }
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  const TOP = 112, ABOVE = 190, BELOW = 44;
+  BS = Math.min(W - 24, 340, Math.max(240, H - TOP - 20 - ABOVE - BELOW));
+  BX = (W - BS) / 2; BY = Math.max(TOP + ABOVE - 30, (H - (ABOVE + BS + BELOW)) / 2 + ABOVE);
+  // the board picture's grid: 2.75% in from the left and top, 3.85% from the right and bottom (Mergy's game.css)
+  GX = BX + BS * 0.0275; GY = BY + BS * 0.0275; CS = BS * (1 - 0.0275 - 0.0385) / 4;
+}
+addEventListener('resize', fit); fit();
+const cellX = c => GX + c * CS, cellY = r => GY + r * CS;
+
+// ---- the round: eight cotton puffs; two of the same merge into the next step; seven merges make one Knitting
+let pieces = [], t = 0, score = 0, merges = 0, started = false, ended = false, idleT = 0, fx = [], popups = [],
+  drag = null, hint = 'drag', hintAt = 40, guide = null;
+const at = (r, c) => pieces.find(p => p.r === r && p.c === c && !p.gone);
+function start() {
+  [[0, 0], [0, 2], [1, 1], [1, 3], [2, 0], [2, 2], [3, 1], [3, 3]].forEach(([r, c]) => pieces.push({ v: 0, r, c, x: cellX(c), y: cellY(r), pop: 1 }));
+  guide = pickPair();
+  send('ready'); requestAnimationFrame(loop);
+}
+// the pair the finger shows: the two closest pieces that match
+function pickPair() {
+  let best = null, d0 = 99;
+  for (const a of pieces) for (const b of pieces) {
+    if (a === b || a.gone || b.gone || a.v !== b.v || a.v >= LINE.length - 1) continue;
+    const d = Math.abs(a.r - b.r) + Math.abs(a.c - b.c);
+    if (d < d0) { d0 = d; best = [a, b]; }
+  }
+  return best;
+}
+function cellAt(x, y) { const c = Math.floor((x - GX) / CS), r = Math.floor((y - GY) / CS); return r >= 0 && r < 4 && c >= 0 && c < 4 ? [r, c] : null; }
+function toLogical(e) { return { x: e.clientX / scale, y: e.clientY / scale }; }
+cv.addEventListener('pointerdown', e => {
+  e.preventDefault(); unlock(); if (ended) return;
+  const p = toLogical(e), cell = cellAt(p.x, p.y); if (!cell) return;
+  const pc = at(cell[0], cell[1]); if (!pc) return;
+  drag = { pc, dx: p.x - pc.x, dy: p.y - pc.y }; pc.lift = 1; idleT = 0; hint = null;
+  if (!started) { started = true; send('start'); }
+});
+addEventListener('pointermove', e => { if (!drag) return; const p = toLogical(e); drag.pc.x = p.x - drag.dx; drag.pc.y = p.y - drag.dy; });
+addEventListener('pointerup', e => {
+  if (!drag) return;
+  const pc = drag.pc; drag = null; pc.lift = 0;
+  const cell = cellAt(pc.x + CS / 2, pc.y + CS / 2);
+  if (cell) {
+    const other = at(cell[0], cell[1]);
+    if (other && other !== pc && other.v === pc.v && pc.v < LINE.length - 1) return merge(pc, other);
+    if (!other) { pc.r = cell[0]; pc.c = cell[1]; }
+  }
+  hintAt = t + 50; hint = 'drag'; guide = pickPair();   // back to its square; the finger shows a pair again soon
+});
+function merge(a, b) {
+  a.gone = true; b.v++; b.pop = 1.25; score++; merges++; idleT = 0;
+  chime(merges);
+  const cx = cellX(b.c) + CS / 2, cy = cellY(b.r) + CS / 2;
+  popups.push({ x: cx, y: cy - CS * 0.45, txt: '+1', life: 50 });
+  for (let i = 0; i < 10; i++) { const an = Math.random() * 6.28, sp = 0.6 + Math.random() * 1.4; fx.push({ x: cx, y: cy, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 36, c: ['#ffd27a', '#fff3d6', '#e9a6ff'][i % 3] }); }
+  pieces = pieces.filter(p => !p.gone);
+  if (pieces.length <= 1) { hint = null; setTimeout(finish, 1300); return; }
+  guide = pickPair(); hint = 'drag'; hintAt = t + 45;
+}
+function finish() {
+  if (ended) return; ended = true;
+  document.getElementById('end').classList.add('on');
+  send('complete', { score });
+}
+document.getElementById('cta').addEventListener('click', e => { e.stopPropagation(); cta(); });
+document.getElementById('end').addEventListener('click', cta);
+
+// ---- drawing
+function step() {
+  t++; idleT++;
+  for (const p of pieces) { if (p === (drag && drag.pc)) continue; p.x += (cellX(p.c) - p.x) * 0.25; p.y += (cellY(p.r) - p.y) * 0.25; p.pop += (1 - p.pop) * 0.12; }
+  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.03, --p.life > 0));
+  popups = popups.filter(p => (p.y -= 0.4, --p.life > 0));
+  if (!ended && started && idleT > 60 * 12) finish();
+  if (!started && t > 60 * 15) finish();
+}
+function text(s, x, y, size, fill, stroke) {
+  g.font = `900 ${size}px "Trebuchet MS",Arial,sans-serif`; g.textAlign = 'center'; g.lineJoin = 'round';
+  g.lineWidth = Math.max(4, size / 5); g.strokeStyle = stroke || '#4a2240'; g.strokeText(s, x, y); g.fillStyle = fill || '#fff'; g.fillText(s, x, y);
+}
+function draw() {
+  g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  g.fillStyle = '#3a1e14'; g.fillRect(0, 0, W, H);
+  const bg = img.bg;
+  if (bg.width) { const k = Math.max(W / bg.width, H / bg.height), w = bg.width * k, h = bg.height * k; g.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h); }
+  g.fillStyle = 'rgba(30,14,40,.32)'; g.fillRect(0, 0, W, H);
+  // what it is, at a glance
+  text('MERGY', W / 2, BY - 168, 30, '#ffd27a');
+  text('a cozy merge game', W / 2, BY - 143, 17, '#fff');
+  // merges so far
+  text(`${score} ${score === 1 ? 'merge' : 'merges'}`, W / 2, BY - 100, 24, '#fff');
+  // the board, Mergy the cat asleep on its top edge
+  if (img.board.width) g.drawImage(img.board, BX, BY, BS, BS);
+  if (img.cat.width) { const cw = BS * 0.3, ch = cw * img.cat.height / img.cat.width; g.drawImage(img.cat, W / 2 - cw / 2, BY - ch * 0.86, cw, ch); }
+  const order = pieces.slice().sort((a, b) => (a.lift || 0) - (b.lift || 0));
+  for (const p of order) {
+    const im = img[LINE[p.v]]; if (!im || !im.width) continue;
+    const s = CS * 0.86 * p.pop * (p.lift ? 1.12 : 1), cx = p.x + CS / 2, cy = p.y + CS / 2;
+    g.drawImage(im, cx - s / 2, cy - s / 2, s, s);
+  }
+  for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 16); g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, 2.8, 0, 6.29); g.fill(); }
+  g.globalAlpha = 1;
+  for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); text(p.txt, p.x, p.y, 22, '#ffd27a'); }
+  g.globalAlpha = 1;
+  // the hint: the words, and the finger dragging one piece slowly onto its twin
+  if (hint === 'drag' && t >= hintAt && guide) {
+    text(merges ? 'KEEP MERGING!' : 'DRAG TWO THE SAME TOGETHER', W / 2, BY + BS + 32, merges ? 22 : 18, '#fff');
+    const [a, b] = guide, P = 150, k = ((t - hintAt) % P) / P, glide = Math.min(1, Math.max(0, (k - 0.12) / 0.5)), e = glide * glide * (3 - 2 * glide);
+    const al = k < 0.12 ? k / 0.12 : k < 0.62 ? 1 : k < 0.76 ? 1 - (k - 0.62) / 0.14 : 0;
+    const ax = cellX(a.c) + CS / 2, ay = cellY(a.r) + CS / 2, bx = cellX(b.c) + CS / 2, by = cellY(b.r) + CS / 2;
+    const hx = ax + (bx - ax) * e, hy = ay + (by - ay) * e;
+    if (al > 0) {
+      g.save(); g.globalAlpha = al * 0.55; const im = img[LINE[a.v]]; if (im.width) g.drawImage(im, hx - CS * 0.36, hy - CS * 0.36, CS * 0.72, CS * 0.72);
+      g.globalAlpha = al; g.font = '44px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', hx + 8, hy + 40); g.restore();
+    }
+  }
+}
+// the rules run at a steady 60 steps a second; pieces are drawn between steps so 120 Hz screens stay smooth
+let last = 0, acc = 0, blend = null, fpsCount = 0, fpsAt = 0;
+const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag, then frames drawn per second (for testing)
+function loop(now) {
+  if (!last) last = now;
+  acc = Math.min(acc + (now - last), 250); last = now;
+  let prev = null;
+  while (acc >= 1000 / 60) { prev = new Map(pieces.map(o => [o, [o.x, o.y]])); step(); acc -= 1000 / 60; }
+  if (prev) blend = prev;
+  const a = acc / (1000 / 60), keep = new Map(pieces.map(o => [o, [o.x, o.y]]));
+  if (blend) for (const o of pieces) { if (drag && o === drag.pc) continue; const p = blend.get(o); if (p) { o.x = p[0] + (o.x - p[0]) * a; o.y = p[1] + (o.y - p[1]) * a; } }
+  draw(); fpsCount++;
+  if (now - fpsAt >= 1000) { verEl.textContent = BUILD + ' · ' + fpsCount + ' fps'; fpsCount = 0; fpsAt = now; }
+  for (const [o, p] of keep) { o.x = p[0]; o.y = p[1]; }
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

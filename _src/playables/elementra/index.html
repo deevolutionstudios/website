@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="ad.orientation" content="portrait">
+<meta name="ad.size" content="width=320,height=480">
+<title>Elementra: Dragon Academy</title>
+<!--NETWORK-->
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0d1530;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  canvas{display:block;width:100%;height:100%}
+  #end{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;
+    background:radial-gradient(circle at 50% 40%,rgba(120,90,255,.35),rgba(8,10,30,.92) 70%);font-family:'Trebuchet MS',Arial,sans-serif;color:#fff;text-align:center}
+  #end.on{display:flex;animation:fade .35s ease-out}
+  #end img.logo{width:min(84vw,360px);filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+  #end .pair{display:flex;gap:10px}
+  #end .pair img{width:min(30vw,120px);border-radius:8px;box-shadow:0 0 22px rgba(190,140,255,.6)}
+  #end .line{font-size:clamp(18px,5.2vw,23px);font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+  #end .sub2{font-size:clamp(14px,4vw,17px);opacity:.9;max-width:320px}
+  #end button{margin-top:6px;border:3px solid #cfe3ff;border-radius:16px;background:linear-gradient(#4fa3ff,#2a5fd8);color:#fff;font:900 clamp(20px,6.2vw,26px)/1 'Trebuchet MS',Arial,sans-serif;
+    padding:16px 40px;box-shadow:0 6px 0 #18348a,0 10px 22px rgba(0,0,0,.5);animation:pulse 1.4s ease-in-out infinite;cursor:pointer}
+  #end .sub{font-size:13px;opacity:.8}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  @media (prefers-reduced-motion:reduce){#end button{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">/*BUILD*/</div>
+<div id="end">
+  <img class="logo" id="endlogo" alt="Elementra: Dragon Academy">
+  <div class="pair"><img id="endr" alt=""><img id="endd" alt=""></div>
+  <div class="line">Bond a Rider and a Dragon.<br>Win the Battle.</div>
+  <div class="sub2">The dragon card game, now on your phone. Duel friends and players around the world.</div>
+  <button id="cta" type="button">PLAY FREE</button>
+  <div class="sub">Coming to iPhone and Android</div>
+</div>
+<script>
+// Elementra playable ad (De-Evolution Studios). One file: the art is inlined by tools/build-playables.js.
+// Shown inside our other games (house ads; never inside Elementra itself) and usable on ad networks.
+// Host games talk to it with postMessage: it sends {dvsAd: 'ready'|'start'|'complete'|'cta', game} to its parent.
+// The Battle follows RULES.md: Battle Power is the two Power Levels plus Combat Abilities (Fia +3 with Blaze, +2 with
+// another Dragon; Nova +2 with Finn or Aurora; Kira +3 with Cloud Dancer, Breaker or Nox; Blaze +1 per other player).
+const GAME = 'elementra';
+const STORE = { ios: 'https://deevolutionstudios.com/elementra/', android: 'https://deevolutionstudios.com/elementra/', web: 'https://deevolutionstudios.com/elementra/' };
+const A = /*ASSETS*/{};
+const Q = new URLSearchParams(location.search);
+const hosted = window.parent !== window;
+const platform = Q.get('platform') || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
+let soundOn = Q.get('sound') !== '0';
+const send = (type, extra) => { try { if (hosted) parent.postMessage(Object.assign({ dvsAd: type, game: GAME }, extra || {}), '*'); } catch (e) {} };
+function cta() {
+  send('cta', { platform });
+  if (window.mraid && mraid.open) mraid.open(STORE[platform] || STORE.web);
+  else if (window.ExitApi && ExitApi.exit) ExitApi.exit();
+  else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
+}
+const src = k => A[k] || ('assets/' + k);
+// your four cards and the rival's two (Cole Evenguard + Radiance: 16, no bonuses)
+const HAND = [
+  { id: 'kira-magnos', name: 'Kira', kind: 'rider', p: 9 },
+  { id: 'nova', name: 'Nova', kind: 'dragon', p: 9 },
+  { id: 'fia-magmis', name: 'Fia', kind: 'rider', p: 4 },
+  { id: 'blaze', name: 'Blaze', kind: 'dragon', p: 3 },
+];
+const RIVAL = { cards: ['cole-evenguard', 'radiance'], power: 16 };
+function power(r, d) {
+  let p = r.p + d.p;
+  if (r.id === 'fia-magmis') p += d.id === 'blaze' ? 3 : 2;
+  if (d.id === 'blaze') p += 1;   // one other player in the Round
+  return p;
+}
+const img = {}; let left = 0, begun = false;   // begun: start once, even if a picture comes back early
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0 && !begun) { begun = true; start(); } }; i.src = src(k + '.webp'); img[k] = i; }
+['bg', 'logo', 'back', ...HAND.map(c => c.id), ...RIVAL.cards].forEach(load);
+document.getElementById('endlogo').src = src('logo.webp');
+document.getElementById('endr').src = src('kira-magnos.webp');
+document.getElementById('endd').src = src('nova.webp');
+
+let ac = null;
+function unlock() { if (ac || !soundOn) return; try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+function tone(f, d, vol) {
+  if (!ac || !soundOn) return;
+  const o = ac.createOscillator(), g = ac.createGain(), t0 = ac.currentTime;
+  o.type = 'triangle'; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol || 0.12, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t0 + d);
+  o.connect(g).connect(ac.destination); o.start(t0); o.stop(t0 + d + 0.05);
+}
+window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd === 'sound') soundOn = !!d.on; });
+
+// ---- layout, in logical pixels 360 wide, centred and clear of the host's Ad tag up top
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+let W = 360, H = 640, scale = 1, dpr = 1, TOPY = 120, CW = 78, CH = 107, HANDY = 400, RIVY = 200;
+function fit() {
+  if (!innerWidth || !innerHeight) return;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  scale = innerWidth / 360; W = 360; H = innerHeight / scale;
+  if (H < 560) { scale = innerHeight / 560; H = 560; W = innerWidth / scale; }
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  CW = Math.min(80, (W - 24 - 3 * 8) / 4); CH = CW * 659 / 480;
+  const stack = 70 + 30 + CH * 0.8 + 70 + CH + 90;   // title, hint, rival, versus, your hand, result line
+  TOPY = Math.max(118, (H - stack) / 2 + 40);
+  RIVY = TOPY + 92; HANDY = RIVY + CH * 0.8 + 66;
+}
+addEventListener('resize', fit); fit();
+const handX = i => (W - (4 * CW + 3 * 8)) / 2 + i * (CW + 8);
+
+let t = 0, picked = [], state = 'pick', result = null, resultAt = 0, flipped = 0, started = false, ended = false, idleT = 0, fx = [], hintAt = 30;
+const lift = HAND.map(() => 0);
+function start() { send('ready'); requestAnimationFrame(loop); }
+function toLogical(e) { return { x: e.clientX / scale, y: e.clientY / scale }; }
+cv.addEventListener('pointerdown', e => {
+  e.preventDefault(); unlock(); if (ended || state !== 'pick') return;
+  const p = toLogical(e);
+  for (let i = 0; i < 4; i++) {
+    const x = handX(i), y = HANDY - lift[i] * 14;
+    if (p.x > x && p.x < x + CW && p.y > y && p.y < y + CH) return tapCard(i);
+  }
+});
+function tapCard(i) {
+  if (!started) { started = true; send('start'); }
+  idleT = 0;
+  const c = HAND[i];
+  if (picked.includes(i)) { picked = picked.filter(j => j !== i); tone(330, 0.15); return; }
+  picked = picked.filter(j => HAND[j].kind !== c.kind);   // one Rider and one Dragon
+  picked.push(i); tone(c.kind === 'rider' ? 440 : 554, 0.2);
+  if (picked.length === 2) { state = 'battle'; setTimeout(battle, 450); }
+}
+function battle() {
+  const r = HAND[picked.find(j => HAND[j].kind === 'rider')], d = HAND[picked.find(j => HAND[j].kind === 'dragon')];
+  flipped = t; const mine = power(r, d);
+  setTimeout(() => {
+    result = { mine, win: mine > RIVAL.power }; resultAt = t;
+    if (result.win) {
+      [523, 659, 784, 1046].forEach((f, k) => setTimeout(() => tone(f, 0.35, 0.14), k * 110));
+      for (let k = 0; k < 40; k++) { const an = Math.random() * 6.28, sp = 1 + Math.random() * 3; fx.push({ x: W / 2, y: HANDY - 30, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 1, life: 60, c: ['#ffd45c', '#c8a6ff', '#fff', '#7fc8ff'][k % 4] }); }
+      setTimeout(finish, 2200);
+    } else {
+      tone(220, 0.4, 0.12);
+      setTimeout(() => { picked = []; state = 'pick'; result = null; flipped = 0; hintAt = t + 20; }, 2000);   // try again
+    }
+  }, 900);
+}
+function finish() {
+  if (ended) return; ended = true;
+  document.getElementById('end').classList.add('on');
+  send('complete', { score: result ? result.mine : 0 });
+}
+document.getElementById('cta').addEventListener('click', e => { e.stopPropagation(); cta(); });
+document.getElementById('end').addEventListener('click', cta);
+
+function step() {
+  t++; idleT++;
+  for (let i = 0; i < 4; i++) lift[i] += ((picked.includes(i) ? 1 : 0) - lift[i]) * 0.2;
+  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.04, --p.life > 0));
+  if (!ended && started && idleT > 60 * 12) finish();
+  if (!started && t > 60 * 15) finish();
+}
+function text(s, x, y, size, fill, stroke) {
+  g.font = `900 ${size}px "Trebuchet MS",Arial,sans-serif`; g.textAlign = 'center'; g.lineJoin = 'round';
+  g.lineWidth = Math.max(4, size / 5); g.strokeStyle = stroke || '#0b1030'; g.strokeText(s, x, y); g.fillStyle = fill || '#fff'; g.fillText(s, x, y);
+}
+function card(im, x, y, w, h, glow) {
+  g.save();
+  if (glow) { g.shadowColor = glow; g.shadowBlur = 18; }
+  if (im && im.width) g.drawImage(im, x, y, w, h);
+  g.restore();
+}
+function draw() {
+  g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  g.fillStyle = '#0d1530'; g.fillRect(0, 0, W, H);
+  const bg = img.bg;
+  if (bg.width) { const k = Math.max(W / bg.width, H / bg.height), w = bg.width * k, h = bg.height * k; g.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h); }
+  g.fillStyle = 'rgba(5,8,25,.35)'; g.fillRect(0, 0, W, H);
+  // the logo, then the challenge
+  if (img.logo.width) { const lw = Math.min(260, W - 60), lh = lw * img.logo.height / img.logo.width; g.drawImage(img.logo, W / 2 - lw / 2, TOPY - lh * 0.75, lw, lh); }
+  text('THE DRAGON CARD GAME', W / 2, TOPY + 40, 15, '#c8d8ff');
+  // the rival's two cards: face down until the Battle
+  const rw = CW * 0.8, rh = CH * 0.8, rx = W / 2 - rw - 5;
+  RIVAL.cards.forEach((id, k) => {
+    const open = flipped && t - flipped > 30 + k * 8, x = rx + k * (rw + 10);
+    card(open ? img[id] : img.back, x, RIVY, rw, rh, open && result && !result.win ? '#ffd45c' : null);
+  });
+  text(flipped && t - flipped > 46 ? `RIVAL: ${RIVAL.power}` : 'RIVAL: ?', W / 2, RIVY + rh + 22, 18, '#ffb4b4');
+  // the middle line: what to do, or the result
+  const my = RIVY + rh + 50;
+  if (result) text(result.win ? `${result.mine} vs ${RIVAL.power}: VICTORY!` : `${result.mine} vs ${RIVAL.power}: NOT ENOUGH!`, W / 2, my, result.win ? 24 : 20, result.win ? '#ffd45c' : '#ff8a8a');
+  else if (state === 'pick') text(picked.length ? 'NOW PICK A ' + (HAND[picked[0]].kind === 'rider' ? 'DRAGON' : 'RIDER') : `BEAT ${RIVAL.power}: PICK A RIDER AND A DRAGON`, W / 2, my, picked.length ? 20 : 16, '#fff');
+  else text('BATTLE!', W / 2, my, 24, '#fff');
+  // your hand
+  for (let i = 0; i < 4; i++) {
+    const x = handX(i), y = HANDY - lift[i] * 14;
+    card(img[HAND[i].id], x, y, CW, CH, picked.includes(i) ? '#ffd45c' : null);
+    text(HAND[i].kind === 'rider' ? 'RIDER' : 'DRAGON', x + CW / 2, y + CH + 16, 11, HAND[i].kind === 'rider' ? '#ffe08a' : '#a8d4ff');
+  }
+  // your Battle Power once both are picked
+  if (picked.length === 2) { const r = HAND[picked.find(j => HAND[j].kind === 'rider')], d = HAND[picked.find(j => HAND[j].kind === 'dragon')]; text(`YOUR POWER: ${power(r, d)}`, W / 2, HANDY + CH + 46, 18, '#ffd45c'); }
+  for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 16); g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, 3, 0, 6.29); g.fill(); }
+  g.globalAlpha = 1;
+  // the finger: Kira first, then Nova (the winning bond), pressing slowly
+  if (state === 'pick' && t >= hintAt) {
+    const want = !picked.includes(0) ? 0 : !picked.includes(1) ? 1 : -1;
+    if (want >= 0) {
+      const x = handX(want) + CW / 2, y = HANDY + CH * 0.55, k = ((t - hintAt) % 90) / 90;
+      g.save(); g.globalAlpha = 0.7 * (1 - k); g.strokeStyle = '#fff'; g.lineWidth = 3; g.beginPath(); g.arc(x, y - 10, 10 + k * 22, 0, 6.29); g.stroke();
+      g.globalAlpha = 1; g.font = '42px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', x + 8, y + 30 + Math.sin(t / 22) * 3); g.restore();
+    }
+  }
+}
+let last = 0, acc = 0, fpsCount = 0, fpsAt = 0;
+const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag, then frames drawn per second (for testing)
+function loop(now) {
+  if (!last) last = now;
+  acc = Math.min(acc + (now - last), 250); last = now;
+  while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
+  draw(); fpsCount++;
+  if (now - fpsAt >= 1000) { verEl.textContent = BUILD + ' · ' + fpsCount + ' fps'; fpsCount = 0; fpsAt = now; }
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

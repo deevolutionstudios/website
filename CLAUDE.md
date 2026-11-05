@@ -42,8 +42,10 @@ This repo:
   tools/build-playables.js` inlines everything into one file per game in `playables/<game>/` (index.html for our games,
   plus `-mraid.html` and `-google.zip` for ad networks) and copies `house-ads.js` (the serving code each game keeps a copy
   of) and `test.html` (plays a game asking for ads). Then `node tools/build.js` writes `promo/ads.json` (the list and the
-  rules: share 20%, fill when AdMob has nothing, 2 a day per game, 14 days off after a tap) from games.js. Candi and
-  D2048 so far; D2048 and Candi show them (web now, apps from their next builds). .htaccess lets any app read /playables/.
+  rules: share 20%, fill when AdMob has nothing, 2 a day per game, 14 days off after a tap) from games.js. Candi, D2048,
+  Mergy and Elementra (Nov 5); D2048, Candi and Glimmlings show them (web now, apps from their next builds). Richard's
+  rule (Nov 5): Mergy and Elementra are advertised but never show ads themselves (only their "More from us" card);
+  Colorwise has no ads. .htaccess lets any app read /playables/.
   Each playable shows a faint tag in its bottom-left corner: its build code (the source's fingerprint) and frames per
   second, for testing (Nov 5); take the fps out before the apps ship. Candi's speed (Richard's pick, Nov 5): rise 2.75,
   drift 2.94 per 1/60 s; both playables run their rules at a steady 60 steps a second and draw between steps. While an
