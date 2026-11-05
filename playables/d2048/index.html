@@ -28,7 +28,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">c16edf</div>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">749ebf</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="D2048">
   <div class="line">The 2048 you love,<br>gone dungeon crawling!</div>
@@ -79,7 +79,11 @@ function fit() {
   scale = innerWidth / 360; W = 360; H = innerHeight / scale;
   if (H < 560) { scale = innerHeight / 560; H = 560; W = innerWidth / scale; }
   cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
-  BS = Math.min(W - 24, 340); BX = (W - BS) / 2; BY = Math.max(180, H * 0.27); CS = (BS - 36) / 4;
+  // the whole stack (title, gold, hint, board, sword) is centred on the screen, kept clear of the host's Ad tag and
+  // countdown up top (TOP); on a short screen the board shrinks so the sword still fits
+  const TOP = 112, ABOVE = 146, BELOW = 112;
+  BS = Math.min(W - 24, 340, Math.max(240, H - TOP - 20 - ABOVE - BELOW));
+  BX = (W - BS) / 2; BY = Math.max(TOP + ABOVE - 26, (H - (ABOVE + BS + BELOW)) / 2 + ABOVE); CS = (BS - 36) / 4;
 }
 addEventListener('resize', fit); fit();
 const cellX = c => BX + 18 + c * CS, cellY = r => BY + 18 + r * CS;
@@ -237,13 +241,13 @@ function draw() {
   g.fillStyle = 'rgba(10,4,18,.35)'; g.fillRect(0, 0, W, H);
   // gold counter
   // what it is, at a glance: 2048, in a dungeon
-  { const ty = Math.max(56, BY - 120), a = '2048 ', b = 'IN A DUNGEON!';
+  { const ty = BY - 120, a = '2048 ', b = 'IN A DUNGEON!';
     g.font = '900 26px "Trebuchet MS",Arial,sans-serif'; const wa = g.measureText(a).width, wb = g.measureText(b).width, x0 = W / 2 - (wa + wb) / 2;
     g.textAlign = 'left'; g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#2a0d3a';
     g.strokeText(a, x0, ty); g.fillStyle = '#fff'; g.fillText(a, x0, ty);
     g.strokeText(b, x0 + wa, ty); g.fillStyle = '#ff9a3c'; g.fillText(b, x0 + wa, ty); g.textAlign = 'center'; }
   // gold: D2048's own coin with the count beside it, the pair centred, a little above the hint
-  { const gy = Math.max(110, BY - 64), str = Math.round(shownGold).toLocaleString('en'), cs = 36;
+  { const gy = BY - 64, str = Math.round(shownGold).toLocaleString('en'), cs = 36;
     g.font = '900 30px "Trebuchet MS",Arial,sans-serif'; const tw = g.measureText(str).width, x0 = W / 2 - (cs + 8 + tw) / 2;
     if (img.coin.width) g.drawImage(img.coin, x0, gy - cs + 6, cs, cs);
     g.textAlign = 'left'; g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#2a0d3a'; g.strokeText(str, x0 + cs + 8, gy); g.fillStyle = '#ffd45c'; g.fillText(str, x0 + cs + 8, gy); g.textAlign = 'center'; }
