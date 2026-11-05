@@ -28,7 +28,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">2d5cb3</div>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">c16edf</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="D2048">
   <div class="line">The 2048 you love,<br>gone dungeon crawling!</div>
@@ -237,9 +237,11 @@ function draw() {
   g.fillStyle = 'rgba(10,4,18,.35)'; g.fillRect(0, 0, W, H);
   // gold counter
   // what it is, at a glance: 2048, in a dungeon
-  { const ty = Math.max(40, BY - 146);
-    text('2048', W / 2, ty, 34, '#fff', '#2a0d3a');
-    text('...IN A DUNGEON!', W / 2, ty + 30, 20, '#ff9a3c', '#2a0d3a'); }
+  { const ty = Math.max(56, BY - 120), a = '2048 ', b = 'IN A DUNGEON!';
+    g.font = '900 26px "Trebuchet MS",Arial,sans-serif'; const wa = g.measureText(a).width, wb = g.measureText(b).width, x0 = W / 2 - (wa + wb) / 2;
+    g.textAlign = 'left'; g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#2a0d3a';
+    g.strokeText(a, x0, ty); g.fillStyle = '#fff'; g.fillText(a, x0, ty);
+    g.strokeText(b, x0 + wa, ty); g.fillStyle = '#ff9a3c'; g.fillText(b, x0 + wa, ty); g.textAlign = 'center'; }
   // gold: D2048's own coin with the count beside it, the pair centred, a little above the hint
   { const gy = Math.max(110, BY - 64), str = Math.round(shownGold).toLocaleString('en'), cs = 36;
     g.font = '900 30px "Trebuchet MS",Arial,sans-serif'; const tw = g.measureText(str).width, x0 = W / 2 - (cs + 8 + tw) / 2;
