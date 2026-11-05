@@ -73,6 +73,7 @@ window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd ==
 const cv = document.getElementById('c'), g = cv.getContext('2d');
 let W = 360, H = 640, scale = 1, dpr = 1;
 function fit() {
+  if (!innerWidth || !innerHeight) return;   // a frame not laid out yet: wait for its resize
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   scale = innerWidth / 300; W = 300; H = innerHeight / scale;
   if (H < 480) { scale = innerHeight / 480; H = 480; W = innerWidth / scale; }

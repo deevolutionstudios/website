@@ -69,8 +69,9 @@ window.addEventListener('message', e => { const d = e.data || {}; if (d.dvsAd ==
 
 // ---- layout, in logical pixels 360 wide
 const cv = document.getElementById('c'), g = cv.getContext('2d');
-let W = 360, H = 640, scale = 1, dpr = 1, BX, BY, BS, CS;
+let W = 360, H = 640, scale = 1, dpr = 1, BX = 12, BY = 150, BS = 336, CS = 75;
 function fit() {
+  if (!innerWidth || !innerHeight) return;   // a frame not laid out yet: wait for its resize
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   scale = innerWidth / 360; W = 360; H = innerHeight / scale;
   if (H < 560) { scale = innerHeight / 560; H = 560; W = innerWidth / scale; }
@@ -196,7 +197,8 @@ document.getElementById('end').addEventListener('click', cta);
 // ---- drawing
 function step() {
   t++; idleT++;
-  for (const o of tiles) { o.x += (cellX(o.c) - o.x) * 0.24; o.y += (cellY(o.r) - o.y) * 0.24; o.pop += (1 - o.pop) * 0.12; }
+  for (const o of tiles) { if (!isFinite(o.x) || !isFinite(o.y)) { o.x = cellX(o.c); o.y = cellY(o.r); }
+    o.x += (cellX(o.c) - o.x) * 0.24; o.y += (cellY(o.r) - o.y) * 0.24; o.pop += (1 - o.pop) * 0.12; }
   shownGold += (gold - shownGold) * 0.12; if (Math.abs(gold - shownGold) < 1) shownGold = gold;
   fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.03, --p.life > 0));
   popups = popups.filter(p => (p.y -= 0.35, --p.life > 0));

@@ -817,7 +817,8 @@ fs.writeFileSync(path.join(ROOT, 'promo/games.json'), JSON.stringify({ version: 
 const houseAds = MOBILE.filter(g => fs.existsSync(path.join(ROOT, 'playables', g.slug, 'index.html'))).map(g => ({
   id: g.slug,
   name: g.shortName || g.name,
-  playable: `${SITE}/playables/${g.slug}/index.html`,
+  // ?v= the file's own fingerprint, so phones and Hostinger's cache always fetch the newest version
+  playable: `${SITE}/playables/${g.slug}/index.html?v=${require('crypto').createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'playables', g.slug, 'index.html'))).digest('hex').slice(0, 10)}`,
   page: `${SITE}/${g.slug}/`,
   ios: g.appStore && g.appStore.live && g.appStore.id ? `https://apps.apple.com/app/id${g.appStore.id}` : null,
   android: g.play && g.play.live && g.play.id ? `https://play.google.com/store/apps/details?id=${g.play.id}` : null,

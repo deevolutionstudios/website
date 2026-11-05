@@ -42,14 +42,14 @@ RedirectMatch 404 ^/(README\.md|CLAUDE\.md|package\.json|\.gitignore)$
   # The "More from us" list: any of our apps may read it, and a change shows within the hour
   <If "%{REQUEST_URI} =~ m#^/promo/#">
     Header set Access-Control-Allow-Origin "*"
-    Header set Cache-Control "public, max-age=3600"
+    Header set Cache-Control "public, max-age=300"
   </If>
   # Our playable ads (house ads): any of our apps may load them and show them in a frame
   <If "%{REQUEST_URI} =~ m#^/playables/#">
     Header set Access-Control-Allow-Origin "*"
     Header unset X-Frame-Options
     Header always unset X-Frame-Options
-    Header set Cache-Control "public, max-age=3600"
+    Header set Cache-Control "no-cache"
   </If>
   <FilesMatch "^(app-ads|robots)\.txt$">
     Header set Cache-Control "public, max-age=3600"
