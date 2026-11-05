@@ -27,7 +27,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">dccea8</div>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">70bf6a</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="Candi's Swamp Hop">
   <img class="pose" id="endpose" alt="">
@@ -234,7 +234,7 @@ function drawHint() {
 function draw() {
   g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
   const sky = img.sky;
-  if (sky.width) g.drawImage(sky, 0, 0, W, H); else { g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); }
+  if (sky.width) { const k = Math.max(W / sky.width, H / sky.height), w = sky.width * k, h = sky.height * k; g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); g.drawImage(sky, (W - w) / 2, 0, w, h); }   // cover, never stretched (the moon stays round) else { g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); }
   cover(img.trees, H * 0.30, H * 0.56, 0.35);
   for (const s of stumps) if (s.x - cam > -80 && s.x - cam < W + 80) drawStump(s);
   const wg = g.createLinearGradient(0, WATER(), 0, H); wg.addColorStop(0, 'rgba(74,140,128,.92)'); wg.addColorStop(1, 'rgba(22,58,58,.98)');
