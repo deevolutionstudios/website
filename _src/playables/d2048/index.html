@@ -130,8 +130,25 @@ function bestDir() {
   }
   return best;
 }
+const mergesFor = d => { const r = slide(tiles.filter(o => !o.gone).map(o => ({ ...o })), d); return r.moved ? r.merges.length : 0; };
+// a new coin where the next swipe will merge something (every guided swipe merges: Richard, Nov 5)
+function spawnMerging() {
+  const free = []; for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (!at(tiles, r, c)) free.push([r, c]);
+  const kinds = [...new Set(tiles.filter(o => typeof o.v === 'number' && o.v < 9).map(o => o.v))].sort((a, b) => a - b);
+  let best = null, most = 0;
+  for (const v of kinds.length ? kinds : [1]) for (const [r, c] of free) {
+    const o = add(v, r, c, true);
+    const m = Math.max(...['left', 'up', 'right', 'down'].map(mergesFor));
+    tiles.pop();
+    if (m > most) { most = m; best = [v, r, c]; }
+  }
+  if (best) return add(best[0], best[1], best[2], true);
+  return spawn(1);
+}
+function bump() { for (const o of tiles) o.pop = 0.94; }   // a swipe that merges nothing: the coins only flinch
 function move(dir) {
   if (ended || state !== 'play' || busy || moves >= SWIPES) return;
+  if (mergesFor(dir) === 0) { bump(); return; }
   const r = slide(tiles, dir);
   if (!r.moved) return;
   if (!started) { started = true; send('start'); }
@@ -152,21 +169,21 @@ function move(dir) {
       }, 450);
       return;
     }
-    spawn(1);
+    spawnMerging();
     busy = false; hintDir = bestDir(); hint = 'swipe'; hintAt = t + 35;   // the finger comes back after a short pause
   }, 220);
 }
 function useSword() {
   const s = tiles.find(o => o.v === 's'); if (!s || slash) return;
   swordGlow = false; hint = null; idleT = 0;
-  slash = { x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, life: 30 };
+  const sb0 = swordBox(); slash = { x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, fx: sb0.x + sb0.s / 2, fy: sb0.y + sb0.s / 2, life: 48 };
   play('slay', 0.55);
   setTimeout(() => {
     s.v = 'c'; s.pop = 1.15; gold += 500; play('explode', 0.5);
     popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + 8, txt: '+500 GOLD', life: 80 });
     for (let i = 0; i < 16; i++) { const an = Math.random() * 6.28, sp = 0.8 + Math.random() * 1.8; fx.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 44, c: ['#ffd45c', '#fff', '#ff9a3c'][i % 3] }); }
     setTimeout(finish, 1600);
-  }, 420);
+  }, 500);
 }
 function finish() {
   if (ended) return; ended = true;
@@ -231,11 +248,26 @@ function draw() {
   const sb = swordBox();
   g.save(); g.translate(sb.x + sb.s / 2, sb.y + sb.s / 2);
   if (swordGlow) { const k = 1 + Math.sin(t / 16) * 0.06; g.scale(k, k); g.shadowColor = '#ffcf3f'; g.shadowBlur = 24; }
-  if (img.sword.width) g.drawImage(img.sword, -sb.s / 2, -sb.s / 2, sb.s, sb.s);
+  if (img.sword.width && !slash && !tiles.some(o => o.v === 'c')) g.drawImage(img.sword, -sb.s / 2, -sb.s / 2, sb.s, sb.s);   // gone once it's swung
   g.restore();
-  // slash
-  if (slash) { g.save(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.shadowColor = '#c38cff'; g.shadowBlur = 16; g.globalAlpha = slash.life / 30;
-    const k = (30 - slash.life) / 30 * 60; g.beginPath(); g.moveTo(slash.x - 40, slash.y - 40); g.lineTo(slash.x - 40 + k * 1.4, slash.y - 40 + k * 1.4); g.stroke(); g.restore(); }
+  // the sword: flies up from its button (frames 48-34), then swings down across the skeleton (33-14) leaving a trail
+  if (slash && img.sword.width) {
+    const f = 48 - slash.life, sz = CS * 1.35;
+    const fly = Math.min(1, f / 14), e = fly * fly * (3 - 2 * fly);
+    const swing = Math.max(0, Math.min(1, (f - 14) / 16)), se = 1 - Math.pow(1 - swing, 3);
+    // the hilt rests above and to the right of the skeleton; the blade sweeps from pointing up-right down across it
+    const hx = slash.x + CS * 0.42, hy = slash.y - CS * 0.5;
+    const px = slash.fx + (hx - slash.fx) * e, py = slash.fy + (hy - slash.fy) * e;
+    const a = 0.5 + (-2.45 - 0.5) * se;   // the blade's direction: 0 = straight up, clockwise positive
+    const fade = slash.life < 12 ? slash.life / 12 : 1;
+    if (swing > 0 && swing < 1) { // the trail of the swing
+      g.save(); g.globalAlpha = 0.5 * fade; g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round';
+      g.beginPath(); g.arc(px, py, sz * 0.8, a - Math.PI / 2, 0.5 - Math.PI / 2); g.stroke(); g.restore();
+    }
+    // the sword picture's blade points up and to the right, so turn it back by 45 degrees; the hilt sits at the pivot
+    g.save(); g.globalAlpha = fade; g.translate(px, py); g.rotate(a - Math.PI / 4);
+    g.drawImage(img.sword, -sz * 0.18, -sz * 0.82, sz, sz); g.restore();
+  }
   for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 16); g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, 2.8, 0, 6.29); g.fill(); }
   g.globalAlpha = 1;
   for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); text(p.txt, p.x, p.y, p.red ? 18 : 18, p.red ? '#ff8a8a' : '#ffd45c'); }
