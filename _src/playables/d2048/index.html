@@ -272,11 +272,13 @@ function loop(now) {
   if (prev) blend = prev;
   const a = acc / (1000 / 60), keep = new Map(tiles.map(o => [o, [o.x, o.y]]));
   if (blend) for (const o of tiles) { const p = blend.get(o); if (p && isFinite(p[0])) { o.x = p[0] + (o.x - p[0]) * a; o.y = p[1] + (o.y - p[1]) * a; } }
-  draw();
+  draw(); fpsCount++;
+  if (now - fpsAt >= 1000) { verEl.textContent = BUILD + ' · ' + fpsCount + ' fps'; fpsCount = 0; fpsAt = now; }
   for (const [o, p] of keep) { o.x = p[0]; o.y = p[1]; }
   requestAnimationFrame(loop);
 }
-let blend = null;
+let blend = null, fpsCount = 0, fpsAt = 0;
+const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag, then frames drawn per second (for testing)
 </script>
 </body>
 </html>

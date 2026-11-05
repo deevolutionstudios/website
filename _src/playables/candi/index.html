@@ -234,7 +234,8 @@ function drawHint() {
 function draw() {
   g.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
   const sky = img.sky;
-  if (sky.width) { const k = Math.max(W / sky.width, H / sky.height), w = sky.width * k, h = sky.height * k; g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); g.drawImage(sky, (W - w) / 2, 0, w, h); }   // cover, never stretched (the moon stays round) else { g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H); }
+  g.fillStyle = '#9ad'; g.fillRect(0, 0, W, H);
+  if (sky.width) { const k = Math.max(W / sky.width, H / sky.height), w = sky.width * k, h = sky.height * k; g.drawImage(sky, (W - w) / 2, 0, w, h); }   // cover, never stretched (the moon stays round)
   cover(img.trees, H * 0.30, H * 0.56, 0.35);
   for (const s of stumps) if (s.x - cam > -80 && s.x - cam < W + 80) drawStump(s);
   const wg = g.createLinearGradient(0, WATER(), 0, H); wg.addColorStop(0, 'rgba(74,140,128,.92)'); wg.addColorStop(1, 'rgba(22,58,58,.98)');
@@ -264,11 +265,13 @@ function loop(now) {
   if (prev) blend = prev;
   const a = acc / (1000 / 60), keep = { x: candi.x, y: candi.y, cam };
   if (blend) { candi.x = blend.x + (keep.x - blend.x) * a; candi.y = blend.y + (keep.y - blend.y) * a; cam = blend.cam + (keep.cam - blend.cam) * a; }
-  draw();
+  draw(); fpsCount++;
+  if (now - fpsAt >= 1000) { verEl.textContent = BUILD + ' · ' + fpsCount + ' fps'; fpsCount = 0; fpsAt = now; }
   candi.x = keep.x; candi.y = keep.y; cam = keep.cam;
   requestAnimationFrame(loop);
 }
-let blend = null;
+let blend = null, fpsCount = 0, fpsAt = 0;
+const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag, then frames drawn per second (for testing)
 </script>
 </body>
 </html>
