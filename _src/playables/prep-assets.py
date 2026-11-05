@@ -13,7 +13,7 @@ o='candi/assets/'
 save(f'{C}/img/scenery/sky.webp', o+'sky.webp', w=600, q=60)
 save(f'{C}/img/scenery/mid-trees.webp', o+'trees.webp', w=700, q=65)
 save(f'{C}/img/scenery/reeds.webp', o+'reeds.webp', w=700, q=65)
-for i in (1, 3, 5): save(f'{C}/img/stumps/trees/{i}.webp', o+f'stump{i}.webp', h=700, q=70)
+for i in range(1, 8): save(f'{C}/img/stumps/trees/{i}.webp', o+f'stump{i}.webp', h=700, q=70)
 save(f'{C}/img/moss/1.webp', o+'moss.webp', q=80)
 save(f'{C}/img/ui/logo.webp', o+'logo.webp', w=520, q=80)
 save(f'{C}/img/candi/classic/pose.webp', o+'pose.webp', h=300, q=80)
