@@ -27,7 +27,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">70bf6a</div>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">df5e69</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="Candi's Swamp Hop">
   <img class="pose" id="endpose" alt="">
@@ -258,9 +258,17 @@ let last = 0, acc = 0;
 function loop(now) {
   if (!last) last = now;
   acc = Math.min(acc + (now - last), 250); last = now;
-  while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
-  draw(); requestAnimationFrame(loop);
+  let prev = null;
+  while (acc >= 1000 / 60) { prev = { x: candi.x, y: candi.y, cam }; step(); acc -= 1000 / 60; }
+  // draw between the last two steps, so a 120 Hz screen (iPhone) moves smoothly instead of every other frame
+  if (prev) blend = prev;
+  const a = acc / (1000 / 60), keep = { x: candi.x, y: candi.y, cam };
+  if (blend) { candi.x = blend.x + (keep.x - blend.x) * a; candi.y = blend.y + (keep.y - blend.y) * a; cam = blend.cam + (keep.cam - blend.cam) * a; }
+  draw();
+  candi.x = keep.x; candi.y = keep.y; cam = keep.cam;
+  requestAnimationFrame(loop);
 }
+let blend = null;
 </script>
 </body>
 </html>

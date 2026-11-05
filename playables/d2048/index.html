@@ -27,7 +27,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">8e36c4</div>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">efa5ee</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="D2048">
   <div class="line">Merge treasure. Slay monsters.<br>60 levels and a dragon.</div>
@@ -266,9 +266,17 @@ let last = 0, acc = 0;
 function loop(now) {
   if (!last) last = now;
   acc = Math.min(acc + (now - last), 250); last = now;
-  while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
-  draw(); requestAnimationFrame(loop);
+  let prev = null;
+  while (acc >= 1000 / 60) { prev = new Map(tiles.map(o => [o, [o.x, o.y]])); step(); acc -= 1000 / 60; }
+  // draw between the last two steps, so a 120 Hz screen (iPhone) moves smoothly instead of every other frame
+  if (prev) blend = prev;
+  const a = acc / (1000 / 60), keep = new Map(tiles.map(o => [o, [o.x, o.y]]));
+  if (blend) for (const o of tiles) { const p = blend.get(o); if (p && isFinite(p[0])) { o.x = p[0] + (o.x - p[0]) * a; o.y = p[1] + (o.y - p[1]) * a; } }
+  draw();
+  for (const [o, p] of keep) { o.x = p[0]; o.y = p[1]; }
+  requestAnimationFrame(loop);
 }
+let blend = null;
 </script>
 </body>
 </html>
