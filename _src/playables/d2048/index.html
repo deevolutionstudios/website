@@ -56,7 +56,7 @@ function cta() {
 const src = k => A[k] || ('assets/' + k);
 const img = {}; let left = 0, begun = false;   // begun: start once, even if a picture comes back early
 function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0 && !begun) { begun = true; start(); } }; i.src = src(k + '.webp'); img[k] = i; }
-['bg', 'frame', 'cell', 'skel', 'chest', 'sword', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'].forEach(load);
+['bg', 'frame', 'cell', 'skel', 'chest', 'sword', 'coin', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'].forEach(load);
 document.getElementById('endlogo').src = src('logo.webp');
 
 let ac = null; const buf = {};
@@ -234,7 +234,11 @@ function draw() {
   if (bg.width) { const h = Math.max(H, W * bg.height / bg.width), w = h * bg.width / bg.height; g.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h); }
   g.fillStyle = 'rgba(10,4,18,.35)'; g.fillRect(0, 0, W, H);
   // gold counter
-  text(`\u{1FA99} ${Math.round(shownGold).toLocaleString('en')}`, W / 2, Math.max(56, BY - 74), 30, '#ffd45c');
+  // gold: D2048's own coin with the count beside it, the pair centred, a little above the hint
+  { const gy = Math.max(70, BY - 60), str = Math.round(shownGold).toLocaleString('en'), cs = 36;
+    g.font = '900 30px "Trebuchet MS",Arial,sans-serif'; const tw = g.measureText(str).width, x0 = W / 2 - (cs + 8 + tw) / 2;
+    if (img.coin.width) g.drawImage(img.coin, x0, gy - cs + 6, cs, cs);
+    g.textAlign = 'left'; g.lineJoin = 'round'; g.lineWidth = 6; g.strokeStyle = '#2a0d3a'; g.strokeText(str, x0 + cs + 8, gy); g.fillStyle = '#ffd45c'; g.fillText(str, x0 + cs + 8, gy); g.textAlign = 'center'; }
   // board
   if (img.frame.width) g.drawImage(img.frame, BX - 6, BY - 6, BS + 12, BS + 12);
   for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (img.cell.width) g.drawImage(img.cell, cellX(c) + 2, cellY(r) + 2, CS - 4, CS - 4);
