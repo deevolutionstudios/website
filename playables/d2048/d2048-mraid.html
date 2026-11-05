@@ -81,67 +81,90 @@ addEventListener('resize', fit); fit();
 const cellX = c => BX + 18 + c * CS, cellY = r => BY + 18 + r * CS;
 
 // ---- the board: tiles {id, v (1-9 treasure, 's' skeleton, 'c' chest), r, c, x, y, pop}
-let tiles = [], nextId = 1, moves = 0, gold = 0, t = 0, state = 'load', hint = 'swipe', started = false, ended = false, idleT = 0,
-  fx = [], popups = [], swordGlow = false, slash = null, dir0 = 'left';
-const add = (v, r, c, pop) => { const o = { id: nextId++, v, r, c, x: cellX(c), y: cellY(r), pop: pop ? 0.2 : 1 }; tiles.push(o); return o; };
-const at = (r, c) => tiles.find(o => o.r === r && o.c === c && !o.gone);
+// The flow (Richard, Nov 5: clean and calm): four guided swipes, the finger showing each one, then the skeleton and the sword.
+const SWIPES = 4;
+let tiles = [], nextId = 1, moves = 0, gold = 0, shownGold = 0, t = 0, state = 'load', hint = null, hintAt = 30, hintDir = 'left',
+  started = false, ended = false, idleT = 0, fx = [], popups = [], swordGlow = false, slash = null, busy = false;
+const add = (v, r, c, pop) => { const o = { id: nextId++, v, r, c, x: cellX(c), y: cellY(r), pop: pop ? 0.4 : 1 }; tiles.push(o); return o; };
+const at = (list, r, c) => list.find(o => o.r === r && o.c === c && !o.gone);
 function start() {
-  // a board where the first swipe left merges three pairs at once
+  // a board with pairs to merge in every direction
   [[0, 0, 1], [0, 2, 1], [1, 1, 2], [1, 3, 2], [2, 0, 3], [2, 1, 3], [3, 2, 4], [0, 3, 5]].forEach(([r, c, v]) => add(v, r, c));
+  hintDir = bestDir(); hint = 'swipe';
   state = 'play'; send('ready'); requestAnimationFrame(loop);
 }
 const SPAWNS = [[3, 3], [2, 3], [1, 3], [3, 0], [0, 3], [2, 2], [3, 1], [1, 2]];
 function spawn(v) {
-  for (const [r, c] of SPAWNS) if (!at(r, c)) return add(v, r, c, true);
-  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (!at(r, c)) return add(v, r, c, true);
+  for (const [r, c] of SPAWNS) if (!at(tiles, r, c)) return add(v, r, c, true);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (!at(tiles, r, c)) return add(v, r, c, true);
 }
-function move(dir) {
-  if (ended || state !== 'play') return;
+// slides one list of tiles (changes them); returns whether anything moved and where merges landed
+function slide(list, dir) {
   const dr = { up: -1, down: 1, left: 0, right: 0 }[dir], dc = { left: -1, right: 1, up: 0, down: 0 }[dir];
   const order = [0, 1, 2, 3]; if (dr > 0 || dc > 0) order.reverse();
-  let moved = false, merged = 0;
-  const done = new Set();
+  let moved = false; const merges = [], done = new Set();
   for (const a of order) for (const b of order) {
-    const r = dr ? a : b, c = dc ? a : b, o = at(r, c); if (!o) continue;
-    let nr = r, nc = c;
+    const r = dr ? a : b, c = dc ? a : b, o = at(list, r, c); if (!o) continue;
+    let nr = r, nc = c, merged = false;
     while (true) {
       const tr = nr + dr, tc = nc + dc; if (tr < 0 || tr > 3 || tc < 0 || tc > 3) break;
-      const there = at(tr, tc);
+      const there = at(list, tr, tc);
       if (!there) { nr = tr; nc = tc; continue; }
       if (typeof o.v === 'number' && there.v === o.v && o.v < 9 && !done.has(there.id)) {
-        o.gone = true; o.r = tr; o.c = tc; there.v++; there.pop = 1.35; done.add(there.id); merged++; moved = true;
-        const g2 = 5 * Math.pow(2, there.v); gold += g2;
-        popups.push({ x: cellX(tc) + CS / 2, y: cellY(tr), txt: '+' + g2, life: 50 });
-        for (let i = 0; i < 10; i++) { const an = Math.random() * 6.28, s = 1 + Math.random() * 2.5; fx.push({ x: cellX(tc) + CS / 2, y: cellY(tr) + CS / 2, vx: Math.cos(an) * s, vy: Math.sin(an) * s, life: 30, c: ['#ffd45c', '#fff2b0', '#c38cff'][i % 3] }); }
-        nr = null; break;
+        o.gone = true; o.r = tr; o.c = tc; there.v++; done.add(there.id); merges.push(there); moved = merged = true;
       }
       break;
     }
-    if (nr !== null && (nr !== r || nc !== c)) { o.r = nr; o.c = nc; moved = true; }
+    if (!merged && (nr !== r || nc !== c)) { o.r = nr; o.c = nc; moved = true; }
   }
-  if (!moved) return;
+  return { moved, merges };
+}
+// the swipe that merges the most right now (the finger shows it)
+function bestDir() {
+  let best = 'left', most = -1;
+  for (const d of ['left', 'up', 'right', 'down']) {
+    const r = slide(tiles.filter(o => !o.gone).map(o => ({ ...o })), d);
+    if (r.moved && r.merges.length > most) { most = r.merges.length; best = d; }
+  }
+  return best;
+}
+function move(dir) {
+  if (ended || state !== 'play' || busy || moves >= SWIPES) return;
+  const r = slide(tiles, dir);
+  if (!r.moved) return;
   if (!started) { started = true; send('start'); }
-  idleT = 0; moves++; hint = null;
-  if (merged) play('coin', 0.6);
+  idleT = 0; moves++; hint = null; busy = true;
+  for (const m of r.merges) {
+    m.pop = 1.12; const g2 = 5 * Math.pow(2, m.v); gold += g2;
+    popups.push({ x: cellX(m.c) + CS / 2, y: cellY(m.r) + 8, txt: '+' + g2, life: 46 });
+    for (let i = 0; i < 6; i++) { const an = Math.random() * 6.28, sp = 0.6 + Math.random() * 1.2; fx.push({ x: cellX(m.c) + CS / 2, y: cellY(m.r) + CS / 2, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 34, c: ['#ffd45c', '#fff2b0'][i % 2] }); }
+  }
+  if (r.merges.length) play('coin', 0.5);
   setTimeout(() => {
     tiles = tiles.filter(o => !o.gone);
-    if (moves === 2 || (moves > 2 && !tiles.some(o => o.v === 's' || o.v === 'c') && !slash)) {
-      const s = spawn('s'); s.pop = 0.1; play('appear', 0.5); hint = 'sword'; swordGlow = true;
-      popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) - 6, txt: 'A SKELETON!', life: 80, red: true });
-    } else spawn(moves % 3 === 0 ? 2 : 1);
-  }, 130);
+    if (moves >= SWIPES) {
+      setTimeout(() => {   // a moment's calm, then the skeleton steps out
+        const s = spawn('s'); s.pop = 0.4; play('appear', 0.45); swordGlow = true; busy = false;
+        popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + 4, txt: 'A SKELETON!', life: 90, red: true });
+        hint = 'sword'; hintAt = t + 40;
+      }, 450);
+      return;
+    }
+    spawn(1);
+    busy = false; hintDir = bestDir(); hint = 'swipe'; hintAt = t + 35;   // the finger comes back after a short pause
+  }, 220);
 }
 function useSword() {
   const s = tiles.find(o => o.v === 's'); if (!s || slash) return;
   swordGlow = false; hint = null; idleT = 0;
-  slash = { x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, life: 24 };
-  play('slay', 0.6);
+  slash = { x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, life: 30 };
+  play('slay', 0.55);
   setTimeout(() => {
-    s.v = 'c'; s.pop = 1.4; gold += 500; play('explode', 0.6);
-    popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r), txt: '+500 GOLD', life: 70 });
-    for (let i = 0; i < 30; i++) { const an = Math.random() * 6.28, sp = 1.5 + Math.random() * 3.5; fx.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 44, c: ['#ffd45c', '#fff', '#ff9a3c'][i % 3] }); }
-    setTimeout(finish, 1400);
-  }, 350);
+    s.v = 'c'; s.pop = 1.15; gold += 500; play('explode', 0.5);
+    popups.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + 8, txt: '+500 GOLD', life: 80 });
+    for (let i = 0; i < 16; i++) { const an = Math.random() * 6.28, sp = 0.8 + Math.random() * 1.8; fx.push({ x: cellX(s.c) + CS / 2, y: cellY(s.r) + CS / 2, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, life: 44, c: ['#ffd45c', '#fff', '#ff9a3c'][i % 3] }); }
+    setTimeout(finish, 1600);
+  }, 420);
 }
 function finish() {
   if (ended) return; ended = true;
@@ -173,9 +196,10 @@ document.getElementById('end').addEventListener('click', cta);
 // ---- drawing
 function step() {
   t++; idleT++;
-  for (const o of tiles) { o.x += (cellX(o.c) - o.x) * 0.35; o.y += (cellY(o.r) - o.y) * 0.35; o.pop += (1 - o.pop) * 0.2; }
-  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.08, --p.life > 0));
-  popups = popups.filter(p => (p.y -= 0.5, --p.life > 0));
+  for (const o of tiles) { o.x += (cellX(o.c) - o.x) * 0.24; o.y += (cellY(o.r) - o.y) * 0.24; o.pop += (1 - o.pop) * 0.12; }
+  shownGold += (gold - shownGold) * 0.12; if (Math.abs(gold - shownGold) < 1) shownGold = gold;
+  fx = fx.filter(p => (p.x += p.vx, p.y += p.vy, p.vy += 0.03, --p.life > 0));
+  popups = popups.filter(p => (p.y -= 0.35, --p.life > 0));
   if (slash && --slash.life <= 0) slash = null;
   if (!ended && started && idleT > 60 * 12) finish();
   if (!started && t > 60 * 15) finish();
@@ -190,15 +214,15 @@ function draw() {
   if (bg.width) { const h = Math.max(H, W * bg.height / bg.width), w = h * bg.width / bg.height; g.drawImage(bg, (W - w) / 2, (H - h) / 2, w, h); }
   g.fillStyle = 'rgba(10,4,18,.35)'; g.fillRect(0, 0, W, H);
   // gold counter
-  text(`\u{1FA99} ${gold.toLocaleString('en')}`, W / 2, Math.max(56, BY - 74), 30, '#ffd45c');
+  text(`\u{1FA99} ${Math.round(shownGold).toLocaleString('en')}`, W / 2, Math.max(56, BY - 74), 30, '#ffd45c');
   // board
   if (img.frame.width) g.drawImage(img.frame, BX - 6, BY - 6, BS + 12, BS + 12);
   for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) if (img.cell.width) g.drawImage(img.cell, cellX(c) + 2, cellY(r) + 2, CS - 4, CS - 4);
   for (const o of tiles) {
     const im = typeof o.v === 'number' ? img['t' + o.v] : o.v === 's' ? img.skel : img.chest;
     if (!im || !im.width) continue;
-    const s = CS * 0.92 * o.pop, cx = o.x + CS / 2, cy = o.y + CS / 2 + (o.v === 's' ? Math.sin(t / 14) * 2 : 0);
-    g.globalAlpha = o.gone ? 0.6 : 1; g.drawImage(im, cx - s / 2, cy - s / 2, s, s); g.globalAlpha = 1;
+    const s = CS * 0.92 * o.pop, cx = o.x + CS / 2, cy = o.y + CS / 2 + (o.v === 's' ? Math.sin(t / 28) * 1.5 : 0);
+    g.globalAlpha = o.gone ? 0.5 : 1; g.drawImage(im, cx - s / 2, cy - s / 2, s, s); g.globalAlpha = 1;
   }
   // sword button
   const sb = swordBox();
@@ -207,21 +231,31 @@ function draw() {
   if (img.sword.width) g.drawImage(img.sword, -sb.s / 2, -sb.s / 2, sb.s, sb.s);
   g.restore();
   // slash
-  if (slash) { g.save(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.shadowColor = '#c38cff'; g.shadowBlur = 16; g.globalAlpha = slash.life / 24;
-    const k = (24 - slash.life) / 24 * 60; g.beginPath(); g.moveTo(slash.x - 40, slash.y - 40); g.lineTo(slash.x - 40 + k * 1.4, slash.y - 40 + k * 1.4); g.stroke(); g.restore(); }
+  if (slash) { g.save(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.shadowColor = '#c38cff'; g.shadowBlur = 16; g.globalAlpha = slash.life / 30;
+    const k = (30 - slash.life) / 30 * 60; g.beginPath(); g.moveTo(slash.x - 40, slash.y - 40); g.lineTo(slash.x - 40 + k * 1.4, slash.y - 40 + k * 1.4); g.stroke(); g.restore(); }
   for (const p of fx) { g.globalAlpha = Math.min(1, p.life / 16); g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, 2.8, 0, 6.29); g.fill(); }
   g.globalAlpha = 1;
-  for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); text(p.txt, p.x, p.y, p.red ? 20 : 22, p.red ? '#ff6b6b' : '#ffd45c'); }
+  for (const p of popups) { g.globalAlpha = Math.min(1, p.life / 20); text(p.txt, p.x, p.y, p.red ? 18 : 18, p.red ? '#ff8a8a' : '#ffd45c'); }
   g.globalAlpha = 1;
-  // hints
+  // hints: the title over the board, the finger showing the swipe slowly, dots for the four swipes
   const hy = BY - 26;
-  if (hint === 'swipe') {
-    text('SWIPE TO MERGE!', W / 2, hy, 26);
-    const k = (t % 110) / 110, hx = BX + BS * (0.72 - 0.45 * k), hy2 = BY + CS * 0.75;
-    g.globalAlpha = k < 0.85 ? 1 : (1 - k) / 0.15; g.font = '46px sans-serif'; g.fillText('\u{1F446}', hx, hy2 + 30); g.globalAlpha = 1;
-  } else if (hint === 'sword') {
-    text('TAP THE SWORD!', W / 2, hy, 26, '#fff', '#5a0b0b');
-    g.font = '40px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', sb.x + sb.s / 2 + 8, sb.y + sb.s + 34 + Math.sin(t / 20) * 3);
+  if (hint === 'swipe' && t >= hintAt) {
+    text('SWIPE TO MERGE', W / 2, hy, 24);
+    for (let i = 0; i < SWIPES; i++) { g.fillStyle = i < moves ? '#ffd45c' : 'rgba(255,255,255,.35)'; g.beginPath(); g.arc(W / 2 + (i - 1.5) * 16, hy + 16, 4.5, 0, 6.29); g.fill(); }
+    // one slow stroke every 2.4 s: fade in, glide across the middle of the board, fade out, rest
+    const P = 144, k = ((t - hintAt) % P) / P, glide = Math.min(1, Math.max(0, (k - 0.12) / 0.5)), ease = glide * glide * (3 - 2 * glide);
+    const a = k < 0.12 ? k / 0.12 : k < 0.62 ? 1 : k < 0.76 ? 1 - (k - 0.62) / 0.14 : 0;
+    const v = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] }[hintDir], span = BS * 0.28;
+    const cx = BX + BS / 2, cy = BY + BS / 2, hx = cx - v[0] * span + v[0] * 2 * span * ease, hyy = cy - v[1] * span + v[1] * 2 * span * ease;
+    if (a > 0) {
+      g.save(); g.globalAlpha = a * 0.35; g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(cx - v[0] * span, cy - v[1] * span); g.lineTo(hx, hyy); g.stroke();
+      g.globalAlpha = a; g.font = '44px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', hx + 6, hyy + 38); g.restore();
+    }
+  } else if (hint === 'sword' && t >= hintAt) {
+    text('TAP THE SWORD!', W / 2, hy, 24, '#fff', '#5a0b0b');
+    g.save(); g.globalAlpha = Math.min(1, (t - hintAt) / 20); g.font = '40px sans-serif'; g.textAlign = 'center';
+    g.fillText('\u{1F446}', sb.x + sb.s / 2 + 8, sb.y + sb.s + 34 + Math.sin(t / 30) * 3); g.restore();
   }
 }
 // the rules run at a steady 60 steps a second, so a 120 Hz phone plays at the same speed as any other
