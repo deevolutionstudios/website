@@ -5,7 +5,8 @@
 // The list and the rules come from https://deevolutionstudios.com/promo/ads.json (built from the website's games.js),
 // so new games, store links and tuning reach every game without an app update. Kept on the phone for offline.
 //
-//   import * as House from './house-ads.js';
+//   <script src="house-ads.js"></script>   (a plain script, so classic and module games can both use it: window.HouseAds)
+//   const House = window.HouseAds;
 //   House.init({ self: 'd2048' });                 // once, at start (fetches the list in the background)
 //   if (House.wantsTurn()) ...                     // this ad request should be one of ours (the `share` rule)
 //   House.show({ rewarded: true })                 // resolves true once earned; rejects 'skipped' (closed early) or 'none'
@@ -18,6 +19,7 @@
 // The playable runs in a sandboxed frame and talks by postMessage: {dvsAd: 'ready'|'start'|'complete'|'cta', game}.
 // A rewarded ad pays out on 'complete' (the playable's end card) or after `rewardAfterSec`.
 
+(function () {
 const LIST = 'https://deevolutionstudios.com/promo/ads.json';
 const KEY = 'dvs.houseads';            // localStorage: { list, shown: {id: {day, n, at}}, tapped: {id: time} }
 const DEFAULT_RULES = { share: 0.2, fallback: true, perGamePerDay: 2, afterTapDays: 14, rewardAfterSec: 25, closeAfterSec: 5 };
@@ -29,16 +31,16 @@ function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } ca
 function persist() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private mode: fine */ } }
 const today = () => new Date().toISOString().slice(0, 10);
 const rules = () => Object.assign({}, DEFAULT_RULES, state.list && state.list.rules);
-export const platform = () => (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform())
+const platform = () => (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform())
   || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
 const safe = u => (typeof u === 'string' && /^https:\/\//.test(u) ? u : null);
 const storeOf = a => { const p = platform(); return p === 'ios' ? safe(a.ios) : p === 'android' ? safe(a.android) : safe(a.page); };
 
-export function init(o) {
+function init(o) {
   opts = Object.assign(opts, o || {});
   return refresh();
 }
-export async function refresh() {
+async function refresh() {
   try {
     const r = await fetch(opts.list, { cache: 'no-cache' });
     if (r.ok) { state.list = await r.json(); persist(); }
@@ -46,7 +48,7 @@ export async function refresh() {
 }
 
 // The games we could show right now, best first.
-export function candidates() {
+function candidates() {
   const R = rules(), now = Date.now(), d = today();
   const ads = ((state.list && state.list.ads) || []).filter(a => a && a.id !== opts.self && safe(a.playable) && storeOf(a));
   return ads.filter(a => {
@@ -57,9 +59,9 @@ export function candidates() {
   }).sort((x, y) => (((state.shown || {})[x.id] || {}).at || 0) - (((state.shown || {})[y.id] || {}).at || 0));
 }
 // Should this ad request be one of ours? (a share of requests, when we have one to show)
-export function wantsTurn() { return candidates().length > 0 && Math.random() < rules().share; }
+function wantsTurn() { return candidates().length > 0 && Math.random() < rules().share; }
 // When AdMob has nothing, can we fill in?
-export function canFill() { return rules().fallback && candidates().length > 0; }
+function canFill() { return rules().fallback && candidates().length > 0; }
 
 async function page(a) {
   if (html[a.id]) return html[a.id];
@@ -70,7 +72,7 @@ async function page(a) {
 
 // Shows one of our playables full screen. Resolves true when a rewarded ad was earned (or any ad was closed after
 // it could be); rejects 'skipped' if a rewarded ad was closed early, 'none' if there's nothing to show.
-export async function show({ rewarded = false } = {}) {
+async function show({ rewarded = false } = {}) {
   const list = candidates();
   let a = null, doc = null;
   for (const c of list) { try { doc = await page(c); a = c; break; } catch (e) { /* try the next */ } }
@@ -138,3 +140,6 @@ export async function show({ rewarded = false } = {}) {
     addEventListener('message', onMsg);
   });
 }
+
+window.HouseAds = { init, refresh, candidates, wantsTurn, canFill, show, platform };
+})();

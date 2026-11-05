@@ -8,8 +8,11 @@
 <select id="self"><option>mergy</option><option>d2048</option><option>candi</option></select></p>
 <p><button id="rew">Rewarded ad</button><button id="plain">Plain ad</button><button id="reset">Forget what was shown</button></p>
 <pre id="log"></pre>
-<script type="module">
-import * as House from './house-ads.js';
+<script src="house-ads.js"></script>
+<script>
+const House = window.HouseAds;
+// on this computer, read the site's files from here instead of the live site
+if (location.hostname === 'localhost') { const f = window.fetch; window.fetch = (u, o) => f(String(u).replace('https://deevolutionstudios.com/', '/'), o); }
 const log = t => { document.getElementById('log').textContent = `${new Date().toLocaleTimeString()}  ${t}\n` + document.getElementById('log').textContent; };
 const list = location.hostname === 'localhost' ? '/promo/ads.json' : undefined;
 const start = () => House.init({ self: document.getElementById('self').value, list, onEvent: (e, d) => log(`${e} ${JSON.stringify(d)}`), open: u => log('open store: ' + u) })

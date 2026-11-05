@@ -37,3 +37,11 @@ This repo:
   Nov 5, the contact form still uses Formspree). Both use MailerLite's confirm email. Email designs: _src/email/ (template.html is the studio
   template; images in assets/email/, PNG/JPG only). Privacy notice has #news and #testers sections for these.
 - deevolutionstudios.com is verified in Google Search Console (DNS TXT record at Hostinger, Nov 3).
+- **House ads: our own playable ads** (Nov 5, Richard's call: shown in our games when they ask for an ad). Sources in
+  `_src/playables/<game>/` (index.html + assets/, art made by prep-assets.py from the game repos); `node
+  tools/build-playables.js` inlines everything into one file per game in `playables/<game>/` (index.html for our games,
+  plus `-mraid.html` and `-google.zip` for ad networks) and copies `house-ads.js` (the serving code each game keeps a copy
+  of) and `test.html` (plays a game asking for ads). Then `node tools/build.js` writes `promo/ads.json` (the list and the
+  rules: share 20%, fill when AdMob has nothing, 2 a day per game, 14 days off after a tap) from games.js. Candi and
+  D2048 so far; D2048 and Candi show them (web now, apps from their next builds). .htaccess lets any app read /playables/.
+
