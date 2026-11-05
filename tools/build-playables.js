@@ -15,7 +15,10 @@ for (const game of fs.readdirSync(srcRoot)) {
     const m = MIME[path.extname(f)]; if (!m) continue;
     assets[f] = `data:${m};base64,${fs.readFileSync(path.join(dir, 'assets', f)).toString('base64')}`;
   }
-  const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8').replace('/*ASSETS*/{}', JSON.stringify(assets));
+  const srcText = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
+  // the build tag in the corner: the source's own fingerprint, so a tester can tell which version is showing
+  const tag = require('crypto').createHash('sha1').update(srcText).digest('hex').slice(0, 6);
+  const html = srcText.replace('/*ASSETS*/{}', JSON.stringify(assets)).replace('/*BUILD*/', tag);
   const out = path.join(root, 'playables', game);
   fs.mkdirSync(out, { recursive: true });
   const write = (name, text) => { fs.writeFileSync(path.join(out, name), text); console.log(`${game}/${name}: ${(text.length / 1024).toFixed(0)} KB`); };

@@ -27,6 +27,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">4dae47</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="Candi's Swamp Hop">
   <img class="pose" id="endpose" alt="">
@@ -53,8 +54,8 @@ function cta() {
   else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
 }
 const src = k => A[k] || ('assets/' + k);
-const img = {}; let left = 0;
-function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0) start(); }; i.src = src(k + '.webp'); img[k] = i; }
+const img = {}; let left = 0, begun = false;   // begun: start once, even if a picture comes back early
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0 && !begun) { begun = true; start(); } }; i.src = src(k + '.webp'); img[k] = i; }
 ['sky', 'trees', 'reeds', 'stump1', 'stump2', 'stump3', 'stump4', 'stump5', 'stump6', 'stump7', 'moss', 'candi'].forEach(load);
 document.getElementById('endlogo').src = src('logo.webp');
 document.getElementById('endpose').src = src('pose.webp');

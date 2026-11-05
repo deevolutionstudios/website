@@ -27,6 +27,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
+<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">/*BUILD*/</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="D2048">
   <div class="line">Merge treasure. Slay monsters.<br>60 levels and a dragon.</div>
@@ -53,8 +54,8 @@ function cta() {
   else if (!hosted) window.open(STORE[platform] || STORE.web, '_blank');
 }
 const src = k => A[k] || ('assets/' + k);
-const img = {}; let left = 0;
-function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0) start(); }; i.src = src(k + '.webp'); img[k] = i; }
+const img = {}; let left = 0, begun = false;   // begun: start once, even if a picture comes back early
+function load(k) { left++; const i = new Image(); i.onload = i.onerror = () => { if (--left === 0 && !begun) { begun = true; start(); } }; i.src = src(k + '.webp'); img[k] = i; }
 ['bg', 'frame', 'cell', 'skel', 'chest', 'sword', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'].forEach(load);
 document.getElementById('endlogo').src = src('logo.webp');
 
