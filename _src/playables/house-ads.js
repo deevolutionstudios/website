@@ -35,12 +35,21 @@ const rules = () => Object.assign({}, DEFAULT_RULES, state.list && state.list.ru
 const platform = () => (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform())
   || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios' : /Android/.test(navigator.userAgent) ? 'android' : 'web');
 const safe = u => (typeof u === 'string' && /^https:\/\//.test(u) ? u : null);
-const storeOf = a => { const p = platform(); return p === 'ios' ? safe(a.ios) : p === 'android' ? safe(a.android) : safe(a.page); };
+// In the phone apps only games live in that store are shown. On the website (a phone's browser too) every game is
+// shown: its store link when there is one for that phone, else its web page (Candi isn't on the App Store yet).
+const native = () => !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const storeOf = a => {
+  const p = platform(), store = p === 'ios' ? safe(a.ios) : p === 'android' ? safe(a.android) : null;
+  return native() ? store : store || safe(a.page);
+};
 
+let ready = Promise.resolve();
 function init(o) {
   opts = Object.assign(opts, o || {});
-  return refresh();
+  return (ready = refresh());
 }
+// resolves once the list has been fetched (or failed): ask before deciding, so the first ad after opening isn't missed
+const whenReady = () => ready;
 async function refresh() {
   try {
     const r = await fetch(opts.list + (opts.list.includes('?') ? '&' : '?') + 't=' + Math.floor(Date.now() / 300000), { cache: 'no-cache' }); // a new address every 5 minutes, past any cache
@@ -143,5 +152,5 @@ async function show({ rewarded = false } = {}) {
   });
 }
 
-window.HouseAds = { init, refresh, candidates, wantsTurn, canFill, show, platform };
+window.HouseAds = { init, refresh, whenReady, candidates, wantsTurn, canFill, show, platform };
 })();
