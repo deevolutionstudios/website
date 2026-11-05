@@ -103,7 +103,7 @@
     });
   });
 
-  // Contact and tester forms (Formspree): send without leaving the page, keep the normal post as the no-JS fallback.
+  // Contact form (Formspree) and tester form (MailerLite): send without leaving the page, keep the normal post as the no-JS fallback.
   [['contactForm', 'formSuccess'], ['testerForm', 'testerSuccess']].forEach(function (ids) {
   var form = document.getElementById(ids[0]);
   var done = document.getElementById(ids[1]);
@@ -113,20 +113,10 @@
       var b = form.querySelector('.form-submit');
       var data = new FormData(form); // includes the "What do you need?" pick (its radios use form="contactForm")
       b.textContent = 'Sending…'; b.disabled = true;
-      // Tester sign-ups also go to the studio's MailerLite list (group Testers, with a confirm email).
-      var ml = form.getAttribute('data-mailerlite');
-      if (ml) {
-        var m = new FormData();
-        m.append('fields[email]', data.get('email') || '');
-        m.append('fields[name]', data.get('name') || '');
-        m.append('fields[game]', data.get('game') || '');
-        m.append('fields[device]', data.get('phone') || '');
-        m.append('ml-submit', '1'); m.append('anticsrf', 'true');
-        fetch(ml, { method: 'POST', body: m, mode: 'no-cors' }).catch(function () {});
-      }
-      fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      var ml = form.action.indexOf('mailerlite.com') > -1; // the tester form posts to MailerLite (no readable reply)
+      fetch(form.action, ml ? { method: 'POST', body: data, mode: 'no-cors' } : { method: 'POST', body: data, headers: { Accept: 'application/json' } })
         .then(function (r) {
-          if (!r.ok) throw new Error(r.status);
+          if (!ml && !r.ok) throw new Error(r.status);
           form.style.display = 'none'; done.classList.add('show'); done.focus();
         })
         .catch(function () { b.textContent = 'Something went wrong. Try again'; b.disabled = false; });

@@ -697,16 +697,14 @@ write('/testers/', layout({
 <section class="doc"><div class="prose">
 <p>When a game is ready for testing, we'll email you an invite for TestFlight (iPhone) or Google Play testing (Android).
 Testing is free, and you can stop at any time.</p>
-<form class="contact-form tester-form" id="testerForm" action="https://formspree.io/f/meepjead" method="POST" data-mailerlite="https://assets.mailerlite.com/jsonp/2770936/forms/203289329782490467/subscribe">
-  <input type="hidden" name="_subject" value="Tester sign-up">
-  <input type="hidden" name="form" value="tester sign-up">
-  <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="name" autocomplete="name" required></div>
-  <div class="form-group"><label for="temail">Email address</label><input type="email" id="temail" name="email" autocomplete="email" required></div>
-  <div class="form-group"><label for="tgame">Which game?</label><select id="tgame" name="game">${TESTING.map(t => `<option value="${t.slug}">${esc(t.name)}</option>`).join('')}</select></div>
-  <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="phone"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
-  <div class="form-group"><label for="tnote">Anything else? (optional)</label><textarea id="tnote" name="message" placeholder="What games do you like to play?"></textarea></div>
+<form class="contact-form tester-form" id="testerForm" action="https://assets.mailerlite.com/jsonp/2770936/forms/203289329782490467/subscribe" method="POST">
+  <input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true">
+  <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="fields[name]" autocomplete="name" required></div>
+  <div class="form-group"><label for="temail">Email address</label><input type="email" id="temail" name="fields[email]" autocomplete="email" required></div>
+  <div class="form-group"><label for="tgame">Which game?</label><select id="tgame" name="fields[game]">${TESTING.map(t => `<option value="${t.slug}">${esc(t.name)}</option>`).join('')}</select></div>
+  <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="fields[device]"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
   <button type="submit" class="form-submit">Sign me up →</button>
-  <p class="form-note">We'll email you test invites and news when our games launch; you can unsubscribe at any time. Your sign-up is sent through Formspree and MailerLite; see our <a href="/privacy/#testers">privacy notice</a>.</p>
+  <p class="form-note">We'll email you test invites and news when our games launch; you can unsubscribe at any time. Your sign-up is kept in our mailing list at MailerLite; see our <a href="/privacy/#testers">privacy notice</a>.</p>
 </form>
 <div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>Almost there!</h3><p>Check your inbox and tap the button in our email to confirm. Then we'll email you when there's something to test. In the meantime, see <a href="/news/">what we're building</a>.</p></div>
 </div></section>
@@ -745,9 +743,8 @@ message you enter are sent to us through Formspree, which delivers them to our i
 and delete them when they are no longer needed for that. See <a href="https://formspree.io/legal/privacy-policy/">Formspree's
 privacy policy</a>. If you email us directly, your email is handled by our email provider, Hostinger.</p>
 <h3 id="testers">Signing up as a tester</h3>
-<p>If you sign up on the <a href="/testers/">tester page</a>, the name, email address, game, phone type and note you
-enter are sent to us through Formspree, the same way as the contact form, and your name, email address, game and phone type
-are also kept in our mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy
+<p>If you sign up on the <a href="/testers/">tester page</a>, the name, email address, game and phone type you enter
+are kept in our mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy
 policy</a>), after you confirm by email. We use them to invite you to test our games (by email, and by adding your email to
 Apple's TestFlight or Google Play's testing list for that game, whose own policies then apply) and to email you news when
 our games launch. Every email has an unsubscribe link. We delete your details when you ask us to.</p>
