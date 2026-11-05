@@ -125,11 +125,11 @@ function step() {
   cam += (camTo - cam) * 0.12;
   const next = stumps[candi.on + 1], here = stumps[candi.on];
   if (candi.mode === 'fly') {
-    candi.y = Math.max(70, candi.y - 2.6);
+    candi.y = Math.max(70, candi.y - 1.8);
     if (t % 3 === 0) fx.push({ x: candi.x + (Math.random() - .5) * 18, y: candi.y - 80, vx: 0, vy: .5, life: 30, c: '#ffd1ee' });
   } else if (candi.mode === 'drift') {
     const px = candi.x, py = candi.y;
-    candi.x += 2.8; candi.y += 2.8;
+    candi.x += 1.9; candi.y += 1.9;
     // landing: her feet cross the next stump's top while over it
     if (next && py <= next.top && candi.y >= next.top && Math.abs(candi.x - next.x) <= next.w / 2 + 14) {
       candi.y = next.top; candi.on++; hops++;
@@ -145,7 +145,7 @@ function step() {
       candi.mode = 'slide'; candi.x = next.x - next.w / 2 - 4;   // hit its side: slide down it
     } else if (candi.y > WATER()) splash();
     else if (candi.x - cam > W + 30) splash();
-  } else if (candi.mode === 'slide') { candi.y += 4; if (candi.y > WATER()) splash(); }
+  } else if (candi.mode === 'slide') { candi.y += 3; if (candi.y > WATER()) splash(); }
   else if (candi.mode === 'run') {
     candi.x += (candi.runTo - candi.x) * 0.15;
     if (Math.abs(candi.x - candi.runTo) < 1) { candi.x = candi.runTo; candi.mode = 'stand'; }
@@ -213,17 +213,17 @@ function drawGuide() {
 }
 function drawHint() {
   if (!hint || ended) return;
-  const pulse = 1 + Math.sin(t / 8) * 0.06, y = H * 0.22;
+  const pulse = 1 + Math.sin(t / 22) * 0.04, y = H * 0.22;
   g.save(); g.translate(W / 2, y); g.scale(pulse, pulse);
   g.font = '900 28px "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif'; g.textAlign = 'center'; g.lineJoin = 'round';
   const txt = hint === 'hold' ? 'HOLD TO FLOAT' : 'LET GO TO HOP!';
   g.lineWidth = 7; g.strokeStyle = '#8a1d5a'; g.strokeText(txt, 0, 0); g.fillStyle = '#fff'; g.fillText(txt, 0, 0);
   g.restore();
   if (hint === 'hold') { // a finger pressing
-    const fy = H * 0.34, fx0 = W / 2, k = (t % 50) / 50;
+    const fy = H * 0.34, fx0 = W / 2, k = (t % 100) / 100;
     g.save(); g.strokeStyle = '#fff'; g.lineWidth = 4;
     g.globalAlpha = .8 * (1 - k); g.beginPath(); g.arc(fx0, fy, 14 + k * 26, 0, Math.PI * 2); g.stroke();
-    g.globalAlpha = 1; g.font = '44px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', fx0 + 6, fy + 40 + Math.sin(t / 8) * 3); g.restore();
+    g.globalAlpha = 1; g.font = '44px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', fx0 + 6, fy + 40 + Math.sin(t / 24) * 3); g.restore();
   }
 }
 function draw() {
@@ -248,7 +248,14 @@ function draw() {
   g.strokeText(String(score), W / 2, 62); g.fillStyle = '#fff'; g.fillText(String(score), W / 2, 62);
   drawHint();
 }
-function loop() { step(); draw(); requestAnimationFrame(loop); }
+// the rules run at a steady 60 steps a second, so a 120 Hz phone plays at the same speed as any other
+let last = 0, acc = 0;
+function loop(now) {
+  if (!last) last = now;
+  acc = Math.min(acc + (now - last), 250); last = now;
+  while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
+  draw(); requestAnimationFrame(loop);
+}
 </script>
 </body>
 </html>

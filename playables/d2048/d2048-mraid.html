@@ -197,13 +197,13 @@ function draw() {
   for (const o of tiles) {
     const im = typeof o.v === 'number' ? img['t' + o.v] : o.v === 's' ? img.skel : img.chest;
     if (!im || !im.width) continue;
-    const s = CS * 0.92 * o.pop, cx = o.x + CS / 2, cy = o.y + CS / 2 + (o.v === 's' ? Math.sin(t / 6) * 2 : 0);
+    const s = CS * 0.92 * o.pop, cx = o.x + CS / 2, cy = o.y + CS / 2 + (o.v === 's' ? Math.sin(t / 14) * 2 : 0);
     g.globalAlpha = o.gone ? 0.6 : 1; g.drawImage(im, cx - s / 2, cy - s / 2, s, s); g.globalAlpha = 1;
   }
   // sword button
   const sb = swordBox();
   g.save(); g.translate(sb.x + sb.s / 2, sb.y + sb.s / 2);
-  if (swordGlow) { const k = 1 + Math.sin(t / 6) * 0.1; g.scale(k, k); g.shadowColor = '#ffcf3f'; g.shadowBlur = 24; }
+  if (swordGlow) { const k = 1 + Math.sin(t / 16) * 0.06; g.scale(k, k); g.shadowColor = '#ffcf3f'; g.shadowBlur = 24; }
   if (img.sword.width) g.drawImage(img.sword, -sb.s / 2, -sb.s / 2, sb.s, sb.s);
   g.restore();
   // slash
@@ -217,14 +217,21 @@ function draw() {
   const hy = BY - 26;
   if (hint === 'swipe') {
     text('SWIPE TO MERGE!', W / 2, hy, 26);
-    const k = (t % 60) / 60, hx = BX + BS * (0.72 - 0.45 * k), hy2 = BY + CS * 0.75;
+    const k = (t % 110) / 110, hx = BX + BS * (0.72 - 0.45 * k), hy2 = BY + CS * 0.75;
     g.globalAlpha = k < 0.85 ? 1 : (1 - k) / 0.15; g.font = '46px sans-serif'; g.fillText('\u{1F446}', hx, hy2 + 30); g.globalAlpha = 1;
   } else if (hint === 'sword') {
     text('TAP THE SWORD!', W / 2, hy, 26, '#fff', '#5a0b0b');
-    g.font = '40px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', sb.x + sb.s / 2 + 8, sb.y + sb.s + 34 + Math.sin(t / 7) * 4);
+    g.font = '40px sans-serif'; g.textAlign = 'center'; g.fillText('\u{1F446}', sb.x + sb.s / 2 + 8, sb.y + sb.s + 34 + Math.sin(t / 20) * 3);
   }
 }
-function loop() { step(); draw(); requestAnimationFrame(loop); }
+// the rules run at a steady 60 steps a second, so a 120 Hz phone plays at the same speed as any other
+let last = 0, acc = 0;
+function loop(now) {
+  if (!last) last = now;
+  acc = Math.min(acc + (now - last), 250); last = now;
+  while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
+  draw(); requestAnimationFrame(loop);
+}
 </script>
 </body>
 </html>
