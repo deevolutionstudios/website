@@ -31,4 +31,9 @@ This repo:
   games and their order: Mergy, D2048, Candi; store links follow each game's `live` flags). Every game's "More from us"
   card reads it (Mergy's Settings first), so keep its fields as they are (id, name, tagline, icon, page, ios, android).
   .htaccess lets any app read /promo/ (CORS) and caches it an hour.
+- **Mailing list: MailerLite** (Nov 5, studio account deevolutionstudios@gmail.com, account 2770936). Every page's footer has
+  "New game alerts" (form "Website release news sign-up", id 203289542855231042, group Release news); the tester page also
+  sends each sign-up to form "Website tester sign-up" (203289329782490467, group Testers, fields game and device) besides
+  Formspree (site.js). Both use MailerLite's confirm email. Email designs: _src/email/ (template.html is the studio
+  template; images in assets/email/, PNG/JPG only). Privacy notice has #news and #testers sections for these.
 - deevolutionstudios.com is verified in Google Search Console (DNS TXT record at Hostinger, Nov 3).
