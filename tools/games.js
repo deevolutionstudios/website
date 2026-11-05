@@ -66,7 +66,7 @@ swamp!</p>
     tagline: '2048 goes dungeon crawling! Merge coins into gems and chests, outwit monsters and slay bosses in 60 levels.',
     short: 'Merge treasure, slay monsters: the 2048 you love, now with swords and a dragon.',
     appStore: { id: '1354589124', live: true },
-    play: { id: 'com.deevolutionstudios.d2048', live: false },
+    play: { id: 'com.deevolutionstudios.d2048', live: true },
     shots: ['01-title', '02-adventure', '03-boss', '04-map', '05-menu', '06-guide', '07-profile'],
     info: [['Platforms', 'iPhone, iPad, Android'], ['Genre', 'Puzzle / RPG'], ['Age', '9+'], ['Price', 'Free, with optional packs'], ['Account', 'None needed']],
     about: `
