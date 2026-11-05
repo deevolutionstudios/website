@@ -99,6 +99,11 @@ async function show({ rewarded = false } = {}) {
     const root = document.createElement('div');
     root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', `Ad: ${a.name}`);
     root.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:#000;';
+    root.className = 'dvs-housead';
+    // the game underneath stops drawing while the ad plays (on an iPhone both together ran the ad at 6 frames a second)
+    const hush = document.createElement('style');
+    hush.textContent = 'body > *:not(.dvs-housead){visibility:hidden!important} body > *:not(.dvs-housead) *{animation-play-state:paused!important}';
+    document.head.appendChild(hush);
     const frame = document.createElement('iframe');
     frame.setAttribute('sandbox', 'allow-scripts');   // its own little world: no access to the game, its storage or cookies
     frame.setAttribute('allow', 'autoplay');
@@ -143,7 +148,7 @@ async function show({ rewarded = false } = {}) {
     }
     function close() {
       if (done) return; done = true;
-      clearInterval(tick); removeEventListener('message', onMsg); root.remove();
+      clearInterval(tick); removeEventListener('message', onMsg); root.remove(); hush.remove();
       if (opts.onShow) opts.onShow(false);
       if (earned) resolve(true); else reject('skipped');
     }
