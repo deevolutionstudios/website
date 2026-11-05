@@ -113,6 +113,17 @@
       var b = form.querySelector('.form-submit');
       var data = new FormData(form); // includes the "What do you need?" pick (its radios use form="contactForm")
       b.textContent = 'Sending…'; b.disabled = true;
+      // Tester sign-ups also go to the studio's MailerLite list (group Testers, with a confirm email).
+      var ml = form.getAttribute('data-mailerlite');
+      if (ml) {
+        var m = new FormData();
+        m.append('fields[email]', data.get('email') || '');
+        m.append('fields[name]', data.get('name') || '');
+        m.append('fields[game]', data.get('game') || '');
+        m.append('fields[device]', data.get('phone') || '');
+        m.append('ml-submit', '1'); m.append('anticsrf', 'true');
+        fetch(ml, { method: 'POST', body: m, mode: 'no-cors' }).catch(function () {});
+      }
       fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
         .then(function (r) {
           if (!r.ok) throw new Error(r.status);
@@ -122,4 +133,16 @@
     });
   }
   });
+  // New game alerts (footer): straight to MailerLite's release news form, which sends a confirm email.
+  (function () {
+    var f = document.getElementById('newsForm'), done = document.getElementById('newsDone');
+    if (!f || !done) return;
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var b = f.querySelector('button'); b.textContent = 'Sending…'; b.disabled = true;
+      fetch(f.action, { method: 'POST', body: new FormData(f), mode: 'no-cors' })
+        .then(function () { f.hidden = true; f.style.display = 'none'; done.hidden = false; done.focus(); })
+        .catch(function () { b.textContent = 'Try again'; b.disabled = false; });
+    });
+  })();
 })();

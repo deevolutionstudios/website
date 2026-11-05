@@ -24,8 +24,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="De-Evolution Studios news" href="/news/feed.xml">
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=tnyuo6">
-<script defer src="/assets/js/site.js?v=tnyuo6"></script>
+<link rel="stylesheet" href="/assets/css/site.css?v=to0wlb">
+<script defer src="/assets/js/site.js?v=to0wlb"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://deevolutionstudios.com/#studio","name":"De-Evolution Studios","legalName":"DE-EVOLUTION STUDIOS LLC","url":"https://deevolutionstudios.com/","logo":"https://deevolutionstudios.com/assets/img/studio/logo.webp","email":"contact@deevolutionstudios.com"},{"@type":"Game","name":"Wraps & Isis","description":"Wraps & Isis: Escape from Giza, a mobile action puzzle game. De-Evolution Studios created the story, characters and designs for the mummy, his cat and Khufu’s ghost.","url":"https://deevolutionstudios.com/wraps/","image":"https://deevolutionstudios.com/assets/img/wraps/cover.webp","author":{"@id":"https://deevolutionstudios.com/#studio"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://deevolutionstudios.com/"},{"@type":"ListItem","position":2,"name":"Our Work","item":"https://deevolutionstudios.com/work/"},{"@type":"ListItem","position":3,"name":"Wraps & Isis","item":"https://deevolutionstudios.com/wraps/"}]}]}</script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7266c15388174b1e8c991502c03aca7a"}'></script>
 </head>
@@ -74,6 +74,17 @@
 </main>
 <footer class="site">
   <div class="footer-inner">
+    <div class="footer-news">
+      <div class="footer-news-text"><h2>✦ New game alerts</h2><p>Get one email when we release a new game. No spam; unsubscribe any time.</p></div>
+      <form class="footer-news-form" id="newsForm" action="https://assets.mailerlite.com/jsonp/2770936/forms/203289542855231042/subscribe" method="POST">
+        <label class="sr-only" for="nname">Your first name</label><input type="text" id="nname" name="fields[name]" placeholder="First name" autocomplete="given-name">
+        <label class="sr-only" for="nemail">Email address</label><input type="email" id="nemail" name="fields[email]" placeholder="Email address" autocomplete="email" required>
+        <input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true">
+        <button type="submit">Notify me</button>
+        <p class="footer-news-note">Sent through MailerLite; see our <a href="/privacy/#news">privacy notice</a>.</p>
+      </form>
+      <p class="footer-news-done" id="newsDone" tabindex="-1" role="status" hidden>Almost there! Check your inbox and tap the button in our email to confirm.</p>
+    </div>
     <div class="footer-top">
       <div class="footer-brand">
         <a href="/" class="footer-logo"><img src="/assets/img/studio/logo-long.png?v=3e990484" alt="De-Evolution Studios" width="342" height="19" loading="lazy"></a>

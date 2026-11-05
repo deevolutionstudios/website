@@ -389,6 +389,18 @@ html.viewer-on{overflow:hidden}
 /* ── FOOTER ── */
 footer.site{background:var(--ink);color:#fff;padding:64px 52px 44px}
 .footer-inner{max-width:1260px;margin:0 auto}
+.footer-news{display:flex;gap:28px 48px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-bottom:36px;margin-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)}
+.footer-news h2{font-family:var(--cond);font-size:.86rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.footer-news p{font-size:.88rem;color:rgba(255,255,255,.62);max-width:420px}
+.footer-news-form{display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex:1 1 420px;max-width:600px}
+.footer-news-form input{flex:1 1 160px;min-width:0;padding:12px 16px;border-radius:100px;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:.9rem}
+.footer-news-form input::placeholder{color:rgba(255,255,255,.45)}
+.footer-news-form input:focus{outline:none;border-color:var(--gold)}
+.footer-news-form button{padding:12px 26px;border-radius:100px;border:0;background:var(--red);color:#fff;font-family:var(--cond);font-weight:600;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.footer-news-form button:hover{background:var(--gold);color:var(--ink)}
+.footer-news-form .footer-news-note{flex-basis:100%;font-size:.72rem;color:rgba(255,255,255,.4)}
+.footer-news-form .footer-news-note a{color:rgba(255,255,255,.6)}
+.footer-news-done{font-size:.95rem!important;color:var(--gold)!important;font-weight:600}
 .footer-top{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)}
 .footer-logo img{height:30px;width:auto;filter:brightness(0) invert(1);opacity:.9}
 .footer-about{font-size:.85rem;color:rgba(255,255,255,.55);margin-top:18px;max-width:300px;line-height:1.65}
@@ -522,3 +534,5 @@ footer.site{background:var(--ink);color:#fff;padding:64px 52px 44px}
 .rss-line{margin-top:22px;font-size:.85rem;text-align:right}.rss-line a{color:var(--muted)}
 .tester-form{margin-top:24px}
 @media (max-width:760px){.news-wrap{padding:40px 16px 80px}.post-lead{grid-template-columns:1fr}.post-lead img{border-right:0;border-bottom:2.5px solid var(--ink);height:auto}.post-lead-body{padding:22px}.post-grid{grid-template-columns:1fr}.post-card{padding:18px;gap:14px}.post-card img{width:44px;height:44px}.tester-box{flex-direction:column;align-items:flex-start}}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

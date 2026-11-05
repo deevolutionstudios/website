@@ -24,8 +24,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="De-Evolution Studios news" href="/news/feed.xml">
 <link rel="preload" href="/assets/fonts/alfa-slab-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=tnyuo6">
-<script defer src="/assets/js/site.js?v=tnyuo6"></script>
+<link rel="stylesheet" href="/assets/css/site.css?v=to0wlb">
+<script defer src="/assets/js/site.js?v=to0wlb"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7266c15388174b1e8c991502c03aca7a"}'></script>
 </head>
 <body>
@@ -78,9 +78,16 @@ and delete them when they are no longer needed for that. See <a href="https://fo
 privacy policy</a>. If you email us directly, your email is handled by our email provider, Hostinger.</p>
 <h3 id="testers">Signing up as a tester</h3>
 <p>If you sign up on the <a href="/testers/">tester page</a>, the name, email address, game, phone type and note you
-enter are sent to us through Formspree, the same way as the contact form. We use them only to invite you to test our
-games (by email, and by adding your email to Apple's TestFlight or Google Play's testing list for that game, whose own
-policies then apply). We delete them when you ask us to, or when we no longer run tests you signed up for.</p>
+enter are sent to us through Formspree, the same way as the contact form, and your name, email address, game and phone type
+are also kept in our mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy
+policy</a>), after you confirm by email. We use them to invite you to test our games (by email, and by adding your email to
+Apple's TestFlight or Google Play's testing list for that game, whose own policies then apply) and to email you news when
+our games launch. Every email has an unsubscribe link. We delete your details when you ask us to.</p>
+<h3 id="news">New game alerts</h3>
+<p>If you sign up for new game alerts (in the footer of our website), your first name and email address are kept in our
+mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy policy</a>) after
+you confirm by email. We use them only to email you when we release a new game. Every email has an unsubscribe link, and we
+delete your details when you ask us to.</p>
 <h3>Your rights</h3>
 <p>You can ask us for a copy of the information we hold about you, or ask us to correct or delete it, by emailing
 <a href="mailto:contact@deevolutionstudios.com">contact@deevolutionstudios.com</a>. If you live in the European Union or the UK, you can also object to how
@@ -91,6 +98,17 @@ we use it and complain to a data protection authority.</p>
 </main>
 <footer class="site">
   <div class="footer-inner">
+    <div class="footer-news">
+      <div class="footer-news-text"><h2>✦ New game alerts</h2><p>Get one email when we release a new game. No spam; unsubscribe any time.</p></div>
+      <form class="footer-news-form" id="newsForm" action="https://assets.mailerlite.com/jsonp/2770936/forms/203289542855231042/subscribe" method="POST">
+        <label class="sr-only" for="nname">Your first name</label><input type="text" id="nname" name="fields[name]" placeholder="First name" autocomplete="given-name">
+        <label class="sr-only" for="nemail">Email address</label><input type="email" id="nemail" name="fields[email]" placeholder="Email address" autocomplete="email" required>
+        <input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true">
+        <button type="submit">Notify me</button>
+        <p class="footer-news-note">Sent through MailerLite; see our <a href="/privacy/#news">privacy notice</a>.</p>
+      </form>
+      <p class="footer-news-done" id="newsDone" tabindex="-1" role="status" hidden>Almost there! Check your inbox and tap the button in our email to confirm.</p>
+    </div>
     <div class="footer-top">
       <div class="footer-brand">
         <a href="/" class="footer-logo"><img src="/assets/img/studio/logo-long.png?v=3e990484" alt="De-Evolution Studios" width="342" height="19" loading="lazy"></a>

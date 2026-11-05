@@ -121,6 +121,17 @@ function footer() {
   const games = MOBILE.map(g => `<li><a href="/${g.slug}/">${esc(g.shortName || g.name)}</a></li>`).join('');
   return `<footer class="site">
   <div class="footer-inner">
+    <div class="footer-news">
+      <div class="footer-news-text"><h2>✦ New game alerts</h2><p>Get one email when we release a new game. No spam; unsubscribe any time.</p></div>
+      <form class="footer-news-form" id="newsForm" action="https://assets.mailerlite.com/jsonp/2770936/forms/203289542855231042/subscribe" method="POST">
+        <label class="sr-only" for="nname">Your first name</label><input type="text" id="nname" name="fields[name]" placeholder="First name" autocomplete="given-name">
+        <label class="sr-only" for="nemail">Email address</label><input type="email" id="nemail" name="fields[email]" placeholder="Email address" autocomplete="email" required>
+        <input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true">
+        <button type="submit">Notify me</button>
+        <p class="footer-news-note">Sent through MailerLite; see our <a href="/privacy/#news">privacy notice</a>.</p>
+      </form>
+      <p class="footer-news-done" id="newsDone" tabindex="-1" role="status" hidden>Almost there! Check your inbox and tap the button in our email to confirm.</p>
+    </div>
     <div class="footer-top">
       <div class="footer-brand">
         <a href="/" class="footer-logo"><img src="/assets/img/studio/logo-long.png" alt="De-Evolution Studios" width="342" height="19" loading="lazy"></a>
@@ -686,7 +697,7 @@ write('/testers/', layout({
 <section class="doc"><div class="prose">
 <p>When a game is ready for testing, we'll email you an invite for TestFlight (iPhone) or Google Play testing (Android).
 Testing is free, and you can stop at any time.</p>
-<form class="contact-form tester-form" id="testerForm" action="https://formspree.io/f/meepjead" method="POST">
+<form class="contact-form tester-form" id="testerForm" action="https://formspree.io/f/meepjead" method="POST" data-mailerlite="https://assets.mailerlite.com/jsonp/2770936/forms/203289329782490467/subscribe">
   <input type="hidden" name="_subject" value="Tester sign-up">
   <input type="hidden" name="form" value="tester sign-up">
   <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="name" autocomplete="name" required></div>
@@ -695,9 +706,9 @@ Testing is free, and you can stop at any time.</p>
   <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="phone"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
   <div class="form-group"><label for="tnote">Anything else? (optional)</label><textarea id="tnote" name="message" placeholder="What games do you like to play?"></textarea></div>
   <button type="submit" class="form-submit">Sign me up →</button>
-  <p class="form-note">We'll only use your details to invite you to tests. Your sign-up is sent through Formspree; see our <a href="/privacy/#testers">privacy notice</a>.</p>
+  <p class="form-note">We'll email you test invites and news when our games launch; you can unsubscribe at any time. Your sign-up is sent through Formspree and MailerLite; see our <a href="/privacy/#testers">privacy notice</a>.</p>
 </form>
-<div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>You're on the list!</h3><p>Thanks for signing up. We'll email you when there's something to test. In the meantime, see <a href="/news/">what we're building</a>.</p></div>
+<div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>Almost there!</h3><p>Check your inbox and tap the button in our email to confirm. Then we'll email you when there's something to test. In the meantime, see <a href="/news/">what we're building</a>.</p></div>
 </div></section>
 <script>(function(){var g=new URLSearchParams(location.search).get('game'),s=document.getElementById('tgame');if(g&&s&&s.querySelector('option[value="'+g+'"]'))s.value=g;})();</script>`,
 }));
@@ -735,9 +746,16 @@ and delete them when they are no longer needed for that. See <a href="https://fo
 privacy policy</a>. If you email us directly, your email is handled by our email provider, Hostinger.</p>
 <h3 id="testers">Signing up as a tester</h3>
 <p>If you sign up on the <a href="/testers/">tester page</a>, the name, email address, game, phone type and note you
-enter are sent to us through Formspree, the same way as the contact form. We use them only to invite you to test our
-games (by email, and by adding your email to Apple's TestFlight or Google Play's testing list for that game, whose own
-policies then apply). We delete them when you ask us to, or when we no longer run tests you signed up for.</p>
+enter are sent to us through Formspree, the same way as the contact form, and your name, email address, game and phone type
+are also kept in our mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy
+policy</a>), after you confirm by email. We use them to invite you to test our games (by email, and by adding your email to
+Apple's TestFlight or Google Play's testing list for that game, whose own policies then apply) and to email you news when
+our games launch. Every email has an unsubscribe link. We delete your details when you ask us to.</p>
+<h3 id="news">New game alerts</h3>
+<p>If you sign up for new game alerts (in the footer of our website), your first name and email address are kept in our
+mailing list at MailerLite (<a href="https://www.mailerlite.com/legal/privacy-policy">MailerLite's privacy policy</a>) after
+you confirm by email. We use them only to email you when we release a new game. Every email has an unsubscribe link, and we
+delete your details when you ask us to.</p>
 <h3>Your rights</h3>
 <p>You can ask us for a copy of the information we hold about you, or ask us to correct or delete it, by emailing
 <a href="mailto:${CONTACT}">${CONTACT}</a>. If you live in the European Union or the UK, you can also object to how
