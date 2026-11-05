@@ -28,7 +28,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ver" style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">2fa20b</div>
+<div id="ver" hidden style="position:fixed;left:6px;bottom:4px;font:10px/1 monospace;color:#fff;opacity:.35;pointer-events:none">4fb708</div>
 <div id="end">
   <img class="logo" id="endlogo" alt="Elementra: Dragon Academy">
   <div class="pair"><img id="endr" alt=""><img id="endd" alt=""></div>
@@ -209,14 +209,13 @@ function draw() {
     }
   }
 }
-let last = 0, acc = 0, fpsCount = 0, fpsAt = 0;
-const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag, then frames drawn per second (for testing)
+let last = 0, acc = 0;
+const verEl = document.getElementById('ver'), BUILD = verEl.textContent;   // the build tag (hidden; it's in the page for telling versions apart)
 function loop(now) {
   if (!last) last = now;
   acc = Math.min(acc + (now - last), 250); last = now;
   while (acc >= 1000 / 60) { step(); acc -= 1000 / 60; }
-  draw(); fpsCount++;
-  if (now - fpsAt >= 1000) { verEl.textContent = BUILD + ' · ' + fpsCount + ' fps'; fpsCount = 0; fpsAt = now; }
+  draw();
   requestAnimationFrame(loop);
 }
 </script>

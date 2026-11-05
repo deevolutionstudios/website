@@ -47,8 +47,8 @@ This repo:
   rule (Nov 5): Mergy and Elementra are advertised but never show ads themselves (only their "More from us" card);
   Colorwise has no ads. Copies of house-ads.js live in D2048, Candi, Glimmlings and the game starter
   (deevolutionstudios/game-starter, so every new game has it): after changing it here, copy it to each. .htaccess lets any app read /playables/.
-  Each playable shows a faint tag in its bottom-left corner: its build code (the source's fingerprint) and frames per
-  second, for testing (Nov 5); take the fps out before the apps ship. Candi's speed (Richard's pick, Nov 5): rise 2.75,
+  Each playable carries its build code (the source's fingerprint) in a hidden corner tag (`#ver`); the frames-per-second
+  readout used while testing was taken out on Nov 5 for D2048's launch build. Candi's speed (Richard's pick, Nov 5): rise 2.75,
   drift 2.94 per 1/60 s; both playables run their rules at a steady 60 steps a second and draw between steps. While an
   ad plays, the game underneath is hidden (house-ads.js `hush`): on an iPhone both together ran at 6 fps.
 
