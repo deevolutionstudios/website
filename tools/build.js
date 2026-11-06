@@ -814,11 +814,13 @@ fs.writeFileSync(path.join(ROOT, 'promo/games.json'), JSON.stringify({ version: 
 // /promo/ads.json: our own playable ads (house ads), read by house-ads.js in each game (Nov 5). One entry per game
 // that has a playable in /playables/<game>/ (built by tools/build-playables.js); store links as above, so a game is only
 // advertised in a store it's live in. The rules here tune the serving in every game without an app update.
-const houseAds = MOBILE.filter(g => fs.existsSync(path.join(ROOT, 'playables', g.slug, 'index.html'))).map(g => ({
+// A game with a video ad (playables/<game>/video.html, D2048's since Nov 6, Richard's call) shows that instead.
+const adPage = slug => ['video.html', 'index.html'].find(f => fs.existsSync(path.join(ROOT, 'playables', slug, f)));
+const houseAds = MOBILE.filter(g => adPage(g.slug)).map(g => ({
   id: g.slug,
   name: g.shortName || g.name,
   // ?v= the file's own fingerprint, so phones and Hostinger's cache always fetch the newest version
-  playable: `${SITE}/playables/${g.slug}/index.html?v=${require('crypto').createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'playables', g.slug, 'index.html'))).digest('hex').slice(0, 10)}`,
+  playable: `${SITE}/playables/${g.slug}/${adPage(g.slug)}?v=${require('crypto').createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'playables', g.slug, adPage(g.slug)))).digest('hex').slice(0, 10)}`,
   page: `${SITE}/${g.slug}/`,
   ios: g.appStore && g.appStore.live && g.appStore.id ? `https://apps.apple.com/app/id${g.appStore.id}` : null,
   android: g.play && g.play.live && g.play.id ? `https://play.google.com/store/apps/details?id=${g.play.id}` : null,

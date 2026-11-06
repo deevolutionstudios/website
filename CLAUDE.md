@@ -51,4 +51,8 @@ This repo:
   readout used while testing was taken out on Nov 5 for D2048's launch build. Candi's speed (Richard's pick, Nov 5): rise 2.75,
   drift 2.94 per 1/60 s; both playables run their rules at a steady 60 steps a second and draw between steps. While an
   ad plays, the game underneath is hidden (house-ads.js `hush`): on an iPhone both together ran at 6 fps.
+- **D2048's house ad is a video** (Nov 6, Richard's call): `playables/d2048/video.html` plays `ad.mp4` (the 30-second
+  ad, 720x1280, ~6 MB; poster `ad-poster.jpg`) and speaks the same postMessage protocol (ready, start, complete at the
+  end, cta on a tap during the end card). tools/build.js lists `video.html` in ads.json when a game has one, else its
+  `index.html` playable (D2048's playable and its MRAID and Google files are still there for ad networks).
 
