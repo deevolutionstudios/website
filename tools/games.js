@@ -12,7 +12,7 @@ const MOBILE = [
     type: 'Mobile game · Arcade',
     tagline: 'Hold to float, let go to hop! Help Candi cross the spooky-cute swamp without getting her boots wet.',
     short: 'A one-touch hopping game with a spooky-cute twist. Remastered for 2026.',
-    appStore: { id: '6825680669', live: false },
+    appStore: { id: '6825680669', live: true },
     play: { id: 'com.deevolutionstudios.swamphop', live: true },
     shots: ['1-float', '2-bat', '3-new-best', '4-wardrobe'],
     info: [['Platforms', 'iPhone, Android, web'], ['Genre', 'Arcade'], ['Age', '13+'], ['Price', 'Free, with optional packs'], ['Account', 'Optional (leaderboard)']],

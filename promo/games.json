@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "games": [
     {
       "id": "mergy",
@@ -26,7 +26,7 @@
       "tagline": "Hold to float, let go to hop! Help Candi cross the spooky-cute swamp without getting her boots wet.",
       "icon": "https://deevolutionstudios.com/assets/img/candi/icon.webp",
       "page": "https://deevolutionstudios.com/candi/",
-      "ios": null,
+      "ios": "https://apps.apple.com/app/id6825680669",
       "android": "https://play.google.com/store/apps/details?id=com.deevolutionstudios.swamphop"
     }
   ]
