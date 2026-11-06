@@ -1,0 +1,34 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Candi's Swamp Hop</title>
+<!-- Candi's 30-second video ad (Nov 6), shown as a house ad. Talks to house-ads.js like the playables:
+     {dvsAd: 'ready'|'start'|'complete'|'cta'}. The end card (the last 4 s, and after it ends) opens the store on a tap anywhere. -->
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;-webkit-tap-highlight-color:transparent}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+#snd{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;padding:9px 16px;border-radius:22px;border:0;background:rgba(0,0,0,.6);color:#fff;font:700 15px/1 system-ui,sans-serif}
+</style></head>
+<body>
+<video id="v" playsinline webkit-playsinline preload="auto" poster="https://deevolutionstudios.com/playables/candi/ad-poster.jpg" src="https://deevolutionstudios.com/playables/candi/ad.mp4"></video>
+<button id="snd" type="button">&#128263; Tap for sound</button>
+<script>
+(function(){
+const v=document.getElementById('v'),snd=document.getElementById('snd');
+const END=26.0; // the end card starts here
+const post=m=>{try{parent.postMessage(Object.assign({game:'candi'},m),'*')}catch(e){}};
+let wantSound=true,started=false,done=false,trying=false;
+function play(){if(trying)return;trying=true;
+  v.muted=!wantSound;
+  v.play().then(start).catch(()=>{v.muted=true;snd.style.display=wantSound?'block':'none';v.play().then(start).catch(()=>{})});
+}
+function start(){if(!started){started=true;post({dvsAd:'start'})}}
+addEventListener('message',e=>{const d=e.data||{};if(d.dvsAd==='sound'){wantSound=!!d.on;if(!started)play();else v.muted=!wantSound}});
+snd.addEventListener('click',e=>{e.stopPropagation();v.muted=false;snd.style.display='none'});
+v.addEventListener('ended',()=>{if(!done){done=true;post({dvsAd:'complete'})}});
+function go(){post({dvsAd:'cta'})}
+document.body.addEventListener('click',()=>{if(v.ended||v.currentTime>=END)go()});
+post({dvsAd:'ready'});
+setTimeout(()=>{if(!started)play()},600); // if the host never says how loud, start anyway
+})();
+</script>
+</body></html>
