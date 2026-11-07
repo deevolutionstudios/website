@@ -1,0 +1,36 @@
+# Your Craft Sync (the Windows program for the Your Craft WoW companion app): builds YourCraftSync.exe from the
+# bundle in _src/yourcraft-sync/ (put there by the private wow-companion repo's tools/release-sync.sh) and publishes
+# it with the addon zip on the release "yourcraft-sync". The app links to those downloads, so they don't use Render's
+# bandwidth. Release files don't count toward Actions storage.
+name: Your Craft Sync
+on:
+  push:
+    branches: [main]
+    paths: ["_src/yourcraft-sync/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build YourCraftSync.exe
+        working-directory: _src/yourcraft-sync
+        run: |
+          npm i --no-save --silent resedit@2.0.3 pe-library@2.0.1 postject@1.0.0-alpha.6
+          node make-exe.js yc-sync.cjs icon.ico "$(node -p 'require("./version.json").addon')" YourCraftSync.exe "$RUNNER_TEMP/yc"
+      - name: Publish the downloads
+        working-directory: _src/yourcraft-sync
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(node -p 'require("./version.json").addon')
+          NOTES="Your Craft Sync and the Your Craft addon ${VER}, for the Your Craft app. Built $(date -u +%F)."
+          gh release view yourcraft-sync >/dev/null 2>&1 || gh release create yourcraft-sync --title "Your Craft Sync" --notes "$NOTES" --latest=false
+          gh release edit yourcraft-sync --notes "$NOTES" --latest=false
+          cp YourCraft.zip "YourCraft-${VER}.zip"
+          gh release upload yourcraft-sync --clobber YourCraftSync.exe YourCraft.zip "YourCraft-${VER}.zip"
