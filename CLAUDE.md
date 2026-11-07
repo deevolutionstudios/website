@@ -55,4 +55,9 @@ This repo:
   ad, 720x1280, ~6 MB; poster `ad-poster.jpg`) and speaks the same postMessage protocol (ready, start, complete at the
   end, cta on a tap during the end card). tools/build.js lists `video.html` in ads.json when a game has one, else its
   `index.html` playable (D2048's playable and its MRAID and Google files are still there for ad networks).
+- **Your Craft Sync downloads** (Nov 7): Richard's WoW companion app (private repo deevolutionstudios/wow-companion)
+  keeps its Windows program and addon zip here, on the release `yourcraft-sync`, so its 87 MB download doesn't use
+  Render's bandwidth. `_src/yourcraft-sync/` holds the bundle that repo's `npm run release:sync` puts here; the
+  workflow `.github/workflows/yourcraft-sync.yml` builds YourCraftSync.exe from it and uploads it. Leave both alone
+  unless working on Your Craft.
 
