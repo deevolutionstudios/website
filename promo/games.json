@@ -1,7 +1,16 @@
 {
   "version": 1,
-  "updated": "2026-11-06",
+  "updated": "2026-11-14",
   "games": [
+    {
+      "id": "elementra",
+      "name": "Elementra",
+      "tagline": "Bond a Rider and a Dragon, outwit your rivals and win fantasy card duels. Two cards are all you need.",
+      "icon": "https://deevolutionstudios.com/assets/img/elementra/icon.webp",
+      "page": "https://deevolutionstudios.com/elementra/",
+      "ios": "https://apps.apple.com/app/id6826172343",
+      "android": "https://play.google.com/store/apps/details?id=com.deevolutionstudios.elementra"
+    },
     {
       "id": "mergy",
       "name": "Mergy",

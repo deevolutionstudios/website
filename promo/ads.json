@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-06",
+  "updated": "2026-11-14",
   "rules": {
     "share": 0.2,
     "fallback": true,
@@ -29,10 +29,10 @@
     {
       "id": "elementra",
       "name": "Elementra",
-      "playable": "https://deevolutionstudios.com/playables/elementra/index.html?v=88fcaf47c2",
+      "playable": "https://deevolutionstudios.com/playables/elementra/video.html?v=1eec4a1d42",
       "page": "https://deevolutionstudios.com/elementra/",
-      "ios": null,
-      "android": null
+      "ios": "https://apps.apple.com/app/id6826172343",
+      "android": "https://play.google.com/store/apps/details?id=com.deevolutionstudios.elementra"
     },
     {
       "id": "mergy",

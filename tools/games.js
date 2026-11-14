@@ -116,8 +116,8 @@ on is a boss fight: a skeleton, the Orc War Chief, the Lich, the Wizard and fina
     type: 'Mobile game · Card duel',
     tagline: 'Bond a Rider and a Dragon, outwit your rivals and win fantasy card duels. Two cards are all you need.',
     short: 'A fast fantasy card duel for 2 to 4 players, online or against the computer.',
-    appStore: { id: '6826172343', live: false },
-    play: { id: 'com.deevolutionstudios.elementra', live: false },
+    appStore: { id: '6826172343', live: true },
+    play: { id: 'com.deevolutionstudios.elementra', live: true },
     shots: ['01-home', '03-table', '02-game', '04-collection'],
     info: [['Platforms', 'iPhone, iPad, Android, web'], ['Genre', 'Card / Strategy'], ['Age', '9+ (accounts 13+)'], ['Price', 'Free, with optional purchases. No ads'], ['Players', '2–4 online, or vs the computer']],
     about: `

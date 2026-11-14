@@ -798,7 +798,7 @@ write('/404.html', layout({
 // Which games are in it, and their order: PROMO below. Store links come from each game's `live` flags in games.js, so
 // a game that goes live in a store shows its button in every game without an app update. Read from any app or site
 // (CORS open in .htaccess); the games keep their last copy for offline.
-const PROMO = ['mergy', 'd2048', 'candi'];
+const PROMO = ['elementra', 'mergy', 'd2048', 'candi'];  // Elementra first since its launch (Nov 14)
 const promoGames = PROMO.map(slug => MOBILE.find(g => g.slug === slug)).filter(Boolean).map(g => ({
   id: g.slug,
   name: g.shortName || g.name,
