@@ -1,0 +1,230 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Cinzel;font-weight:700;src:url(file:///home/claude/elementra/public/fonts/cinzel-latin-700-normal.woff2)}
+@font-face{font-family:Cinzel;font-weight:600;src:url(file:///home/claude/elementra/public/fonts/cinzel-latin-600-normal.woff2)}
+html,body{margin:0;width:720px;height:1280px;overflow:hidden;background:#04060d}
+#stage{position:absolute;inset:0;overflow:hidden;background:#04060d}
+#cam{position:absolute;inset:0;transform-origin:50% 50%}
+.layer{position:absolute;inset:0;opacity:0}
+img{display:block}
+#bgimg{position:absolute;width:720px;height:1280px;object-fit:cover;filter:blur(18px) brightness(.45) saturate(1.3);transform:scale(1.15)}
+#rays{position:absolute;left:50%;top:50%;width:2200px;height:2200px;margin:-1100px 0 0 -1100px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,200,90,.55) 0deg 6deg,rgba(255,200,90,0) 6deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 0,#000 18%,transparent 62%);mask:radial-gradient(circle,#000 0,#000 18%,transparent 62%);opacity:0}
+#clipwrap{position:absolute;left:52px;top:200px;width:616px;height:1095px;border:3px solid #e8a93a;box-shadow:0 0 0 2px #2a1406,0 0 40px rgba(232,169,58,.55),0 20px 60px rgba(0,0,0,.8);overflow:hidden;opacity:0;transform-origin:50% 40%}
+#clipimg{width:616px;height:1095px;object-fit:cover}
+#clipbg{position:absolute;inset:-40px;width:800px;height:1360px;object-fit:cover;filter:blur(22px) brightness(.38) saturate(1.3);opacity:0}
+.card{position:absolute;width:400px;height:549px;opacity:0;transform-origin:50% 50%}
+.card img{width:100%;height:100%;border-radius:18px}
+#full{position:absolute;inset:0;opacity:0}
+#fullimg{position:absolute;inset:0;width:720px;height:1280px;object-fit:cover;object-position:50% 30%;transform-origin:50% 40%}
+#wash{position:absolute;inset:0;mix-blend-mode:color;opacity:0}
+#upcard{position:absolute;left:50%;top:600px;width:500px;height:710px;margin:-355px 0 0 -250px;opacity:0;overflow:hidden;border-radius:24px}
+#upcard img{position:absolute;left:-110px;top:-80px;width:720px;height:1280px}
+#shine{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);mix-blend-mode:overlay;opacity:0}
+#level{position:absolute;left:0;right:0;top:990px;white-space:nowrap;text-align:center;font:700 64px Cinzel;letter-spacing:3px;color:#ffe9a8;opacity:0;
+  text-shadow:0 0 2px #2a1406,0 3px 0 #2a1406,0 0 24px rgba(255,190,80,.9)}
+.cap{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;font-family:Cinzel;font-weight:700;opacity:0;line-height:1;transform-origin:50% 50%;
+  background:linear-gradient(#fffdf0 8%,#ffe08a 45%,#e39a2a 85%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 1px #1e0e04) drop-shadow(0 4px 0 #1e0e04) drop-shadow(0 0 4px #1e0e04) drop-shadow(0 10px 22px rgba(0,0,0,.75))}
+#stamp{position:absolute;left:0;right:0;top:560px;text-align:center;font:700 128px Cinzel;opacity:0;transform-origin:50% 50%;letter-spacing:2px;
+  -webkit-text-stroke:6px #fff;paint-order:stroke fill}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#spark{position:absolute;inset:0}
+#logo{position:absolute;left:50%;top:420px;width:640px;margin-left:-320px;opacity:0;transform-origin:50% 50%}
+#free{position:absolute;left:0;right:0;top:680px;text-align:center;font:700 96px Cinzel;opacity:0}
+#badges{position:absolute;left:50%;top:830px;width:560px;margin-left:-280px;opacity:0}
+#tag{position:absolute;left:0;right:0;top:960px;text-align:center;white-space:nowrap;font:700 25px Cinzel;letter-spacing:3px;color:#fff3d6;opacity:0;
+  text-shadow:0 2px 0 #1e0e04,0 0 6px #000}
+</style></head>
+<body>
+<div id="stage"><div id="cam">
+  <img id="bgimg" src="hl.jpg">
+  <div id="rays"></div>
+  <img id="clipbg" src="">
+  <div id="full"><img id="fullimg" src=""><div id="wash"></div></div>
+  <div id="clipwrap"><img id="clipimg" src=""></div>
+  <div class="card" id="cardL"><img src="/home/claude/elementra/public/cards/riders/fia-magmis.webp"></div>
+  <div class="card" id="cardR"><img src="/home/claude/elementra/public/cards/dragons/blaze.webp"></div>
+  <div id="upcard"><img id="upimg" src=""><div id="shine"></div></div>
+  <div id="level"></div>
+  <canvas id="spark" width="720" height="1280"></canvas>
+  <div class="cap" id="capA"></div>
+  <div class="cap" id="capB"></div>
+  <div id="stamp"></div>
+  <img id="logo" src="/home/claude/elementra/art/logo.png">
+  <div id="free" class="cap">PLAY FREE</div>
+  <img id="badges" src="../badges.png">
+  <div id="tag">THE CARD GAME, NOW ON YOUR PHONE</div>
+  <div id="vig"></div>
+</div><div id="flash"></div></div>
+<script>
+const $ = id => document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lin=(t,a,b)=>clamp((t-a)/(b-a));
+const easeOut=x=>1-Math.pow(1-x,3);
+const easeIn=x=>x*x*x;
+const back=x=>{const c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};   // overshoot pop
+const between=(t,a,b)=>t>=a&&t<b;
+// a pop-in scale: 0 -> overshoot -> 1 over d seconds from t0
+const pop=(t,t0,d=0.28)=>t<t0?0:back(clamp((t-t0)/d));
+const B=0.40625, BAR=1.625;
+
+const RIDERS=['finn-waverunner','jade-everbloom','tannis-mortos'], DRAGONS=['fathom','nova','midnight'];
+const WASH=['#2aa7ff','#3fd36b','#9b5cff','#1fb6ff','#ffd166','#7a3cff'];
+const MONT=['m1','m2','m3','m5','m6','m12','m11','m8','m9','CARD:dragons/nox','CARD:riders/kira-magnos','CARD:dragons/radiance'];
+const UPS=['up_0.3.png','up_1.6.png','up_3.1.png','up_4.8.png'], LEVELS=['APPRENTICE','ADEPT','ASCENDANT','MASTER'];
+
+function seq(name,start,t,len){ // frame of a 30fps sequence
+  const n=Math.min(len,Math.max(1,Math.floor((t-start)*30)+1));
+  return `seq/${name}/${String(n).padStart(4,'0')}.jpg`;
+}
+function setSrc(el,src){ if(el.getAttribute('src')!==src){ el.setAttribute('src',src); } }
+function cap(el,text,top,size,s,o=1,rot=0){ el.textContent=text; el.style.top=top+'px'; el.style.fontSize=size+'px'; el.style.opacity=o*(s>0?1:0); el.style.transform=`scale(${s}) rotate(${rot}deg)`; }
+function stamp(text,color,t,t0,dur,rot=-8){
+  const el=$('stamp'); if(!between(t,t0,t0+dur)){ return false; }
+  const k=t-t0; const s = k<0.12 ? 2.4-1.4*easeOut(k/0.12) : 1+0.03*Math.sin(k*30)*Math.exp(-k*6);
+  el.textContent=text; el.style.color=color; el.style.opacity= k>dur-0.15 ? (dur-k)/0.15 : 1;
+  el.style.transform=`scale(${s}) rotate(${rot}deg)`; el.style.filter=`drop-shadow(0 8px 0 rgba(0,0,0,.55)) drop-shadow(0 0 30px ${color})`;
+  return true;
+}
+// deterministic sparks
+const SP=[...Array(90)].map((_,i)=>{let s=Math.sin(i*99.13)*43758.5; s-=Math.floor(s); let u=Math.sin(i*12.9)*9758.1; u-=Math.floor(u); let v=Math.sin(i*7.7)*3758.3; v-=Math.floor(v); return {x:s*720,sp:80+u*220,ph:v*20,r:1+u*2.5}});
+function sparks(t,amt,hue){
+  const c=$('spark').getContext('2d'); c.clearRect(0,0,720,1280); if(amt<=0) return;
+  c.globalCompositeOperation='lighter';
+  for(const p of SP){ const y=1300-((t*p.sp+p.ph*100)%1400); const x=p.x+Math.sin(t*2+p.ph)*30;
+    const g=c.createRadialGradient(x,y,0,x,y,p.r*6); g.addColorStop(0,`hsla(${hue},100%,75%,${amt})`); g.addColorStop(1,`hsla(${hue},100%,50%,0)`);
+    c.fillStyle=g; c.beginPath(); c.arc(x,y,p.r*6,0,7); c.fill(); }
+}
+function burst(t,t0,hue){ // a ring of sparks flying out from the centre
+  if(t<t0||t>t0+0.7) return; const c=$('spark').getContext('2d'); const k=(t-t0)/0.7;
+  c.globalCompositeOperation='lighter';
+  for(let i=0;i<60;i++){ const a=i/60*Math.PI*2+i; const r=easeOut(k)*(250+(i%7)*60); const x=360+Math.cos(a)*r, y=600+Math.sin(a)*r;
+    c.fillStyle=`hsla(${hue},100%,${70+(i%3)*8}%,${1-k})`; c.beginPath(); c.arc(x,y,3+(i%4),0,7); c.fill(); }
+}
+
+window.render=function(t){
+  // reset
+  for(const id of ['clipwrap','clipbg','full','upcard','level','capA','capB','stamp','logo','free','badges','tag','cardL','cardR']) $(id).style.opacity=0;
+  $('rays').style.opacity=0; $('bgimg').style.opacity=0;
+  let flash=0, shake=0, zoom=1, sparkAmt=0, hue=40;
+  const hitFlash=(t0,d=0.12,a=0.9)=>{ if(between(t,t0,t0+d)) flash=Math.max(flash,a*(1-(t-t0)/d)); };
+  const hitShake=(t0,d=0.35,a=14)=>{ if(between(t,t0,t0+d)) shake=Math.max(shake,a*(1-(t-t0)/d)); };
+  const punch=(t0,d=0.25,a=0.06)=>{ if(between(t,t0,t0+d)) zoom*=1+a*(1-easeOut((t-t0)/d)); };
+
+  // ── HOOK: two cards slam together ──
+  if(t<4.55){
+    sparkAmt = t<0.49 ? 0.35*lin(t,0,0.49) : 0.7; hue = 28;
+    const k=lin(t,0.31,0.49); // fly in fast
+    const L=$('cardL'), R=$('cardR');
+    if(t>=0.31){
+      const e=easeIn(k);
+      const lx=-560+(85+560)*e, ly=-300+(340+300)*e;
+      const rx=900+(240-900)*e, ry=1500+(520-1500)*e;
+      const breathe = t>0.49 ? 1+0.015*Math.sin((t-0.49)*8) : 1;
+      const grow = t>2.39 ? 1+0.06*easeOut(lin(t,2.39,4.4)) : 1;
+      L.style.opacity=1; R.style.opacity=1;
+      L.style.left=lx+'px'; L.style.top=ly+'px'; L.style.transform=`rotate(${-12+4*e}deg) scale(${breathe*grow})`;
+      R.style.left=rx+'px'; R.style.top=ry+'px'; R.style.transform=`rotate(${12-4*e}deg) scale(${breathe*grow})`;
+      const glow = t>0.49 ? (t>2.39 ? 'rgba(255,190,70,.95)' : 'rgba(255,90,30,.85)') : 'rgba(0,0,0,0)';
+      L.style.filter=R.style.filter=`drop-shadow(0 0 ${t>2.39?40:26}px ${glow}) drop-shadow(0 20px 30px rgba(0,0,0,.8))`;
+    }
+    hitFlash(0.49,0.14,1); hitShake(0.49,0.45,22); punch(0.49,0.3,0.08);
+    if(t>=2.39){ $('rays').style.opacity=0.9; $('rays').style.transform=`rotate(${(t-2.39)*25}deg) scale(${0.6+0.4*easeOut(lin(t,2.39,2.8))})`; }
+    hitFlash(2.39,0.12,0.8); hitShake(2.39,0.3,12); punch(2.66,0.25,0.07); punch(2.39,0.25,0.05);
+    if(t>=0.55 && t<2.39) cap($('capA'),'ONLY 2 CARDS',150,82,pop(t,0.55));
+    if(t>=2.39) cap($('capA'),'1 CHAMPION',150,92,pop(t,2.39));
+    if(t>4.3) { $('capA').style.opacity = 1-lin(t,4.3,4.55); }
+  }
+  // ── RIDER + DRAGON: card-art montage on every beat ──
+  else if(t<6.99){
+    const i=Math.min(5,Math.floor((t-4.55)/B)); const t0=4.55+i*B; const k=t-t0;
+    const name = i<3 ? 'riders/'+RIDERS[i] : 'dragons/'+DRAGONS[i-3];
+    $('full').style.opacity=1; setSrc($('fullimg'),`/home/claude/elementra/art/raw/${name.split('/')[1]}.webp`);
+    $('fullimg').style.transform=`scale(${1.12-0.08*easeOut(clamp(k/B))}) rotate(${(i%2?1:-1)*(2-1.5*clamp(k/B))}deg)`;
+    $('wash').style.background=WASH[i]; $('wash').style.opacity=0.12;
+    hitFlash(t0,0.08,0.7); punch(t0,0.2,0.05);
+    cap($('capA'), i<3?'PICK A RIDER':'BOND A DRAGON', 140, i<3?84:72, pop(t, i<3?4.55:4.55+3*B, 0.22));
+    sparkAmt=0.5; hue=i<3?200:280;
+  }
+  // ── GAMEPLAY: draw, peek ──
+  else if(t<10.24){
+    const deal=t<8.61; const src = deal ? seq('deal',6.99,t,51) : seq('peek',8.61,t,51);
+    $('clipwrap').style.opacity=1; $('clipbg').style.opacity=1; setSrc($('clipimg'),src); setSrc($('clipbg'),src);
+    const t0 = deal?6.99:8.61; const s = 1.08-0.08*easeOut(lin(t,t0,t0+0.35));
+    $('clipwrap').style.transform=`scale(${s})`;
+    hitFlash(6.99,0.1,0.8); hitFlash(8.61,0.1,0.8);
+    stamp('DRAW 2','#35e07a',t,7.01,1.5,-7); stamp('PEEK!','#38b6ff',t,9.17,1.05,7);
+    punch(7.01,0.2,0.05); punch(9.17,0.2,0.06); hitShake(9.17,0.25,10);
+  }
+  // ── BATTLE ──
+  else if(t<13.49){
+    const src=seq('battle',10.24,t,99); $('clipwrap').style.opacity=1; $('clipbg').style.opacity=1; setSrc($('clipimg'),src); setSrc($('clipbg'),src);
+    $('clipwrap').style.transform=`scale(${1+0.06*easeOut(lin(t,10.24,13.4))})`;
+    hitFlash(10.24,0.1,0.8);
+    stamp('BATTLE!','#ff3b30',t,10.79,1.3,-8); hitShake(10.79,0.4,18); punch(10.79,0.3,0.08);
+    if(stamp('VICTORY!','#ffc940',t,12.41,1.08,-6)){} hitFlash(12.41,0.12,0.9); hitShake(12.41,0.4,16); punch(12.41,0.3,0.08);
+    burst(t,12.41,45);
+  }
+  // ── EVOLVE: the card climbs to Master ──
+  else if(t<18.36){
+    $('bgimg').style.opacity=1; $('rays').style.opacity = t>=15.92 ? 1 : 0.35; $('rays').style.transform=`rotate(${t*20}deg) scale(${t>=15.92?1:0.7})`;
+    const steps=[13.49,14.30,15.11,15.92]; let i=0; for(let j=0;j<4;j++) if(t>=steps[j]) i=j;
+    $('upcard').style.opacity=1; setSrc($('upimg'),UPS[i]);
+    const k=t-steps[i]; const s = (i===0? pop(t,13.49,0.35) : 1+0.12*Math.exp(-k*9)) * (i===3? 1+0.04*easeOut(lin(t,15.92,18.3)) : 1);
+    $('upcard').style.transform=`scale(${s})`;
+    $('upcard').style.filter=`drop-shadow(0 0 ${20+i*14}px rgba(255,${200-i*10},${90-i*15},.9))`;
+    for(const st of steps.slice(1)){ hitFlash(st,0.12,i===3&&st===15.92?1:0.75); punch(st,0.25,0.05); }
+    hitShake(15.92,0.5,20);
+    cap($('level'),LEVELS[i],990,i===3?82:62,1+0.25*Math.exp(-k*10));
+    // shine sweeps on the Master card
+    if(t>=15.92){ const sw=((t-15.92)%0.81)/0.81; $('shine').style.opacity=1; $('shine').style.backgroundPosition=''; $('shine').style.transform=`translateX(${-600+1200*sw}px)`; } else $('shine').style.opacity=0;
+    cap($('capA'), t<15.92?'EVOLVE YOUR CARDS':'ALL THE WAY TO', 120, t<15.92?58:56, pop(t,t<15.92?13.49:15.92,0.25));
+    
+    sparkAmt = t>=15.92?1:0.4; hue=42; burst(t,15.92,45);
+  }
+  // ── ONLINE + FRIENDS ──
+  else if(t<21.61){
+    const src=seq('home',18.36,t,99); $('clipwrap').style.opacity=1; $('clipbg').style.opacity=1; setSrc($('clipimg'),src); setSrc($('clipbg'),src);
+    $('clipwrap').style.transform=`scale(${1.05-0.05*easeOut(lin(t,18.36,18.8))+0.07*lin(t,18.8,21.6)})`;
+    hitFlash(18.36,0.1,0.8);
+    if(t<19.99) cap($('capA'),'PLAY ONLINE',95,86,pop(t,18.36)); else cap($('capA'),'OR WITH FRIENDS',95,72,pop(t,19.99));
+    punch(19.99,0.22,0.05);
+  }
+  // ── RAPID-FIRE highlights ──
+  else if(t<26.49){
+    const i=Math.min(11,Math.floor((t-21.61)/B)); const t0=21.61+i*B; const m=MONT[i];
+    if(m.startsWith('CARD:')){ $('full').style.opacity=1; setSrc($('fullimg'),`/home/claude/elementra/art/raw/${m.slice(5).split('/')[1]}.webp`); $('wash').style.opacity=0;
+      $('fullimg').style.transform=`scale(${1.15-0.1*easeOut(clamp((t-t0)/B))})`; }
+    else { const src=seq(m,t0,t,14); $('clipwrap').style.opacity=1; $('clipbg').style.opacity=1; setSrc($('clipimg'),src); setSrc($('clipbg'),src);
+      $('clipwrap').style.transform=`scale(${1.1-0.1*easeOut(clamp((t-t0)/B))}) rotate(${(i%2?1:-1)*1.2*(1-clamp((t-t0)/B))}deg)`; }
+    hitFlash(t0,0.07,0.55); punch(t0,0.18,0.05);
+    cap($('capA'),'OUTWIT. OUTLAST.',100,62,pop(t,21.61,0.25));
+    if(t>24.86) cap($('capA'),'WIN IT ALL.',95,92,pop(t,24.86,0.25));
+  }
+  // ── END CARD ──
+  else {
+    $('bgimg').style.opacity=1; $('rays').style.opacity = t>=27.45?0.8:0.3; $('rays').style.transform=`rotate(${t*15}deg)`;
+    if(t<27.45){ cap($('capA'),'TWO CARDS.',520,90,pop(t,26.49,0.25)); }
+    const L=$('logo'); if(t>=27.45){ const k=t-27.45; L.style.opacity=1; L.style.transform=`scale(${k<0.14?2.3-1.3*easeOut(k/0.14):1+0.02*Math.sin(k*4)})`;
+      L.style.filter='drop-shadow(0 0 30px rgba(255,200,90,.6)) drop-shadow(0 12px 20px rgba(0,0,0,.7))'; }
+    hitFlash(27.45,0.16,1); hitShake(27.45,0.45,20);
+    if(t>=27.75){ $('free').style.opacity=1; $('free').style.transform=`scale(${pop(t,27.75,0.3)*(1+0.03*Math.sin((t-27.75)*7))})`; }
+    if(t>=28.05){ $('badges').style.opacity=1; $('badges').style.transform=`scale(${pop(t,28.05,0.3)})`; }
+    if(t>=28.35){ $('tag').style.opacity=lin(t,28.35,28.7); }
+    sparkAmt=0.6; hue=40; burst(t,27.45,45);
+  }
+  if (!(t>=12.41&&t<13.12) && !(t>=15.92&&t<16.62) && !(t>=27.45&&t<28.15)) sparks(t,sparkAmt,hue); else { sparks(t,sparkAmt,hue); }
+  // re-draw bursts after sparks cleared the canvas
+  burst(t,12.41,45); burst(t,15.92,45); burst(t,27.45,45);
+  const sx = shake? Math.sin(t*97)*shake : 0, sy = shake? Math.cos(t*83)*shake : 0;
+  $('cam').style.transform=`translate(${sx}px,${sy}px) scale(${zoom})`;
+  $('flash').style.opacity=flash;
+};
+window.ready=async()=>{ await document.fonts.ready; for(const im of document.images){ if(im.getAttribute('src')) await im.decode().catch(()=>{}); } };
+window.settle=async()=>{ await Promise.all([...document.images].filter(i=>i.getAttribute('src')).map(i=>i.complete&&i.naturalWidth?null:i.decode().catch(()=>{}))); };
+</script>
+</body></html>

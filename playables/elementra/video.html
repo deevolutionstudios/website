@@ -1,7 +1,7 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Elementra</title>
-<!-- Elementra's 30-second video ad (Nov 14), shown as a house ad. Talks to house-ads.js like the playables:
+<!-- Elementra's 30-second video ad (version 2, Nov 14), shown as a house ad. Talks to house-ads.js like the playables:
      {dvsAd: 'ready'|'start'|'complete'|'cta'}. The end card (the last 3.6 s, and after it ends) opens the store on a tap anywhere. -->
 <style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden;-webkit-tap-highlight-color:transparent}
@@ -14,7 +14,7 @@ video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backgr
 <script>
 (function(){
 const v=document.getElementById('v'),snd=document.getElementById('snd');
-const END=26.4; // the end card starts here
+const END=26.5; // the end card starts here
 const post=m=>{try{parent.postMessage(Object.assign({game:'elementra'},m),'*')}catch(e){}};
 let wantSound=true,started=false,done=false,trying=false;
 function play(){if(trying)return;trying=true;
