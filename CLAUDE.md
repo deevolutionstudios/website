@@ -56,7 +56,7 @@ This repo:
   end, cta on a tap during the end card). tools/build.js lists `video.html` in ads.json when a game has one, else its
   `index.html` playable (D2048's playable and its MRAID and Google files are still there for ad networks).
 - **Elementra's house ad is a video too** (Nov 14, Richard's call: "like D2048"): `playables/elementra/video.html` plays `ad.mp4` (30 s: hook, deal, peek, battle, card upgrade to Master, Home, end card from 26.4 s). How it was made: `_src/playables/elementra/video/`. Elementra is marked live on both stores in tools/games.js (store badges, house ads in Candi and D2048) and is first in More from us (`PROMO`).
-- **Launch emails** (Nov 14): `_src/email/2026-11-elementra-launch.html` (each subscriber's own Met the Developer code from the MailerLite field `elementra_code`); a copy in `promo/email/` so MailerLite's editor could load it. The campaign is a draft in MailerLite until Richard approves.
+- **Launch emails** (Nov 14): `_src/email/2026-11-elementra-launch.html` (each subscriber's own Met the Developer code from the MailerLite field `elementra_code`); a copy in `promo/email/` so MailerLite's editor could load it. Sent to all 69 subscribers on Nov 14 (Richard's OK).
 - **Your Craft Sync downloads** (Nov 7): Richard's WoW companion app (private repo deevolutionstudios/wow-companion)
   keeps its Windows program and addon zip here, on the release `yourcraft-sync`, so its 87 MB download doesn't use
   Render's bandwidth. `_src/yourcraft-sync/` holds the bundle that repo's `npm run release:sync` puts here; the
