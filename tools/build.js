@@ -283,7 +283,7 @@ write('/', layout({
       <div><span class="s-eyebrow">✦ Our Work</span><h2 class="s-title">Games We've<br>Built.</h2></div>
       <a href="/work/" class="btn-outline">View All Projects</a>
     </div>
-    <div class="port-grid four">${PROJECTS.filter(p => ['elementra-card-game', 'cthulhu', 'gravefall', 'wraps'].includes(p.slug)).map(p => projectCard(p)).join('')}</div>
+    <div class="port-grid four">${['elementra-card-game', 'cthulhu', 'gravefall', 'wraps'].map(s => projectCard(PROJECTS.find(p => p.slug === s))).join('')}</div>
   </div>
 </section>
 
@@ -320,8 +320,9 @@ write('/work/', layout({
       <button class="filter-btn" data-filter="client" aria-pressed="false">Client Work</button>
     </div>
     <div class="port-grid">
+      ${PROJECTS.slice(0, 4).map(p => projectCard(p)).join('\n')}
       ${projectCard({ slug: 'colorwise', name: 'Colorwise', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'colorwise/icon', tag: 'Word or hue? Beat the beat. A neon rhythm game of colors that lie.' })}
-      ${PROJECTS.map(p => projectCard(p)).join('\n')}
+      ${PROJECTS.slice(4).map(p => projectCard(p)).join('\n')}
     </div>
   </div>
 </section>

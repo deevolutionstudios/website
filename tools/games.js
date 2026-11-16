@@ -285,14 +285,15 @@ and catch it with a seed charm.</p>
 ];
 
 // Older and tabletop projects, as on the March 2026 site.
+// Order (Richard, Nov 16): Elementra, D2048, Lil' Cthulhu and Candi first.
 const PROJECTS = [
-  { slug: 'elementra-card-game', name: 'Elementra', type: 'card', label: 'Card Game', kind: 'Card Game · Dragon Academy', img: 'elementra-card-game/cover', tag: 'Dragon Academy. All you need is 2 cards to win — but getting there is everything.' },
   { slug: 'elementra', name: 'Elementra: Dragon Academy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Card duel', img: 'elementra/cover', tag: 'The card game goes digital. Bond a Rider and a Dragon and duel players around the world.' },
-  { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
   { slug: 'd2048', name: 'D2048', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'd2048/cover', tag: '2048 meets RPG. Merge tiles, battle monsters, survive the waves.' },
+  { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
+  { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
+  { slug: 'elementra-card-game', name: 'Elementra', type: 'card', label: 'Card Game', kind: 'Card Game · Dragon Academy', img: 'elementra-card-game/cover', tag: 'Dragon Academy. All you need is 2 cards to win — but getting there is everything.' },
   { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.' },
   { slug: 'glimmlings', name: 'Glimmlings', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'glimmlings/cover', tag: 'Merge, guess and catch. A cozy creature-keeping adventure at Grandma’s.' },
-  { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
   { slug: 'gravefall', name: 'Grave Fall', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'gravefall/cover', tag: "A Skully & Bony Rabbit Adventure. Cuteness is coming — and it's falling fast." },
   { slug: 'wraps', name: 'Wraps & Isis', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Character Design', img: 'wraps/cover', tag: 'Escape from Giza. A wild cast of mummies, pharaohs, and cats — and one golden box.' },
   { slug: 'hopz', name: 'Hopz', type: 'mobile client', label: 'Mobile Game', client: true, kind: 'Mobile · Client Work', img: 'hopz/cover', tag: 'Mobile arcade built for a client. UFOs, moons, and high scores.' },
