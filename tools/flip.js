@@ -8,7 +8,7 @@ module.exports = {
   total: 8,
   start: '2026-11-23', // the first Monday; fighter n is revealed on start + 7 * (n - 1) days, 09:00 Berlin
   revealed: [
-    { n: 1, name: 'Fritz', file: 'f-5c44ba965a', faction: 'Storm',
+    { n: 1, name: 'Fritz', file: 'f-934f536b83', faction: 'Storm',
       line: 'A marten who chews through cables for fun. Sparks follow him everywhere, and so does trouble.' },
   ],
 };
