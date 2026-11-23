@@ -160,19 +160,18 @@ players.</p>`,
     ],
   },
   {
-    // In testing (Oct 31, 2026): Android first, through Google Play's internal testing. Policy: Mergy repo web/privacy.html.
+    // Live on Google Play since Nov 23, 2026; the App Store version is in Apple's review. Policy: Mergy repo web/privacy.html.
     // Text matches the game as of version 80 (Nov 2, 2026): the cozy redesign, Chill and Less Chill, Mergy the cat.
     slug: 'mergy',
     name: 'Mergy',
-    storeNames: '“Mergy” on Google Play, “Mergy: Cozy Merge” on the App Store',
+    storeNames: '“Mergy: Cozy Merge” on Google Play, “Mergy: Cozy Merge” on the App Store',
     type: 'Mobile game · Merge',
     tagline: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.',
-    short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. Coming to phones.',
+    short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. On Android now, iPhone soon.',
     appStore: { live: false },
     play: { id: 'com.deevolutionstudios.mergy', live: true },
-    comingSoon: true,
     shots: ['01-chill', '02-less-chill', '03-christmas', '04-halloween', '05-ranks'],
-    info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
+    info: [['Platforms', 'Android, iPhone soon'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
     about: `
 <p>Mergy is a tiny, cozy merge game you can play forever. Curl up in a lamp-lit room with snow falling past the
 window, while Mergy the cat dozes on top of the board.</p>
@@ -194,7 +193,7 @@ window, while Mergy the cat dozes on top of the board.</p>
   <li>Optional packs: the Halloween Pack and the Christmas Pack each bring 36 seasonal items and their own room</li>
   <li>Remove ads: one small purchase and the ad is gone for good</li>
 </ul>
-<p>Mergy is coming to Android first, then iPhone.</p>`,
+<p>Mergy is out now on Google Play. The iPhone version is coming soon.</p>`,
     privacy: 'mergy-privacy.html',
     deletion: {
       account: 'You only have an account if you signed in for the world high scores (with Google, or Apple on iPhone). Playing without signing in needs no account, and then we hold no data about you. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
