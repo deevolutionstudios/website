@@ -117,6 +117,7 @@ ${footer()}
 `;
 }
 
+const DISCORD = 'https://discord.gg/ZURYbFe';
 function footer() {
   const games = MOBILE.map(g => `<li><a href="/${g.slug}/">${esc(g.shortName || g.name)}</a></li>`).join('');
   return `<footer class="site">
@@ -136,9 +137,10 @@ function footer() {
       <div class="footer-brand">
         <a href="/" class="footer-logo"><img src="/assets/img/studio/logo-long.png" alt="De-Evolution Studios" width="342" height="19" loading="lazy"></a>
         <p class="footer-about">Games with quirky characters, creative mechanics and just the right amount of chaos. Questions about a game? <a href="mailto:${CONTACT}">${CONTACT}</a></p>
+        <a class="footer-discord" href="${DISCORD}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37A19.8 19.8 0 0 0 15.4 2.8a13.8 13.8 0 0 0-.63 1.3 18.4 18.4 0 0 0-5.53 0 13 13 0 0 0-.64-1.3 19.7 19.7 0 0 0-4.92 1.53C.57 9.04-.27 13.6.15 18.1a19.9 19.9 0 0 0 6.03 3.05c.49-.67.92-1.38 1.3-2.12a12.9 12.9 0 0 1-2.04-.98c.17-.13.34-.26.5-.4a14.2 14.2 0 0 0 12.12 0l.5.4c-.65.39-1.33.72-2.05.98.38.74.81 1.45 1.3 2.12a19.8 19.8 0 0 0 6.04-3.05c.5-5.2-.84-9.72-3.53-13.73ZM8.02 15.33c-1.18 0-2.16-1.09-2.16-2.42s.96-2.42 2.16-2.42c1.21 0 2.18 1.1 2.16 2.42 0 1.33-.96 2.42-2.16 2.42Zm7.97 0c-1.19 0-2.16-1.09-2.16-2.42s.95-2.42 2.16-2.42c1.2 0 2.17 1.1 2.15 2.42 0 1.33-.95 2.42-2.15 2.42Z"/></svg>Join our Discord</a>
       </div>
       <div class="footer-col"><h2>Games</h2><ul>${games}<li><a href="/work/">All projects</a></li></ul></div>
-      <div class="footer-col"><h2>Studio</h2><ul><li><a href="/about/">About</a></li><li><a href="/news/">News</a></li><li><a href="/services/">Services</a></li><li><a href="/contact/">Contact</a></li></ul></div>
+      <div class="footer-col"><h2>Studio</h2><ul><li><a href="/about/">About</a></li><li><a href="/news/">News</a></li><li><a href="/services/">Services</a></li><li><a href="/contact/">Contact</a></li><li><a href="${DISCORD}" target="_blank" rel="noopener">Discord</a></li></ul></div>
       <div class="footer-col"><h2>Help</h2><ul><li><a href="/support/">Support</a></li><li><a href="/support/#delete">Delete your data</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/impressum/">Impressum</a></li></ul></div>
     </div>
     <div class="footer-bottom">
