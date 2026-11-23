@@ -170,7 +170,7 @@ players.</p>`,
     short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. On Android now, iPhone soon.',
     appStore: { live: false },
     play: { id: 'com.deevolutionstudios.mergy', live: true },
-    shots: ['01-chill', '02-less-chill', '03-christmas', '04-halloween', '05-ranks'],
+    shots: ['01-chill', '02-less-chill', '03-story', '04-christmas', '05-halloween', '06-ranks'], // the store screenshots of Nov 18 (version 1.0)
     info: [['Platforms', 'Android, iPhone soon'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
     about: `
 <p>Mergy is a tiny, cozy merge game you can play forever. Curl up in a lamp-lit room with snow falling past the
