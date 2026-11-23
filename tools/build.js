@@ -712,6 +712,100 @@ Testing is free, and you can stop at any time.</p>
 <script>(function(){var g=new URLSearchParams(location.search).get('game'),s=document.getElementById('tgame');if(g&&s&&s.querySelector('option[value="'+g+'"]'))s.value=g;})();</script>`,
 }));
 
+// ── PROJECT FLIP (the secret game; tools/flip.js) ─────────────────────────────────────────────────────────────
+
+{
+  const FLIP = require('./flip');
+  const day = n => { const d = new Date(FLIP.start + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + 7 * (n - 1)); return d; };
+  const when = n => day(n).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+  const shown = new Map(FLIP.revealed.map(f => [f.n, f]));
+  const next = shown.size < FLIP.total ? shown.size + 1 : null;
+  const nextIso = next ? day(next).toISOString().slice(0, 10) + 'T09:00:00+01:00' : '';
+  const card = n => {
+    const f = shown.get(n);
+    return f ? `<li class="pf-card pf-out"><div class="pf-pic"><img src="/assets/img/flip/${f.file}.webp" alt="${esc(f.name)}" width="480" height="640" loading="lazy"></div>
+  <div class="pf-cap"><span class="pf-num">No. ${n}</span><strong class="pf-name">${esc(f.name)}</strong><span class="pf-fac">${esc(f.faction)}</span><p>${esc(f.line)}</p></div></li>`
+      : `<li class="pf-card${n === next ? ' pf-next' : ''}"><div class="pf-pic"><img src="/assets/img/flip/shadow-${n}.webp" alt="A fighter still in the shadows" width="480" height="640" loading="lazy"><span class="pf-q" aria-hidden="true">?</span></div>
+  <div class="pf-cap"><span class="pf-num">No. ${n}</span><strong class="pf-name">???</strong><span class="pf-fac">Steps out ${when(n)}</span></div></li>`;
+  };
+  write('/flip/', layout({
+    url: '/flip/', title: 'Project Flip',
+    description: 'Project Flip: a secret new game from De-Evolution Studios. One fighter steps out of the shadows every Monday. Alpha testers wanted.',
+    image: '/assets/img/flip/og.jpg',
+    body: `<style>
+body{background:#0a0814}
+.pf{background:radial-gradient(ellipse 80% 60% at 50% 0%,#2a1660 0%,#0a0814 70%);color:#ece6ff;padding:150px 24px 90px;overflow:hidden}
+.pf-in{max-width:1180px;margin:0 auto}
+.pf-eyebrow{font-family:'Space Mono',monospace;font-weight:700;font-size:.8rem;letter-spacing:.22em;color:#b9a6ff;text-transform:uppercase}
+.pf-stamp{display:inline-block;margin-top:18px;border:3px solid #ff4d6d;color:#ff4d6d;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.3em;padding:4px 14px;transform:rotate(-4deg);font-size:.9rem}
+.pf h1{font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(3.2rem,11vw,8rem);line-height:.95;margin:22px 0 18px;color:#fff;text-shadow:0 0 40px rgba(140,90,255,.55)}
+.pf-lead{max-width:640px;font-size:1.15rem;color:#cfc6ef}
+.pf-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin:80px 0 26px}
+.pf h2{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:2rem;color:#fff;margin:0}
+.pf-count{font-family:'Space Mono',monospace;color:#b9a6ff;font-size:.95rem}
+.pf-count b{color:#fff}
+.pf-roster{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.pf-card{background:linear-gradient(180deg,#171230,#0e0b1d);border:1px solid #2c2452;border-radius:16px;overflow:hidden}
+.pf-pic{position:relative;aspect-ratio:3/4;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(ellipse 70% 55% at 50% 70%,rgba(120,70,255,.45),transparent 70%)}
+.pf-pic img{width:92%;height:auto;display:block;filter:drop-shadow(0 0 2px #a98bff) drop-shadow(0 0 14px rgba(150,110,255,.55))}
+.pf-out .pf-pic{background:radial-gradient(ellipse 70% 55% at 50% 70%,rgba(255,200,90,.35),transparent 70%)}
+.pf-out .pf-pic img{filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+.pf-q{position:absolute;top:14%;left:50%;transform:translateX(-50%);font-family:'Alfa Slab One',serif;font-size:3.4rem;color:rgba(220,205,255,.85);text-shadow:0 0 24px #7c4dff}
+.pf-next{border-color:#7c4dff;box-shadow:0 0 0 1px #7c4dff,0 0 34px rgba(124,77,255,.35)}
+.pf-next .pf-q{animation:pfpulse 2.4s ease-in-out infinite}
+@keyframes pfpulse{50%{opacity:.35}}
+.pf-cap{padding:14px 16px 18px}
+.pf-num{display:block;font-family:'Space Mono',monospace;font-size:.75rem;color:#8f80c7;letter-spacing:.12em}
+.pf-name{display:block;font-family:'Oswald',sans-serif;font-size:1.45rem;text-transform:uppercase;letter-spacing:.05em;color:#fff;margin:2px 0}
+.pf-fac{font-family:'Space Mono',monospace;font-size:.8rem;color:#ffcf6a}
+.pf-card:not(.pf-out) .pf-fac{color:#b9a6ff}
+.pf-cap p{margin:8px 0 0;font-size:.95rem;color:#cfc6ef;line-height:1.5}
+.pf-timer{margin-top:28px;text-align:center;font-family:'Space Mono',monospace;color:#cfc6ef}
+.pf-timer b{font-size:1.6rem;color:#fff;letter-spacing:.06em;display:block;margin-top:4px}
+.pf-alpha{margin:90px auto 0;max-width:620px;background:#120e26;border:1px solid #3a2f6e;border-radius:20px;padding:36px}
+.pf-alpha p{color:#cfc6ef}
+.pf-alpha label{color:#ece6ff}
+.pf-alpha input,.pf-alpha select{background:#0a0814;color:#fff;border-color:#3a2f6e}
+.pf-alpha .form-submit{background:#7c4dff;border-color:#7c4dff;color:#fff}
+.pf-alpha .form-note,.pf-alpha .form-note a{color:#9d90cf}
+.pf-alpha .form-success h3{color:#fff}
+.pf-alpha .form-success,.pf-alpha .form-success p{color:#cfc6ef}
+.pf-alpha .form-success a{color:#b9a6ff}
+@media (max-width:900px){.pf-roster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.pf{padding-top:120px}.pf-roster{gap:12px}.pf-cap{padding:12px}.pf-name{font-size:1.15rem}.pf-alpha{padding:24px}}
+@media (prefers-reduced-motion:reduce){.pf-next .pf-q{animation:none}}
+</style>
+<section class="pf"><div class="pf-in">
+  <div class="pf-eyebrow">De-Evolution Studios · File 001</div>
+  <div class="pf-stamp">CLASSIFIED</div>
+  <h1>Project Flip</h1>
+  <p class="pf-lead">Something new is being dealt. We can't show you the game yet. What we can do is introduce the fighters, one at a time. Every Monday, another one steps out of the shadows.</p>
+
+  <div class="pf-head"><h2>The roster</h2><div class="pf-count"><b>${shown.size}</b> of ${FLIP.total} revealed</div></div>
+  <ul class="pf-roster">${Array.from({ length: FLIP.total }, (_, i) => card(i + 1)).join('\n')}</ul>
+  ${next ? `<div class="pf-timer" id="pfTimer" data-at="${nextIso}">Next fighter steps out ${when(next)}<b id="pfLeft"></b></div>` : ''}
+
+  <div class="pf-alpha" id="alpha">
+    <h2>Join the alpha</h2>
+    <p>We're picking a small group of players to play it first, before anyone else has seen it. Sign up and we'll be in touch when it's your turn.</p>
+    <form class="contact-form tester-form" id="testerForm" action="https://assets.mailerlite.com/jsonp/2770936/forms/203289329782490467/subscribe" method="POST">
+      <input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true"><input type="hidden" name="fields[game]" value="project-flip">
+      <div class="form-group"><label for="tname">Your name</label><input type="text" id="tname" name="fields[name]" autocomplete="name" required></div>
+      <div class="form-group"><label for="temail">Email address</label><input type="email" id="temail" name="fields[email]" autocomplete="email" required></div>
+      <div class="form-group"><label for="tphone">Your phone</label><select id="tphone" name="fields[device]"><option>iPhone</option><option>Android</option><option>Both</option></select></div>
+      <button type="submit" class="form-submit">Count me in →</button>
+      <p class="form-note">We'll email you when the alpha opens, and news when our games launch; you can unsubscribe at any time. Your sign-up is kept in our mailing list at MailerLite; see our <a href="/privacy/#testers">privacy notice</a>.</p>
+    </form>
+    <div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>You're on the list.</h3><p>Check your inbox and tap the button in our email to confirm. Then keep an eye on this page: a new fighter steps out every Monday.</p></div>
+  </div>
+</div></section>
+<script>(function(){var t=document.getElementById('pfTimer'),o=document.getElementById('pfLeft');if(!t||!o)return;var at=new Date(t.dataset.at).getTime();
+function tick(){var s=Math.max(0,Math.floor((at-Date.now())/1000));if(!s){o.textContent='Any moment now…';return;}
+var d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;o.textContent=d+'d '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m '+String(x).padStart(2,'0')+'s';}
+tick();setInterval(tick,1000);})();</script>`,
+  }));
+}
+
 // ── PRIVACY (this website) AND IMPRESSUM ───────────────────────────────────────────────────────────────────────
 
 write('/privacy/', layout({

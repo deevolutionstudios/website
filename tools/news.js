@@ -11,6 +11,7 @@ const testing = [
   { slug: 'elementra', name: 'Elementra: Dragon Academy' },
   { slug: 'glimmlings', name: 'Glimmlings (our new merge game)' },
   { slug: 'mergy', name: 'Mergy: Cozy Merge' },
+  { slug: 'project-flip', name: 'Project Flip (top secret)' },
 ];
 
 const posts = [
