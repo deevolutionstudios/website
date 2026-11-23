@@ -217,6 +217,18 @@ function appCard(g) {
 </article>`;
 }
 
+// Project Flip, the secret game (tools/flip.js, /flip/): its own card on the home page, where Colorwise was (Richard, Nov 23).
+function flipCard() {
+  return `<article class="app-card fu">
+  <a class="app-visual" href="/flip/" tabindex="-1" aria-hidden="true"><img src="/assets/img/flip/feature.webp" alt="Project Flip" width="1024" height="500" loading="lazy"></a>
+  <div class="app-body">
+    <div class="app-top"><img class="app-icon" src="/assets/img/flip/icon.webp" alt="" width="64" height="64" loading="lazy"><div><span class="app-type">Mobile game · Top secret</span><a class="app-name" href="/flip/">Project Flip</a></div></div>
+    <p class="app-tag">A new game we can't talk about yet. One fighter steps out of the shadows every Monday. Alpha testers wanted.</p>
+    <div class="app-links"><a href="/flip/">Meet the fighters</a><a href="/flip/#alpha">Join the alpha</a></div>
+  </div>
+</article>`;
+}
+
 function projectCard(p, { linkOld = true } = {}) {
   return `<a href="/${p.slug}/" class="g-card fu" data-type="${p.type}">
   <div class="g-visual"><img src="/assets/img/${p.img}.webp"${p.img.endsWith('/cover') ? srcset(p.img.split('/')[0], 'cover', [450, 600]) + ' sizes="(max-width:760px) 46vw, 300px"' : ''} alt="" loading="lazy">
@@ -256,7 +268,7 @@ write('/', layout({
       <div><span class="s-eyebrow">✦ Play Now</span><h2 class="s-title">Our Mobile<br>Games.</h2></div>
       <p class="section-sub">For iPhone, iPad and Android. Each game has its own support page and privacy policy, linked below.</p>
     </div>
-    <div class="app-grid">${MOBILE.map(appCard).join('\n')}</div>
+    <div class="app-grid">${MOBILE.map(g => (g.slug === 'colorwise' ? flipCard() + '\n' : '') + appCard(g)).join('\n')}</div>
   </div>
 </section>
 
@@ -320,6 +332,7 @@ write('/work/', layout({
       <button class="filter-btn" data-filter="client" aria-pressed="false">Client Work</button>
     </div>
     <div class="port-grid">
+      ${projectCard({ slug: 'flip', name: 'Project Flip', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Top secret', img: 'flip/cover', tag: 'A new game we can\u2019t talk about yet. One fighter steps out of the shadows every Monday.' })}
       ${PROJECTS.slice(0, 4).map(p => projectCard(p)).join('\n')}
       ${projectCard({ slug: 'colorwise', name: 'Colorwise', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'colorwise/icon', tag: 'Word or hue? Beat the beat. A neon rhythm game of colors that lie.' })}
       ${PROJECTS.slice(4).map(p => projectCard(p)).join('\n')}
