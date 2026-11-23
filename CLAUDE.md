@@ -25,6 +25,9 @@ Studio-wide (Nov 3, 2026):
   Console with a DNS TXT record at Hostinger: keep that record).
 - **Email**: Apple's "has completed processing" and TestFlight "is now available to test" emails skip the studio inbox
   (Gmail filter, label "Cleaned up"). App Review results still arrive.
+- **Google Play managed publishing is always OFF; Apple always automatic release** (Richard, Nov 23, 2026: "we always push live
+  when they approve. Never do this again."). Every Play app publishes by itself the moment Google approves it; never turn
+  managed publishing on (Mergy 65 sat approved for five days waiting for a Publish click). Turned off for every app Nov 23.
 
 This repo:
 - **"More from us" list** (Nov 4): `promo/games.json`, written by tools/build.js from tools/games.js (`PROMO` picks the
