@@ -160,45 +160,6 @@ players.</p>`,
     ],
   },
   {
-    slug: 'colorwise',
-    name: 'Colorwise',
-    type: 'Mobile game · Rhythm',
-    tagline: 'Word or hue? Beat the beat. A neon rhythm game of colors that lie.',
-    short: 'Swipe toward the color the word says, not the color it’s painted. Coming to phones.',
-    appStore: { live: false },
-    play: { live: false },
-    comingSoon: true,
-    shots: ['01-gates', '02-gold-ring', '04-run', '03-results'],
-    info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
-    about: `
-<p>Colorwise is a neon rhythm game of colors that lie. Gates fly at you on the beat: swipe toward the color the word
-<em>says</em> and ignore the color it's painted. If that color isn't on the ring, tap. And when a gold ring appears,
-the rule flips.</p>
-<ul>
-  <li>Three tracks, a Daily challenge and a Practice mode that teaches every gate</li>
-  <li>Earn Prisms as you play and spend them on skins for the gate wheel, the tunnel and the sky</li>
-  <li>World leaderboards per track, weekly and all-time</li>
-</ul>
-<p>Colorwise is coming to iPhone and Android.</p>`,
-    // DRAFT (Oct 29, 2026): written from the ColorRun code for the owner's review; see the note in the policy file.
-    privacy: 'colorwise-privacy.html',
-    deletion: {
-      account: 'You only have an account if you signed in to the world leaderboards (with your email, Google or Apple). Playing without signing in needs no account. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
-      steps: [
-        `Email ${mail('Colorwise: delete my account')} <strong>from the email address you signed in with</strong> (for Sign in with Apple's “Hide My Email”, from the Apple ID that address forwards to), with the subject “Colorwise: delete my account”.`,
-        'Say whether you want the whole account deleted (for every game that uses it) or only your Colorwise information.',
-        'We check that the request comes from the account’s address, delete what you asked for and confirm by email within 30 days.',
-      ],
-      deleted: ['Your player name and your place on the leaderboards', 'Your best scores on every track', 'Your Prisms, skins and chosen look saved with your account', 'For a whole-account deletion: your sign-in (email address and the Google or Apple sign-in link)'],
-      kept: ['Nothing else: Colorwise sends no game statistics, crash reports or ad data, so there is nothing more to delete.', 'Once the phone apps are out, App Store and Google Play will keep their own record of anything you buy.'],
-      device: 'Everything the game saves on your phone (scores, settings, Prisms and skins) is deleted when you uninstall the app.',
-    },
-    faq: [
-      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Follow our news page to hear when it’s out.'],
-      ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
-    ],
-  },
-  {
     // In testing (Oct 31, 2026): Android first, through Google Play's internal testing. Policy: Mergy repo web/privacy.html.
     // Text matches the game as of version 80 (Nov 2, 2026): the cozy redesign, Chill and Less Chill, Mergy the cat.
     slug: 'mergy',
@@ -208,7 +169,7 @@ the rule flips.</p>
     tagline: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.',
     short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. Coming to phones.',
     appStore: { live: false },
-    play: { id: 'com.deevolutionstudios.mergy', live: false },
+    play: { id: 'com.deevolutionstudios.mergy', live: true },
     comingSoon: true,
     shots: ['01-chill', '02-less-chill', '03-christmas', '04-halloween', '05-ranks'],
     info: [['Platforms', 'Android (coming soon), iPhone later'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
@@ -252,6 +213,45 @@ window, while Mergy the cat dozes on top of the board.</p>
       ['I bought a pack or Remove ads. How do I get it on a new phone?', 'Open <strong>Settings</strong> and tap <strong>Restore purchases</strong>, signed in to the same Google Play account you bought it with.'],
       ['Can I lose?', 'No. Mergy has no timer and no game over. Every merge adds one to your total, and it keeps counting forever.'],
       ['How do I get rid of the ads?', 'Buy <strong>Remove ads</strong> in the Shop in Settings. The ad goes away for good.'],
+    ],
+  },
+  {
+    slug: 'colorwise',
+    name: 'Colorwise',
+    type: 'Mobile game · Rhythm',
+    tagline: 'Word or hue? Beat the beat. A neon rhythm game of colors that lie.',
+    short: 'Swipe toward the color the word says, not the color it’s painted. Coming to phones.',
+    appStore: { live: false },
+    play: { live: false },
+    comingSoon: true,
+    shots: ['01-gates', '02-gold-ring', '04-run', '03-results'],
+    info: [['Platforms', 'iPhone and Android (coming soon)'], ['Genre', 'Rhythm / Reflex'], ['Price', 'Free, with optional cosmetics']],
+    about: `
+<p>Colorwise is a neon rhythm game of colors that lie. Gates fly at you on the beat: swipe toward the color the word
+<em>says</em> and ignore the color it's painted. If that color isn't on the ring, tap. And when a gold ring appears,
+the rule flips.</p>
+<ul>
+  <li>Three tracks, a Daily challenge and a Practice mode that teaches every gate</li>
+  <li>Earn Prisms as you play and spend them on skins for the gate wheel, the tunnel and the sky</li>
+  <li>World leaderboards per track, weekly and all-time</li>
+</ul>
+<p>Colorwise is coming to iPhone and Android.</p>`,
+    // DRAFT (Oct 29, 2026): written from the ColorRun code for the owner's review; see the note in the policy file.
+    privacy: 'colorwise-privacy.html',
+    deletion: {
+      account: 'You only have an account if you signed in to the world leaderboards (with your email, Google or Apple). Playing without signing in needs no account. Your De-Evolution account is shared with our other games that use the same sign-in, such as Candi\'s Swamp Hop.',
+      steps: [
+        `Email ${mail('Colorwise: delete my account')} <strong>from the email address you signed in with</strong> (for Sign in with Apple's “Hide My Email”, from the Apple ID that address forwards to), with the subject “Colorwise: delete my account”.`,
+        'Say whether you want the whole account deleted (for every game that uses it) or only your Colorwise information.',
+        'We check that the request comes from the account’s address, delete what you asked for and confirm by email within 30 days.',
+      ],
+      deleted: ['Your player name and your place on the leaderboards', 'Your best scores on every track', 'Your Prisms, skins and chosen look saved with your account', 'For a whole-account deletion: your sign-in (email address and the Google or Apple sign-in link)'],
+      kept: ['Nothing else: Colorwise sends no game statistics, crash reports or ad data, so there is nothing more to delete.', 'Once the phone apps are out, App Store and Google Play will keep their own record of anything you buy.'],
+      device: 'Everything the game saves on your phone (scores, settings, Prisms and skins) is deleted when you uninstall the app.',
+    },
+    faq: [
+      ['When is Colorwise coming to phones?', 'We’re working on the iPhone and Android apps now. Follow our news page to hear when it’s out.'],
+      ['Do I need an account?', 'No. Sign in only if you want your name on the world leaderboards and your Prisms and skins on every device.'],
     ],
   },
   {
