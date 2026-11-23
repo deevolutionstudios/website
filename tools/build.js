@@ -223,8 +223,8 @@ function flipCard() {
   <a class="app-visual" href="/flip/" tabindex="-1" aria-hidden="true"><img src="/assets/img/flip/feature.webp" alt="Project Flip" width="1024" height="500" loading="lazy"></a>
   <div class="app-body">
     <div class="app-top"><img class="app-icon" src="/assets/img/flip/icon.webp" alt="" width="64" height="64" loading="lazy"><div><span class="app-type">Mobile game · Top secret</span><a class="app-name" href="/flip/">Project Flip</a></div></div>
-    <p class="app-tag">A new game we can't talk about yet. One fighter steps out of the shadows every Monday. Alpha testers wanted.</p>
-    <div class="app-links"><a href="/flip/">Meet the fighters</a><a href="/flip/#alpha">Join the alpha</a></div>
+    <p class="app-tag">A new game we can't talk about yet. One Champion steps out of the shadows every Monday. Alpha testers wanted.</p>
+    <div class="app-links"><a href="/flip/">Meet the Champions</a><a href="/flip/#alpha">Join the alpha</a></div>
   </div>
 </article>`;
 }
@@ -332,7 +332,7 @@ write('/work/', layout({
       <button class="filter-btn" data-filter="client" aria-pressed="false">Client Work</button>
     </div>
     <div class="port-grid">
-      ${projectCard({ slug: 'flip', name: 'Project Flip', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Top secret', img: 'flip/cover', tag: 'A new game we can\u2019t talk about yet. One fighter steps out of the shadows every Monday.' })}
+      ${projectCard({ slug: 'flip', name: 'Project Flip', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Top secret', img: 'flip/cover', tag: 'A new game we can\u2019t talk about yet. One Champion steps out of the shadows every Monday.' })}
       ${PROJECTS.slice(0, 4).map(p => projectCard(p)).join('\n')}
       ${projectCard({ slug: 'colorwise', name: 'Colorwise', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'colorwise/icon', tag: 'Word or hue? Beat the beat. A neon rhythm game of colors that lie.' })}
       ${PROJECTS.slice(4).map(p => projectCard(p)).join('\n')}
@@ -738,12 +738,12 @@ Testing is free, and you can stop at any time.</p>
     const f = shown.get(n);
     return f ? `<li class="pf-card pf-out"><div class="pf-pic"><img src="/assets/img/flip/${f.file}.webp" alt="${esc(f.name)}" width="480" height="640" loading="lazy"></div>
   <div class="pf-cap"><span class="pf-num">No. ${n}</span><strong class="pf-name">${esc(f.name)}</strong><span class="pf-fac">${esc(f.faction)}</span><p>${esc(f.line)}</p></div></li>`
-      : `<li class="pf-card${n === next ? ' pf-next' : ''}"><div class="pf-pic"><img src="/assets/img/flip/shadow-${n}.webp" alt="A fighter still in the shadows" width="480" height="640" loading="lazy"><span class="pf-q" aria-hidden="true">?</span></div>
+      : `<li class="pf-card${n === next ? ' pf-next' : ''}"><div class="pf-pic"><img src="/assets/img/flip/shadow-${n}.webp" alt="A Champion still in the shadows" width="480" height="640" loading="lazy"><span class="pf-q" aria-hidden="true">?</span></div>
   <div class="pf-cap"><span class="pf-num">No. ${n}</span><strong class="pf-name">???</strong><span class="pf-fac">Steps out ${when(n)}</span></div></li>`;
   };
   write('/flip/', layout({
     url: '/flip/', title: 'Project Flip',
-    description: 'Project Flip: a secret new game from De-Evolution Studios. One fighter steps out of the shadows every Monday. Alpha testers wanted.',
+    description: 'Project Flip: a secret new game from De-Evolution Studios. One Champion steps out of the shadows every Monday. Alpha testers wanted.',
     image: '/assets/img/flip/og.jpg',
     body: `<style>
 body{background:#0a0814}
@@ -763,7 +763,9 @@ body{background:#0a0814}
 .pf-pic img{width:92%;height:auto;display:block;filter:drop-shadow(0 0 2px #a98bff) drop-shadow(0 0 14px rgba(150,110,255,.55))}
 .pf-out .pf-pic{background:radial-gradient(ellipse 70% 55% at 50% 70%,rgba(255,200,90,.35),transparent 70%)}
 .pf-out .pf-pic img{filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
-.pf-q{position:absolute;top:14%;left:50%;transform:translateX(-50%);font-family:'Alfa Slab One',serif;font-size:3.4rem;color:rgba(220,205,255,.85);text-shadow:0 0 24px #7c4dff}
+.pf-pic{container-type:inline-size}
+.pf-lead a{color:#fff;text-decoration:underline;text-decoration-color:#7c4dff;text-underline-offset:4px}
+.pf-q{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);line-height:1;font-family:'Alfa Slab One',serif;font-size:min(13.6rem,76cqw);color:rgba(220,205,255,.85);text-shadow:0 0 24px #7c4dff}
 .pf-next{border-color:#7c4dff;box-shadow:0 0 0 1px #7c4dff,0 0 34px rgba(124,77,255,.35)}
 .pf-next .pf-q{animation:pfpulse 2.4s ease-in-out infinite}
 @keyframes pfpulse{50%{opacity:.35}}
@@ -792,11 +794,11 @@ body{background:#0a0814}
   <div class="pf-eyebrow">De-Evolution Studios · File 001</div>
   <div class="pf-stamp">CLASSIFIED</div>
   <h1>Project Flip</h1>
-  <p class="pf-lead">Something new is being dealt. We can't show you the game yet. What we can do is introduce the fighters, one at a time. Every Monday, another one steps out of the shadows.</p>
+  <p class="pf-lead">Something new is being dealt. We can't show you the game yet. What we can do is introduce our Champions. Every Monday, another one steps out of the shadows. Want to know more? <a href="#alpha">Sign up to be an Alpha Tester.</a></p>
 
-  <div class="pf-head"><h2>The roster</h2><div class="pf-count"><b>${shown.size}</b> of ${FLIP.total} revealed</div></div>
+  <div class="pf-head"><h2>The Champions</h2><div class="pf-count"><b>${shown.size}</b> of ${FLIP.total} revealed</div></div>
   <ul class="pf-roster">${Array.from({ length: FLIP.total }, (_, i) => card(i + 1)).join('\n')}</ul>
-  ${next ? `<div class="pf-timer" id="pfTimer" data-at="${nextIso}">Next fighter steps out ${when(next)}<b id="pfLeft"></b></div>` : ''}
+  ${next ? `<div class="pf-timer" id="pfTimer" data-at="${nextIso}">Next Champion steps out ${when(next)}<b id="pfLeft"></b></div>` : ''}
 
   <div class="pf-alpha" id="alpha">
     <h2>Join the alpha</h2>
@@ -809,7 +811,7 @@ body{background:#0a0814}
       <button type="submit" class="form-submit">Count me in →</button>
       <p class="form-note">We'll email you when the alpha opens, and news when our games launch; you can unsubscribe at any time. Your sign-up is kept in our mailing list at MailerLite; see our <a href="/privacy/#testers">privacy notice</a>.</p>
     </form>
-    <div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>You're on the list.</h3><p>Check your inbox and tap the button in our email to confirm. Then keep an eye on this page: a new fighter steps out every Monday.</p></div>
+    <div class="form-success" id="testerSuccess" tabindex="-1" role="status"><h3>You're on the list.</h3><p>Check your inbox and tap the button in our email to confirm. Then keep an eye on this page: a new Champion steps out every Monday.</p></div>
   </div>
 </div></section>
 <script>(function(){var t=document.getElementById('pfTimer'),o=document.getElementById('pfLeft');if(!t||!o)return;var at=new Date(t.dataset.at).getTime();
