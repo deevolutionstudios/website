@@ -166,14 +166,15 @@ players.</p>`,
     name: 'Mergy',
     storeNames: '“Mergy: Cozy Merge” on Google Play, “Mergy: Cozy Merge” on the App Store',
     type: 'Mobile game · Merge',
-    tagline: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.',
-    short: 'Drag an item onto its twin and watch them merge: endless, calm and cozy, with Mergy the cat. On Android now, iPhone soon.',
+    tagline: 'You barely have energy to play games. Why play a game that needs energy? Drag. Merge. Relax with Mergy the cat.',
+    promoTagline: 'Why play a game that needs energy? Drag. Merge. Relax.',
+    short: 'You barely have energy to play games. Why play a game that needs energy? No energy, no timers, no game over: just merge with Mergy the cat. On Android now, iPhone soon.',
     appStore: { live: false },
     play: { id: 'com.deevolutionstudios.mergy', live: true },
     shots: ['01-chill', '02-less-chill', '03-story', '04-christmas', '05-halloween', '06-ranks'], // the store screenshots of Nov 18 (version 1.0)
     info: [['Platforms', 'Android, iPhone soon'], ['Genre', 'Merge / Relaxing'], ['Modes', 'Chill and Less Chill'], ['Price', 'Free, with optional packs and Remove ads'], ['Account', 'Optional (Google or Apple), for the Cozy Hall of Fame']],
     about: `
-<p>Mergy is a tiny, cozy merge game you can play forever. Curl up in a lamp-lit room with snow falling past the
+<p><strong>You barely have energy to play games. Why play a game that needs energy?</strong> Mergy is a tiny, cozy merge game with no energy bars, no timers and no game over, so you can play forever. Curl up in a lamp-lit room with snow falling past the
 window, while Mergy the cat dozes on top of the board.</p>
 <h3>Two moods</h3>
 <ul>
@@ -291,7 +292,7 @@ const PROJECTS = [
   { slug: 'cthulhu', name: "Lil' Cthulhu", type: 'card', label: 'Card Game', kind: 'Card Game · Original IP', img: 'cthulhu/cover', tag: "You thought his dad was bad. A survival card game where winning isn't the point — lasting is." },
   { slug: 'candi', name: "Candi's Swamp Hop", type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'candi/cover', tag: 'Play Like a Girl. Hop through a dangerous swamp full of skulls, slime, and surprises.' },
   { slug: 'elementra-card-game', name: 'Elementra', type: 'card', label: 'Card Game', kind: 'Card Game · Dragon Academy', img: 'elementra-card-game/cover', tag: 'Dragon Academy. All you need is 2 cards to win — but getting there is everything.' },
-  { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'Drag. Merge. Relax. A cozy little merge game with Mergy the cat.' },
+  { slug: 'mergy', name: 'Mergy', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Merge', img: 'mergy/cover', tag: 'You barely have energy to play games. Why play a game that needs energy? A cozy merge game with Mergy the cat.' },
   { slug: 'glimmlings', name: 'Glimmlings', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Coming soon', img: 'glimmlings/cover', tag: 'Merge, guess and catch. A cozy creature-keeping adventure at Grandma’s.' },
   { slug: 'gravefall', name: 'Grave Fall', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game', img: 'gravefall/cover', tag: "A Skully & Bony Rabbit Adventure. Cuteness is coming — and it's falling fast." },
   { slug: 'wraps', name: 'Wraps & Isis', type: 'mobile', label: 'Mobile Game', kind: 'Mobile Game · Character Design', img: 'wraps/cover', tag: 'Escape from Giza. A wild cast of mummies, pharaohs, and cats — and one golden box.' },

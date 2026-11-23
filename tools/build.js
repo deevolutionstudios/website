@@ -753,6 +753,13 @@ body{background:#0a0814}
 .pf-stamp{display:inline-block;margin-top:18px;border:3px solid #ff4d6d;color:#ff4d6d;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.3em;padding:4px 14px;transform:rotate(-4deg);font-size:.9rem}
 .pf h1{font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(3.2rem,11vw,8rem);line-height:.95;margin:22px 0 18px;color:#fff;text-shadow:0 0 40px rgba(140,90,255,.55)}
 .pf-lead{max-width:640px;font-size:1.15rem;color:#cfc6ef}
+.pf-stage{position:relative;padding:4px 0 70px;margin-top:14px}
+.pf-stage h1,.pf-stage .pf-lead{position:relative;z-index:1;text-shadow:0 2px 12px #0a0814,0 0 3px #0a0814}
+.pf-stage h1{margin-top:0}
+.pf-line{position:absolute;z-index:0;top:0;bottom:0;left:-24px;right:-24px;display:flex;align-items:flex-end;justify-content:flex-end;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.35) 0%,#000 55%),linear-gradient(180deg,#000 70%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,rgba(0,0,0,.35) 0%,#000 55%),linear-gradient(180deg,#000 70%,transparent 100%);mask-composite:intersect}
+.pf-line img{height:100%;width:auto;margin-left:-5%;flex:none;filter:drop-shadow(0 0 1.5px #a98bff) drop-shadow(0 0 12px rgba(150,110,255,.55))}
+.pf-line img:nth-child(even){height:88%}
 .pf-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin:80px 0 26px}
 .pf h2{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:2rem;color:#fff;margin:0}
 .pf-count{font-family:'Space Mono',monospace;color:#b9a6ff;font-size:.95rem}
@@ -793,8 +800,11 @@ body{background:#0a0814}
 <section class="pf"><div class="pf-in">
   <div class="pf-eyebrow">De-Evolution Studios · File 001</div>
   <div class="pf-stamp">CLASSIFIED</div>
+  <div class="pf-stage">
+  <div class="pf-line" aria-hidden="true">${[2, 5, 3, 8, 6, 4, 7, 1].map(n => `<img src="/assets/img/flip/shadow-${n}.webp" alt="" width="480" height="640">`).join('')}</div>
   <h1>Project Flip</h1>
   <p class="pf-lead">Something new is being dealt. We can't show you the game yet. What we can do is introduce our Champions. Every Monday, another one steps out of the shadows. Want to know more? <a href="#alpha">Sign up to be an Alpha Tester.</a></p>
+  </div>
 
   <div class="pf-head"><h2>The Champions</h2><div class="pf-count"><b>${shown.size}</b> of ${FLIP.total} revealed</div></div>
   <ul class="pf-roster">${Array.from({ length: FLIP.total }, (_, i) => card(i + 1)).join('\n')}</ul>
@@ -912,7 +922,7 @@ const PROMO = ['elementra', 'mergy', 'd2048', 'candi'];  // Elementra first sinc
 const promoGames = PROMO.map(slug => MOBILE.find(g => g.slug === slug)).filter(Boolean).map(g => ({
   id: g.slug,
   name: g.shortName || g.name,
-  tagline: g.tagline,
+  tagline: g.promoTagline || g.tagline, // the one line in every game's More from us card
   icon: `${SITE}/assets/img/${g.slug}/icon.webp`,
   page: `${SITE}/${g.slug}/`,
   ios: g.appStore && g.appStore.live && g.appStore.id ? `https://apps.apple.com/app/id${g.appStore.id}` : null,
